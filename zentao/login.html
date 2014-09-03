@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>登录到禅道</title>
+    <script src="js/$.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/zentao.js"></script>
+    <script src="js/md5.min.js"></script>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/style.css" rel="stylesheet"/>
+    <link href="css/login.css" rel="stylesheet"/>
+</head>
+<body>
+
+  <script>
+  var zentao = window.zentao;
+  var user = store.get('user', {});
+  var username = $('#username');
+  var password = $('#password');
+  var address = $('#address');
+  var loginBtn = $('#loginBtn');
+  var isReady = false;
+  var tryLogin = function(silence)
+  {
+      if(address.value === '')
+      {
+          if(!silence) alert('请输入禅道地址，包含“http://”。');
+          return false;
+      }
+      else if(username.value === '')
+      {
+          if(!silence) alert('请输入用户名或者注册邮箱。');
+          return false;
+      }
+      else if(password.value === '')
+      {
+          if(!silence) alert('请输入密码。');
+          return false;
+      }
+      loginBtn.disabled = 'disabled';
+      loginBtn.value = '正在登录...';
+
+      if(!silence) password.value = window.md5(password.value);
+
+      user.account = username.value;
+      user.pwdMd5 = password.value;
+      user.url = address.value;
+
+      zentao.login(user, function()
+      {
+          loginBtn.disabled = false;
+          loginBtn.value = '登录';
+          alert('登录成功！');
+      }, function()
+      {
+          loginBtn.disabled = false;
+          loginBtn.value = '登录';
+          alert('登录失败，请检查用户名或密码。');
+      });
+      
+      return false;
+  }
+
+  if(user.account) username.value = user.account;
+  if(user.pwdMd5) password.value = user.pwdMd5;
+  if(user.url) address.value = user.url;
+
+  address.on('focus', function()
+  {
+      if(address.value === '')
+      {
+          address.value = 'http://zentao.com';
+      }
+  }).on('blur', function()
+  {
+      if(address.value === 'http://')
+      {
+          address.value = '';
+      }
+  });
+
+  $('#loginForm').on('submit', function()
+  {
+      tryLogin();
+  });
+  </script>
+</body>
+</html>

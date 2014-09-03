@@ -1,0 +1,98 @@
+/* global style */
+select,
+textarea,
+input[type="text"],
+input[type="search"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="tel"],q
+input[type="color"] 
+{
+  border-radius: 1px;
+  background-color: rgba(255,255,255,.88);
+}
+select:focus,
+textarea:focus,
+input[type="text"]:focus,
+input[type="search"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus
+{
+  background-color: #fff
+}
+
+#content, body
+{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+}
+
+.content-view
+{
+  position: absolute;
+  top: 44px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 100;
+}
+.content-view.with-padding
+{
+  padding: 20px;
+}
+.content-view.full
+{
+  top: 0;
+}
+
+/* #login */
+#login
+{
+  display: flex;
+  margin: auto;
+  background: #0475e1;
+}
+#login > div
+{
+  padding-bottom: 140px;
+  margin: auto;
+}
+#login .logo img
+{
+  max-width: 100%;
+}
+#loginForm
+{
+  max-width: 400px;
+  margin: 0 auto;
+}
+#loginForm > .mui-input-group
+{
+  margin-bottom: 20px;
+}
+#loginForm .mui-btn-primary
+{
+  background: #2694ff
+}
