@@ -2,6 +2,7 @@
 {
     var $content = $('#content');
     var animateSpeed = 300;
+    var firstShow = true;
 
     mui.ready(function()
     {
@@ -42,7 +43,6 @@
         var loginBtn = $('#loginBtn');
         var tryLogin = function(silence)
         {
-            console.log('尝试登录');
             if(!silence)
             {
                 if(address.value === '')
@@ -77,13 +77,14 @@
                 user.url = address.value;
             }
 
-            console.log(user);
-
             zentao.login(user, function()
             {
                 loginBtn.disabled = false;
                 loginBtn.innerHTML = '登录';
                 switchOutContent('login', 'list');
+                consolelog('登录成功。', 'bgsuccess|h5');
+
+                openList();
             }, function(response)
             {
                 loginBtn.disabled = false;
@@ -116,13 +117,31 @@
         tryLogin(true);
     }
 
+    function openList(list)
+    {
+        list = list || 'todos';
+
+        mui.openWindow(
+        {
+            id: 'todos',
+            show:{
+              aniShow: firstShow ? 'none' : 'slide-in-right' //页面显示动画，默认为”slide-in-right“；
+            },
+            waiting:{
+              title:'正在努力加载中...'//等待对话框上显示的提示内容
+            }
+        });
+
+        firstShow = false;
+    }
+
     function switchOutContent(from, to, animation)
     {
         if(typeof animation === 'undefined') animation = 'zoom';
         if(typeof from === 'string') from = $('#' + from);
         if(typeof to === 'string') to = $('#' + to);
         from.classList.add(animation + '-out');
-        to.classList.add('show');
+        if(to) to.classList.add('show');
         $content.classList.add('switching');
         setTimeout(function()
         {

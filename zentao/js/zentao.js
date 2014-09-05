@@ -5,16 +5,110 @@
 
     var store = window.store;
     var md5   = window.md5;
-    var plus  = window.plus;
+    var dataTypeSet = ',todo,task,bug,story,';
+
+    function storeSet(key, value, ignoreAccount)
+    {
+        if(ignoreAccount)
+        {
+            store.set(key, value);
+        }
+        else if(user && user.account)
+        {
+            store.set(user.account + '::' + key, value);
+        }
+        else
+        {
+            console.error('存储失败！无法获取用户数据。');
+        }
+    }
+
+    function storeGet(key, defaultValue, ignoreAccount)
+    {
+        if(ignoreAccount)
+        {
+            return store.get(key, defaultValue);
+        }
+        else if(user && user.account)
+        {
+            return store.get(user.account + '::' + key, defaultValue);
+        }
+        else
+        {
+            console.error('获取存储数据失败！无法获取用户数据。');
+        }
+    }
+
+    function getUser()
+    {
+        var account = store.get('account', '');
+        if(account !== '')
+        {
+            window.user = store.get('userlist', {})[account];
+        }
+        else
+        {
+            window.user = {};
+        }
+        console.groupCollapsed('%cUSER: ' + user.account + '@' + user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
+        console.log(user);
+        console.groupEnd();
+    }
+
+    function saveUser()
+    {
+        var user = window.user;
+        if(user && user.account)
+        {
+            store.set('account', user.account);
+            var userlist = store.get('userlist', {});
+            userlist[user.account] = user;
+            store.set('userlist', userlist);
+        }
+        else
+        {
+            console.error('存储失败！无法获取用户数据。');
+        }
+        
+    }
+
+    var DataList = function(name)
+    {
+        this.name = name;
+    };
+
 
     var Zentao = function()
     {
-        this.user = store.get('user', {});
+        var that = this;
+        this.isReady = false;
+        that.readyFns = [];
+
+        $.plusReady(function()
+        {
+            console.color('Zentao Ready.', 'bgsuccess');
+            getUser();
+
+            that.config = storeGet('zentaoConfig', {});
+            that.session = storeGet('session', {});
+            that.ready();
+            that.isReady = true;
+        });
     };
 
-    Zentao.prototype.setPlus = function(pl)
+    Zentao.prototype.ready = function(fn)
     {
-        plus = pl;
+        if(typeof fn === 'function')
+        {
+            this.readyFns.push(fn);
+        }
+        else
+        {
+            for (var i = 0; i < this.readyFns.length; ++i)
+            {
+                this.readyFns[i]();
+            };
+        }
     };
 
     /* Get zentao config and login in zentao */
@@ -23,9 +117,9 @@
         var that = this;
         if(loginkey)
         {
-            this.user.url     = loginkey.url;
-            this.user.account = loginkey.account;
-            this.user.pwdMd5  = loginkey.pwdMd5;
+            window.user.url     = loginkey.url;
+            window.user.account = loginkey.account;
+            window.user.pwdMd5  = loginkey.pwdMd5;
         }
 
         this.getConfig(function()
@@ -37,17 +131,17 @@
                 return;
             }
 
-            console.log('>>> 1.成功获取配置。');
+            consolelog('1.成功获取配置。', 'success');
             that.getSession(function()
             {
-                console.log('>>> 2.成功获取Session。');
+                consolelog('2.成功获取Session。', 'success');
                 that.tryLogin(function()
                 {
-                    console.log('>>> 3.成功登陆。');
+                    consolelog('3.成功登陆。', 'success');
                     that.getRole(function()
                     {
-                        console.log('>>> 4.成功获取角色。');
-                        store.set('lastLoginTime', new Date());
+                        consolelog('4.成功获取角色。', 'success');
+                        storeSet('lastLoginTime', new Date());
                         successCallback && successCallback();
                     }, errorCallback);
                 }, errorCallback);
@@ -85,8 +179,8 @@
 
     Zentao.prototype.concatUrl = function(params)
     {
-        var url         = this.user.url,
-            user        = this.user,
+        var url         = window.user.url,
+            user        = window.user,
             session     = this.session,
             viewType    = params.viewType || 'json',
             moduleName  = params.module,
@@ -98,7 +192,7 @@
             url += '/index.php?';
             if(moduleName === 'user' && methodName === 'login')
             {
-                var password = md5(this.user.pwdMd5 + session.rand);
+                var password = md5(window.user.pwdMd5 + session.rand);
                 url += 'm=user&f=login&account=' + user.account +
                 '&password=' + password + '&' + session.sessionName +
                 '=' + session.sessionID + '&t=json';
@@ -138,7 +232,7 @@
                     url += '&&orderBy=id_desc&';
                 }
 
-                url += 'recTotal=' + params.recTotal + '&recPerPage=' + params.recPerPage + '&pageID=' + pageID;
+                url += 'recTotal=' + params.recTotal + '&recPerPage=' + params.recPerPage + '&pageID=' + params.pageID;
             }
 
             url += '&t=' + viewType;
@@ -153,7 +247,7 @@
             url += '/';
             if(moduleName === 'user' && methodName === 'login')
             {
-                var password = md5(this.user.pwdMd5 + session.rand);
+                var password = md5(window.user.pwdMd5 + session.rand);
                 url += 'user-login.json?account=' + user.account + '&password=' + password + '&' + (session.sessionName || 'sid') + '=' + session.sessionID;
                 return url;
             }
@@ -193,7 +287,7 @@
                     url += 'id_desc-';
                 }
 
-                url += params.recTotal + '-' + params.recPerPage + '-' + pageID;
+                url += params.recTotal + '-' + params.recPerPage + '-' + params.pageID;
             }
 
             if(url.lastIndexOf('-') === (url.length - 1))
@@ -226,6 +320,7 @@
                 if(session.sessionID && session.sessionID != 'undefined')
                 {
                     that.session = session;
+                    storeSet('session', session);
                     successCallback && successCallback(session);
                 }
                 else
@@ -242,7 +337,7 @@
 
     Zentao.prototype.getRole = function(successCallback, errorCallback)
     {
-        var url = this.concatUrl({module: 'api', method: 'getmodel', moduleName: 'user', methodName: 'getById', account: this.user.account}),
+        var url = this.concatUrl({module: 'api', method: 'getmodel', moduleName: 'user', methodName: 'getById', account: window.user.account}),
             that = this;
         $.get(url, function(response)
         {
@@ -250,9 +345,9 @@
             if(roleData['status'] !== 'failed')
             {
                 roleData = JSON.parse(roleData.data);
-                that.user.role = roleData.role;
-                store.set('user', that.user);
-                that.user.data = roleData;
+                window.user.role = roleData.role;
+                saveUser();
+                window.user.data = roleData;
                 successCallback && successCallback(roleData);
             }
             else
@@ -265,18 +360,18 @@
     Zentao.prototype.getConfig = function(successCallback, errorCallback)
     {
         var that = this;
-        $.get(this.user.url  + '/index.php?mode=getconfig', function(response)
+        $.get(window.user.url  + '/index.php?mode=getconfig', function(response)
         {
             var config = JSON.parse(response);
             if(config.version)
             {
                 that.config = config;
-                store.set('zentaoConfig', config);
+                storeSet('zentaoConfig', config);
                 successCallback && successCallback(config);
             }
             else
             {
-                that.callWidthMessage(errorCallback, '获取配置信息不正确，请确保所登录的账户拥有超级model权限。禅道权限管理请参考：http://www.zentao.net/book/zentaopmshelp/71.html。')
+                that.callWidthMessage(errorCallback, '获取配置信息不正确，请确保所登录的账户拥有超级model权限。禅道权限管理请参考：http://www.zentao.net/book/zentaopmshelp/71.html。');
             }
         }, that.fnToCallWidthMessage(errorCallback, '无法获取禅道配置，请检查禅道地址是否正确。'));
     };
@@ -319,6 +414,35 @@
         }
         return result;
     };
+
+    Zentao.prototype.loadData = function(dataType, successCallback, errorCallback)
+    {
+        console.color('LoadData: ' + dataType, 'h4|info');
+
+        if(typeof dataType === 'undefined' || dataTypeSet.indexOf(',' + dataType + ',') < 0)
+        {
+            this.callWidthMessage(errorCallback, '无法加载数据，因为没有指定DataType或者指定的dataType不受支持。');
+            return false;
+        }
+
+        var that = this,
+            url = this.concatUrl({module: 'my', method: dataType, type: 'all', pageID: 1, recTotal: 1000, recPerPage: 1000});
+
+        $.get(url, function(response)
+        {
+            var dt = JSON.parse(response);
+            if(dt['status'] === 'success')
+            {
+                dt = JSON.parse(dt.data);
+                successCallback && successCallback(dt);
+            }
+            else
+            {
+                that.callWidthMessage(errorCallback, '无法获取用户数据，请确保所登录的账户拥有超级model权限。禅道权限管理请参考：http://www.zentao.net/book/zentaopmshelp/71.html。')
+            }
+
+        }, that.fnToCallWidthMessage(errorCallback, '无法获取数据，请检查网络。'));
+    }
 
     window.zentao = new Zentao();
 }(mui);
