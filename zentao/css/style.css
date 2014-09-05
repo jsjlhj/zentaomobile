@@ -39,24 +39,43 @@ input[type="color"]:focus
   background-color: #fff
 }
 
-#content, body
+button {outline:none}
+
+.mui-title {height: 40px;}
+.mui-title > .mui-segmented-control {width: 50%; min-width: 200px}
+
+.btn-show-more.mui-btn-block {background-color: #f1f1f1; font-size: 15px; color: #999}
+.btn-show-more.mui-btn-block:active {background-color: #ccc; color: #888}
+
+body,#content
 {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
   top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+#content.switching
+{
+  overflow: hidden;
 }
 
 .content-view
 {
   position: absolute;
-  top: 44px;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   width: 100%;
-  z-index: 100;
+  padding-top: 44px;
+  display: none;
+  z-index: 5;
+}
+.content-view.show
+{
+  display: block;
 }
 .content-view.with-padding
 {
@@ -64,15 +83,29 @@ input[type="color"]:focus
 }
 .content-view.full
 {
-  top: 0;
+  padding-top: 0;
+  z-index: 10;
+}
+
+/* animations */
+.zoom-out
+{
+  transition: all .3s ease-out;
+  opacity: 0;
+  -webkit-transform: scale(3);
+      -ms-transform: scale(3);
+          transform: scale(3);
 }
 
 /* #login */
 #login
 {
-  display: flex;
   margin: auto;
   background: #0475e1;
+}
+#login.show
+{
+  display: flex;
 }
 #login > div
 {

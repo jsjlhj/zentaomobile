@@ -4,12 +4,12 @@
     "use strict";
 
     var store = window.store;
-    var md5 = window.md5;
-    var plus = window.plus;
+    var md5   = window.md5;
+    var plus  = window.plus;
 
     var Zentao = function()
     {
-        this.user = {};
+        this.user = store.get('user', {});
     };
 
     Zentao.prototype.setPlus = function(pl)
@@ -23,9 +23,9 @@
         var that = this;
         if(loginkey)
         {
-            this.user.url = loginkey.url;
+            this.user.url     = loginkey.url;
             this.user.account = loginkey.account;
-            this.user.pwdMd5 = loginkey.pwdMd5;
+            this.user.pwdMd5  = loginkey.pwdMd5;
         }
 
         this.getConfig(function()
@@ -143,7 +143,7 @@
 
             url += '&t=' + viewType;
 
-            if(session)
+            if(session && moduleName !== 'api' && methodName.toLowerCase() !== 'getsessionid')
             {
                 url += '&' + session.sessionName + '=' + session.sessionID;
             }
@@ -153,7 +153,6 @@
             url += '/';
             if(moduleName === 'user' && methodName === 'login')
             {
-                console.log('>>>>>>>>>' +session.rand);
                 var password = md5(this.user.pwdMd5 + session.rand);
                 url += 'user-login.json?account=' + user.account + '&password=' + password + '&' + (session.sessionName || 'sid') + '=' + session.sessionID;
                 return url;
@@ -204,7 +203,7 @@
 
             url += '.' + viewType;
 
-            if(session)
+            if(session && moduleName !== 'api' && methodName.toLowerCase() !== 'getsessionid')
             {
                 url += '?' + session.sessionName + '=' + session.sessionID;
             }
