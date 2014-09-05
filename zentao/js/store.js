@@ -90,6 +90,10 @@
         if(val === undefined) return this.remove(key);
         this.setItem(key, this.serialize(val));
         console.log('> STORE SET: ' + key + '=' + this.serialize(val));
+
+        console.groupCollapsed('%cSTORE SET: ' + key + '=' + this.serialize(val), 'color: purple; border-left: 10px solid orange; padding-left: 5px;font-size: 14px; font-weight: bold;');
+        console.log(val);
+        console.groupEnd();
     };
 
     /* Clear all items with browser localstorage native method */

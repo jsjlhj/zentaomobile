@@ -1402,22 +1402,30 @@ window.mui = mui;
     };
     
     var ajax = function(method, url, successCallback, errorCallback) {
-    		console.log('> AJAX ' + method + ': ' + url);
+    		console.groupCollapsed('%cAJAX ' + method + ': ' + url, 'color: blue; border-left: 10px solid blue; padding-left: 5px; font-size: 16px; font-weight: bold; background-color: lightblue;');
         // var xhr = new XMLHttpRequest();
         var xhr = new window.plus.net.XMLHttpRequest();
         var protocol = /^([\w-]+:)\/\//.test(url) ? RegExp.$1 : window.location.protocol;
+        console.log('XMLHttpRequest:',xhr);
         xhr.onreadystatechange = function() {
+        		console.log('readyState:', xhr.readyState, ', status:', xhr.status);
             if (xhr.readyState === 4)
             {
-                console.log('> AJAX readyState=' + xhr.readyState + ' status=' + xhr.status);
                 if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304 || (xhr.status === 0 && protocol === 'file:'))
                 {
-                		console.log('> AJAX Response: ' + xhr.responseText);
-                		// console.log('> AJAX getAllResponseHeaders: ' + xhr.getAllResponseHeaders());
+                		console.group('responseText');
+                		console.log("%c"+xhr.responseText, 'color:blue; margin: 3px 0; padding:2px 5px; background: #fafafa');
+                		console.groupEnd();
+				        		console.groupCollapsed('ResponseHeaders');
+                		console.log(xhr.getAllResponseHeaders());
+                		console.groupEnd();
+				        		
+                		console.groupEnd();
                     successCallback && successCallback(xhr.responseText);
                 }
                 else
                 {
+		                console.groupEnd();
                     errorCallback && errorCallback(xhr);
                 }
             }
