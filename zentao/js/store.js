@@ -89,7 +89,7 @@
     {
         if(val === undefined) return this.remove(key);
         this.setItem(key, this.serialize(val));
-        console.log('> STORE set: ' + this.serialize(val));
+        console.log('> STORE SET: ' + key + '=' + this.serialize(val));
     };
 
     /* Clear all items with browser localstorage native method */
