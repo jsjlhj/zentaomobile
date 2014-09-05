@@ -2377,6 +2377,7 @@ window.mui = mui;
 		var activeTab;
 		var activeBodies;
 		var targetBody;
+		var targetId;
 		var className = 'mui-active';
 		var classSelector = '.' + className;
 
@@ -2391,11 +2392,16 @@ window.mui = mui;
 			targetTab.classList.add(className);
 		}
 
-		if (!targetTab.hash) {
+		targetId = targetTab.getAttribute('data-target');
+		if (!targetId) {
+			targetId = targetTab.hash;
+		}
+
+		if (!targetId) {
 			return;
 		}
 
-		targetBody = document.getElementById(targetTab.hash.replace('#', ''));
+		targetBody = document.getElementById(targetId.replace('#', ''));
 
 		if (!targetBody) {
 			return;
@@ -2419,7 +2425,7 @@ window.mui = mui;
 		
 		$.trigger(targetBody, $.eventName('shown', name), {
 			tabNumber : Array.prototype.indexOf.call(contents, targetBody)
-		})
+		});
 	});
 
 })(mui, window, document, 'tab');
