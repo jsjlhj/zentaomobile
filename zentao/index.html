@@ -9,20 +9,26 @@
 </head>
 <body>
   <header class="mui-bar mui-bar-nav">
-    <a class="mui-action-back mui-icon mui-icon-home mui-pull-left"></a>
-    <a class="mui-action-back mui-icon mui-icon-bars mui-pull-right"></a>
-    <h1 class="mui-title">禅道管理</h1>
+    <a class="mui-action-back mui-icon mui-icon-bars mui-pull-left"></a>
+    <a class="mui-action-back mui-icon mui-icon-cog mui-pull-right"></a>
+    <h1 class="mui-title">
+      <div class="mui-segmented-control">
+        <a class="mui-control-item mui-active" href="###" data-target="#todos">待办</a>
+        <a class="mui-control-item" href="###" data-target="#bugs">Bug</a>
+        <a class="mui-control-item" href="###" data-target="#tasks">任务</a>
+      </div>
+    </h1>
   </header>
 
   <div id="content">
-    <section id="login" class="content-view with-padding full">
+    <section id="login" class="content-view with-padding full show">
       <div>
         <div class="logo">
           <img src="img/bg-zentao.png" alt="">
         </div>
         <div id="loginForm">
           <div class="mui-input-group">
-             <input id="address" type="url" placeholder="禅道地址(例如：http://zentao.com)">
+             <input class="mui-input-clear" id="address" type="url" placeholder="禅道地址(例如：http://zentao.com)">
             <input id="username" type="text" placeholder="用户名/注册邮箱">
             <input id="password" type="password" placeholder="密码">
           </div>
@@ -30,35 +36,67 @@
         </div>
       </div>
     </section>
+    <section id="list" class="content-view">
+      <div id="todos" class="mui-control-content mui-active">
+        <ul class="mui-table-view">
+          <li class="mui-table-view-divider"><span class="mui-badge mui-badge-purple">今日</span></li>
+          <li class="mui-table-view-cell">待办待办</li>
+          <li class="mui-table-view-cell">去吃饭</li>
+          <li class="mui-table-view-cell">吃完继续干</li>
+          <li class="mui-table-view-divider"><span class="mui-badge mui-badge-primary">昨日</span></li>
+          <li class="mui-table-view-cell">待办待办</li>
+          <li class="mui-table-view-cell">去吃饭</li>
+          <li class="mui-table-view-cell">吃完继续干</li>
+          <li class="mui-table-view-divider"><span class="mui-badge mui-badge-success">本周</span></li>
+          <li class="mui-table-view-cell">待办待办</li>
+          <li class="mui-table-view-cell">去吃饭</li>
+          <li class="mui-table-view-cell">吃完继续干</li>
+          <li class="mui-table-view-divider"><span class="mui-badge">上周之前</span></li>
+          <li class="mui-table-view-cell">待办待办</li>
+          <li class="mui-table-view-cell">去吃饭</li>
+          <li class="mui-table-view-cell">吃完继续干</li>
+        </ul>
+        <button class="mui-btn mui-btn-link mui-btn-block btn-show-more"><span class="mui-icon mui-icon-down"></span> 显示更多</button>
+      </div>
+      <div id="bugs" class="mui-control-content">
+        <ul class="mui-table-view">
+          <li class="mui-table-view-divider"><span class="mui-badge mui-badge-purple">我的Bug</span></li>
+          <li class="mui-table-view-cell">待办待办</li>
+          <li class="mui-table-view-cell">去吃饭</li>
+          <li class="mui-table-view-cell">吃完继续干</li>
+          <li class="mui-table-view-divider"><span class="mui-badge mui-badge-primary">昨日</span></li>
+          <li class="mui-table-view-cell">去吃饭</li>
+          <li class="mui-table-view-cell">吃完继续干</li>
+          <li class="mui-table-view-divider"><span class="mui-badge mui-badge-purple">我的Bug</span></li>
+          <li class="mui-table-view-cell">待办待办</li>
+          <li class="mui-table-view-cell">去吃饭</li>
+          <li class="mui-table-view-cell">吃完继续干</li>
+          <li class="mui-table-view-divider"><span class="mui-badge mui-badge-primary">昨日</span></li>
+          <li class="mui-table-view-cell">去吃饭</li>
+          <li class="mui-table-view-cell">吃完继续干</li>
+          <li class="mui-table-view-divider"><span class="mui-badge mui-badge-purple">我的Bug</span></li>
+          <li class="mui-table-view-cell">待办待办</li>
+          <li class="mui-table-view-cell">去吃饭</li>
+          <li class="mui-table-view-cell">吃完继续干</li>
+          <li class="mui-table-view-divider"><span class="mui-badge mui-badge-primary">昨日</span></li>
+          <li class="mui-table-view-cell">去吃饭</li>
+          <li class="mui-table-view-cell">吃完继续干</li>
+        </ul>
+        <button class="mui-btn mui-btn-link mui-btn-block btn-show-more"><span class="mui-icon mui-icon-down"></span> 显示更多</button>
+      </div>
+      <div id="tasks" class="mui-control-content">
+        <button class="mui-btn mui-btn-link mui-btn-block btn-show-more"><span class="mui-icon mui-icon-down"></span> 显示更多</button>
+      </div>
+    </section>
   </div>
   <script src="js/$.js"></script>
   <script src="js/store.js"></script>
   <script src="js/md5.min.js"></script>
   <script src="js/mui.js"></script>
+  <script src="js/webview.js"></script>
   <script src="js/zentao.js"></script>
   <script src="js/app.js"></script>
-
   <script>
-  function shield() {return false;}// 空函数
-  document.addEventListener('touchstart',shield,false);//取消浏览器的所有事件，使得active的样式在手机上正常生效
-  document.oncontextmenu=shield;//屏蔽选择函数
-
-  function plusReady()
-  {
-    // 隐藏滚动条
-    // plus.webview.currentWebview().setStyle({scrollIndicator:'none'});
-
-    // Android处理返回键
-    plus.key.addEventListener('backbutton',function()
-    {
-        if(confirm('确认退出？'))
-        {
-            plus.runtime.quit();
-        }
-    },false);
-  }
-  if(window.plus) plusReady();
-  else document.addEventListener('plusready', plusReady, false);
   </script>
 </body>
 </html>
