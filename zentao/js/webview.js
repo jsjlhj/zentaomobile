@@ -1,7 +1,4 @@
 /* 全局共享变量 */
-var user = store.get('user', {});
-var plus = window.plus;
-
 (function(mui, $)
 {
     function shield() {return false;}// 空函数
@@ -30,16 +27,12 @@ var plus = window.plus;
         }
     });
 
-    mui.ready(function()
+    mui.plusReady(function()
     {
-        if(!plus) { console.log('□ plus未准备就绪。'); return}
-
         var url = plus.webview.currentWebview().getURL();
-        console.log('================================================');
-        console.log('■ WEBVIEW 准备好了！ [' + url.substring(url.lastIndexOf('/')) + ']');
+        console.color('WEBVIEW 准备好了！ [' + url.substring(url.lastIndexOf('/')) + ']', 'h1|bgmuted');
 
         // store.setPlusStorage(plus);
-        zentao.setPlus(plus);
 
         // bind events
         $('body').on('tap', 'a', function(e)

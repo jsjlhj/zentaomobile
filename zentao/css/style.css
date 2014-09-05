@@ -90,7 +90,7 @@ body,#content
 /* animations */
 .zoom-out
 {
-  transition: all .3s ease-out;
+  transition: all .5s ease-out;
   opacity: 0;
   -webkit-transform: scale(3);
       -ms-transform: scale(3);
