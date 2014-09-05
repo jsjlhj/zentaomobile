@@ -1,64 +1,37 @@
 (function(mui, $)
 {
-    var zentao = window.zentao;
-    var store = window.store;
-    var user = store.get('user');
-    var plus;
+    var $content = $('#content');
+    var animateSpeed = 300;
 
-    //全局配置(通常所有页面引用该配置，特殊页面使用mui.init({})来覆盖全局配置)
-    mui.initGlobal(
-    {
-        optimize : true,
-        swipeBack : true,
-        showAfterLoad : true,
-        titleBar : false,
-        back: function()
-        {
-            return
-            {
-               preload : true
-               //TODO 默认启用预加载等show，hide事件，动画都完成后放开预加载
-            };
-        },
-        show: 
-        {
-            aniShow : 'slide-in-right',
-            duration : 400
-        }
-    });
-
-    // hyperlink
     mui.ready(function()
     {
-        console.log('================================================');
-        console.log('准备好了！MUI READY.');
-        // set plus
-        plus = window.plus;
-        // store.setPlusStorage(plus);
-        zentao.setPlus(plus);
-
-        // bind events
-        $('body').on('tap', 'a', function(e)
-        {
-            var id = this.getAttribute('href');
-            if(id && ~id.indexOf('.html'))
+        mui.init({
+            swipeBack : false,
+            preloadPages: [
             {
-                if(window.plus)
-                {
-                    $.openWindow({
-                        id : id,
-                        url : this.href,
-                        preload : true//TODO 等show，hide事件，动画都完成后放开预加载
-                    });
-                } else {
-                    document.location.href = this.href;
+                id : 'todos',
+                url : 'todos.html',
+                styles : {
+                    top : '44px',
+                    bottom : 0,
+                    bounce :'vertical',
+                    scrollIndicator : "none"
                 }
-            }
+            },
+            {
+                id : 'tasks',
+                url : 'tasks.html',
+                styles : {
+                    top : '44px',
+                    bottom : 0,
+                    bounce :'vertical',
+                    scrollIndicator : "none"
+                }
+            }]
         });
 
         handleLoginView();
     });
-
 
     function handleLoginView()
     {
@@ -69,20 +42,24 @@
         var loginBtn = $('#loginBtn');
         var tryLogin = function(silence)
         {
-            if(address.value === '')
+            console.log('尝试登录');
+            if(!silence)
             {
-                if(!silence) alert('请输入禅道地址，包含“http://”。');
-                return;
-            }
-            else if(username.value === '')
-            {
-                if(!silence) alert('请输入用户名或者注册邮箱。');
-                return;
-            }
-            else if(password.value === '')
-            {
-                if(!silence) alert('请输入密码。');
-                return;
+                if(address.value === '')
+                {
+                    alert('请输入禅道地址，包含“http://”。');
+                    return;
+                }
+                else if(username.value === '')
+                {
+                    alert('请输入用户名或者注册邮箱。');
+                    return;
+                }
+                else if(password.value === '')
+                {
+                    alert('请输入密码。');
+                    return;
+                }
             }
 
             if(silence && (user.url || user.account || user.pwdMd5 || 1) === 1)
@@ -100,11 +77,13 @@
                 user.url = address.value;
             }
 
+            console.log(user);
+
             zentao.login(user, function()
             {
                 loginBtn.disabled = false;
                 loginBtn.innerHTML = '登录';
-                alert('登录成功！');
+                switchOutContent('login', 'list');
             }, function(response)
             {
                 loginBtn.disabled = false;
@@ -122,7 +101,7 @@
         {
             if(address.value === '')
             {
-                address.value = 'http://zentao.com';
+                address.value = 'http://';
             }
         }).on('blur', function()
         {
@@ -136,37 +115,19 @@
 
         tryLogin(true);
     }
+
+    function switchOutContent(from, to, animation)
+    {
+        if(typeof animation === 'undefined') animation = 'zoom';
+        if(typeof from === 'string') from = $('#' + from);
+        if(typeof to === 'string') to = $('#' + to);
+        from.classList.add(animation + '-out');
+        to.classList.add('show');
+        $content.classList.add('switching');
+        setTimeout(function()
+        {
+            from.classList.remove('show');
+            $content.classList.remove('switching');
+        }, animateSpeed);
+    }
 })(mui, $);
-
-// toggle
-window.addEventListener('toggle', function(event) {
-    if (event.target.id === 'M_Toggle') {
-        var isActive = event.detail.isActive;
-        var table = document.querySelector('.mui-table-view');
-        var card = document.querySelector('.mui-card');
-        if (isActive) {
-            card.appendChild(table);
-            card.style.display = '';
-        } else {
-            var content = document.querySelector('.mui-content');
-            content.insertBefore(table, card);
-            card.style.display = 'none';
-        }
-    }
-});
-
-//简单处理label点击触发radio或checkbox
-window.addEventListener('tap', function(event) {
-    var target = event.target;
-    for (; target && target !== document; target = target.parentNode) {
-        if (target.tagName && target.tagName === 'LABEL') {
-            var parent = target.parentNode;
-            if (parent.classList && (parent.classList.contains('mui-radio') || parent.classList.contains('mui-checkbox'))) {
-                var input = parent.querySelector('input');
-                if (input) {
-                    input.click();
-                }
-            }
-        }
-    }
-});
