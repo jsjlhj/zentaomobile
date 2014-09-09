@@ -23,6 +23,32 @@ if (!Array.prototype.forEach)
   };
 };
 
+Array.prototype.where = function(conditions)
+{
+    var result = [], cdt, ok, objVal;
+    this.forEach(function(val)
+    {
+        ok = true;
+        for(var key in conditions)
+        {
+            cdt = conditions[key];
+            if(typeof cdt === 'function')
+            {
+                ok = cdt(val);
+            }
+            else
+            {
+                objVal = val[key];
+                ok = (objVal && objVal === cdt);
+            }
+            if(!ok) break;
+        }
+        if(ok) result.push(val);
+    });
+
+    return result;
+};
+
 Date.ONEDAY_TICKS = 24 * 3600 * 1000;
 
 /**
@@ -198,7 +224,6 @@ String.prototype.format = function(args)
     }
     return result;
 };
-
 
 /**
  * Judge the string is a integer number
