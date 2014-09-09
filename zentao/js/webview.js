@@ -1,6 +1,15 @@
 /* 全局共享变量 */
 (function(mui, $)
 {
+
+    if (typeof Array.isArray === 'undefined')
+    {
+        Array.isArray = function(obj)
+        {
+            return Object.toString.call(obj) === '[object Array]';
+        }
+    };
+
     function shield() {return false;}// 空函数
     document.addEventListener('touchstart',shield,false);//取消浏览器的所有事件，使得active的样式在手机上正常生效
     // document.oncontextmenu=shield;//屏蔽选择函数

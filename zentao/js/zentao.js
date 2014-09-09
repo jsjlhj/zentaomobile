@@ -69,14 +69,139 @@
         {
             console.error('存储失败！无法获取用户数据。');
         }
-        
     }
 
-    var DataList = function(name)
+    var DataList = function(name, data)
     {
         this.name = name;
+        this.data = storeGet('datalist::' + this.name, []);
+        this.account = window.user['account'];
+        if(data)
+        {
+            this.load(data);
+        }
     };
 
+    DataList.prototype.clean = function(objOrArray)
+    {
+        if(Array.isArray(objOrArray))
+        {
+            this.each(function(index, obj)
+            {
+                obj = this.clean(obj);
+            }, objOrArray);
+            return objOrArray;
+        }
+        else
+        {
+            if(typeof objOrArray['id'] === 'string')
+            {
+                objOrArray['id'] = parseInt(objOrArray['id']);
+            }
+            if(typeof objOrArray['pri'] === 'string')
+            {
+                objOrArray['pri'] = parseInt(objOrArray['pri']);
+            }
+            if(typeof objOrArray['date'] === 'string')
+            {
+                objOrArray['date'] = Date.parse(objOrArray['date']);
+            }
+            return objOrArray;
+        }
+    };
+
+    DataList.prototype.save = function()
+    {
+        storeSet('datalist::' + this.name, this.data);
+    };
+
+    DataList.prototype.getById = function(id)
+    {
+        var result = null;
+        if(typeof id === 'number')
+        {
+            this.each(function(index, obj)
+            {
+                if(obj.id === id)
+                {
+                    result = obj;
+                    return false;
+                }
+            });
+        }
+        else
+        {
+            console.error('Id必须是数字。');
+        }
+        return result;
+    };
+
+    DataList.prototype.has = function(idOrObj)
+    {
+        var obj = null;
+        if(typeof idOrObj === 'object')
+        {
+            obj = this.getById(idOrObj.id);
+        }
+        else
+        {
+            obj = this.getById(idOrObj);
+        }
+        return obj !== null;
+    };
+
+    DataList.prototype.each = function(fn, data)
+    {
+        data = data || this.data;
+        var result;
+        for (var i = 0; i < data.length; ++i)
+        {
+            result = fn.call(this, i, data[i]);
+            if(result === false)
+            {
+                break;
+            }
+        };
+    };
+
+    DataList.prototype.load = function(data)
+    {
+        var dt = this.data,
+            dObj;
+        this.updateTime = new Date();
+        if(this.account != data.account)
+        {
+            console.error('所获取的数据与当前帐号不匹配。');
+            return false;
+        }
+
+        data = data[this.name ] || data[this.name + 's'];
+
+        this.each(function(index, obj)
+        {
+            obj = this.clean(obj);
+            dObj = this.getById(obj.id);
+            if(dObj === null)
+            {
+                dt.push(obj);
+            }
+            else
+            {
+                dObj = obj;
+            }
+        }, data);
+
+        this.sort();
+        this.save();
+    };
+
+    DataList.prototype.sort = function(fn)
+    {
+        this.data.sort(fn || function(a, b)
+        {
+            return b.id - a.id;
+        });
+    };
 
     var Zentao = function()
     {
@@ -87,7 +212,15 @@
         $.plusReady(function()
         {
             console.color('Zentao Ready.', 'bgsuccess');
+
             getUser();
+            that.data =
+            {
+                todos: new DataList('todo'),
+                tasks: new DataList('task'),
+                bugs: new DataList('bug'),
+                stories: new DataList('story')
+            };
 
             that.config = storeGet('zentaoConfig', {});
             that.session = storeGet('session', {});
@@ -434,6 +567,7 @@
             if(dt['status'] === 'success')
             {
                 dt = JSON.parse(dt.data);
+                that.data.todos.load(dt);
                 successCallback && successCallback(dt);
             }
             else

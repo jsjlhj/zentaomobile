@@ -36,6 +36,7 @@
 
     function handleLoginView()
     {
+        var user     = window.user;
         var username = $('#username');
         var password = $('#password');
         var pwdMd5;
