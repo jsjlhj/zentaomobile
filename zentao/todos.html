@@ -124,7 +124,6 @@ function showAll()
 
 function showItem(id, $item)
 {
-    console.log($item);
     $item = $item || $('.mui-table-view-cell[data-id="' + id + '"]');
     var item = zentao.data && zentao.data.todo.getById(id);
     if(item)
@@ -139,7 +138,7 @@ function showItem(id, $item)
         $dailog.style.top = ($item.clientHeight + 40) + 'px';
         setTimeout(function(){$dailog.classList.add('in'); document.body.classList.add('dialog-open');}, 100);
     }
-    else
+    else // test code
     {
         $dailog.classList.add('show');
         $dailog.style.height = $item.clientHeight + 'px';

@@ -24,22 +24,17 @@ var cstyle = {
   bdmuted: 'border:1px solid gray;'
 };
 
-window.consolelog = function(text, style)
-{
-    if(style.indexOf('|') >= 0)
-    {
-        var styles = style.split('|');
-        style = '';
-        for (var i = 0; i < (styles.length); ++i)
-        {
-            style += cstyle[styles[i]];
-        };
-    }
-    else
-    {
-        style = cstyle[style] || style;
-    }
-    console.log('%c' + text, style);
+window.consolelog = function(text, style) {
+  if (style.indexOf('|') >= 0) {
+    var styles = style.split('|');
+    style = '';
+    for (var i = 0; i < (styles.length); ++i) {
+      style += cstyle[styles[i]];
+    };
+  } else {
+    style = cstyle[style] || style;
+  }
+  console.log('%c' + text, style);
 };
 
 console.color = window.consolelog;
