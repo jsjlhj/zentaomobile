@@ -129,8 +129,11 @@ zentao.ready(function()
 
 function reload(callback)
 {
+    console.color('重新载入数据', 'bgdanger|h2');
     zentao.loadData('todo', function(data)
     {
+        console.color('数据加载成功', 'bgsuccess');
+        console.log(zentao.data);
         showAll();
         callback && callback();
     });
@@ -218,6 +221,8 @@ function show(tab, data)
     $wait.classList[waitCount ? 'remove' : 'add']('mui-hidden');
     $done.classList[doneCount ? 'remove' : 'add']('mui-hidden');
 };
+
+show('today', [{id: 36, name: '测试任务', status: 'wait'}, {id: 36, name: '测试任务2', status: 'wait'}, {id: 36, name: '测试任务3', status: 'wait4'}, {id: 36, name: '测试任务5', status: 'done'}, {id: 36, name: '测试任务6', status: 'done'},{id: 36, name: '测试任务', status: 'wait'}, {id: 36, name: '测试任务2', status: 'wait'}, {id: 36, name: '测试任务3', status: 'wait4'}, {id: 36, name: '测试任务5', status: 'done'}, {id: 36, name: '测试任务6', status: 'done'},{id: 36, name: '测试任务', status: 'wait'}, {id: 36, name: '测试任务2', status: 'wait'}, {id: 36, name: '测试任务3', status: 'wait4'}, {id: 36, name: '测试任务5', status: 'done'}, {id: 36, name: '测试任务6', status: 'done'}]);
 </script>
 </body>
 </html>

@@ -1,10 +1,11 @@
 (function(mui, $)
 {
     var $content = $('#content');
-    var animateSpeed = 300;
-    var firstShow = true;
+    var animateSpeed = 200;
     var windows = {};
     var mainView;
+    var currentSub;
+    var subTabs = {todo: 1, bug: 2, task: 3};
 
     mui.ready(function()
     {
@@ -12,20 +13,6 @@
         {
             swipeBack: false
         });
-
-        // mui.createWindow(
-        // {
-        //     url: 'todos.html',
-        //     styles:
-        //     {
-        //         top: '44px',
-        //         bottom: 0,
-        //         bounce: 'vertical',
-        //         scrollIndicator: "none"
-        //     },
-        //     preload: true
-        // });
-
     });
 
     mui.plusReady(function()
@@ -39,9 +26,36 @@
             scrollIndicator: "none"
         });
 
+        windows.task = plus.webview.create("tasks.html", "task", 
+        {
+            top: "44px",
+            bottom: "0px",
+            bounce: "vertical",
+            scrollIndicator: "none"
+        });
+
+        windows.bug = plus.webview.create("bugs.html", "bug", 
+        {
+            top: "44px",
+            bottom: "0px",
+            bounce: "vertical",
+            scrollIndicator: "none"
+        });
+
         handleLoginView();
+
+        handleSubpageNav();
         console.color('app plus ready', 'bgsuccess');
     });
+
+    function handleSubpageNav()
+    {
+        document.getElementById('subpageNav').addDelegateListener('tap', '.open-subpage', function()
+        {
+            console.log('handleSubpageNav');
+            openSubWin(this.getAttribute('data-id'));
+        });
+    };
 
     function handleLoginView()
     {
@@ -94,7 +108,7 @@
                 switchOutContent('login', 'list');
                 consolelog('登录成功。', 'bgsuccess|h5');
 
-                openList();
+                openSubWin();
             }, function(response)
             {
                 loginBtn.disabled = false;
@@ -130,28 +144,20 @@
         tryLogin(true);
     }
 
-    function openList(list)
+    function openSubWin(list)
     {
         list = list || 'todo';
 
-        mainView.append(windows[list]);
-        console.log(mainView);
-        console.log(windows[list]);
-
-        // mui.openWindow(
-        // {
-        //     id: 'todos.html',
-        //     show:
-        //     {
-        //         aniShow: firstShow ? 'none' : 'slide-in-right' //页面显示动画，默认为”slide-in-right“；
-        //     },
-        //     waiting:
-        //     {
-        //         title: '正在努力加载中...' //等待对话框上显示的提示内容
-        //     }
-        // });
-
-        firstShow = false;
+        windows[currentSub] && windows[currentSub].hide(subTabs[list] < subTabs[currentSub] ? 'slide-out-right' : 'slide-out-left', animateSpeed);
+        if(!windows[list].parent())
+        {
+            mainView.append(windows[list]);
+        }
+        else
+        {
+            windows[list].show(subTabs[list] > subTabs[currentSub] ? 'slide-in-right' : 'slide-in-left', animateSpeed);
+        }
+        currentSub = list;
     }
 
     function switchOutContent(from, to, animation)
