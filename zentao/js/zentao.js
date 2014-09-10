@@ -74,8 +74,15 @@
     var DataList = function(name, data)
     {
         this.name = name;
-        this.data = storeGet('datalist::' + this.name, []);
+        var storeData = storeGet('datalist::' + this.name, {data: [], updateTime: new Date(0)});
+        this.data = storeData.data;
+        this.updateTime = storeData.updateTime;
+        if(typeof this.updateTime === 'string')
+        {
+            this.updateTime = new Date(Date.parse(this.updateTime));
+        }
         this.account = window.user['account'];
+        this.clean();
         if(data)
         {
             this.load(data);
@@ -84,6 +91,8 @@
 
     DataList.prototype.clean = function(objOrArray)
     {
+        objOrArray = objOrArray || this.data;
+
         if(Array.isArray(objOrArray))
         {
             this.each(function(index, obj)
@@ -104,7 +113,7 @@
             }
             if(typeof objOrArray['date'] === 'string')
             {
-                objOrArray['date'] = Date.parse(objOrArray['date']);
+                objOrArray['date'] = new Date(Date.parse(objOrArray['date']));
             }
             return objOrArray;
         }
@@ -112,12 +121,16 @@
 
     DataList.prototype.save = function()
     {
-        storeSet('datalist::' + this.name, this.data);
+        storeSet('datalist::' + this.name, {data: this.data, updateTime: this.updateTime});
     };
 
     DataList.prototype.getById = function(id)
     {
         var result = null;
+        if(typeof id === 'string')
+        {
+            id = parseInt(id);
+        }
         if(typeof id === 'number')
         {
             this.each(function(index, obj)
@@ -212,20 +225,20 @@
         $.plusReady(function()
         {
             console.color('Zentao Ready.', 'bgsuccess');
+            console.log('that.readyFns.length', that.readyFns.length);
 
             getUser();
             that.data =
             {
-                todos: new DataList('todo'),
-                tasks: new DataList('task'),
-                bugs: new DataList('bug'),
-                stories: new DataList('story')
+                todo: new DataList('todo'),
+                task: new DataList('task'),
+                bug: new DataList('bug'),
+                story: new DataList('story')
             };
 
             that.config = storeGet('zentaoConfig', {});
             that.session = storeGet('session', {});
-            that.ready();
-            that.isReady = true;
+            setTimeout(function(){that.ready()}, 100);
         });
     };
 
@@ -242,6 +255,7 @@
                 this.readyFns[i]();
             };
         }
+        this.isReady = true;
     };
 
     /* Get zentao config and login in zentao */
@@ -548,7 +562,135 @@
         return result;
     };
 
-    Zentao.prototype.loadData = function(dataType, successCallback, errorCallback)
+    Zentao.prototype.getData = function(dataType, start, count)
+    {
+        if(typeof start === 'undefined') start = new Date();
+        if(typeof count === 'undefined') count = 10;
+        else if(count === 'all') count = 999999;
+
+        console.color('GetData: ' + dataType + ',' + start + ',' + count, 'h4|info');
+
+        if(typeof dataType === 'undefined' || dataTypeSet.indexOf(',' + dataType + ',') < 0)
+        {
+            console.error('无法检索数据，因为没有指定DataType或者指定的dataType不受支持。');
+            return false;
+        }
+
+        var type = 'unkown';
+        if(typeof start === 'number')
+        {
+            type = 'id';
+        }
+        else if(start instanceof Date)
+        {
+            type = 'date';
+        }
+        else if(start && start.id)
+        {
+            type = 'id';
+            start = start.id;
+        }
+        else if(typeof start === 'function')
+        {
+            type = 'function';
+        }
+        else
+        {
+            console.error('无法检索数据，因为没有指定start边界不是数字或日期。');
+            return false;
+        }
+
+        var data = this.data[dataType],
+            result = [],
+            thisCount = 0;
+        if(type === 'function')
+        {
+            data.each(function(index, obj)
+            {
+                if(start(obj))
+                {
+                    result.push(obj);
+                }
+                if((++thisCount) >= count) return false;
+            });
+        }
+        else
+        {
+            data.each(function(index, obj)
+            {
+                if(obj[type] < start)
+                {
+                    result.push(obj);
+                }
+                if((++thisCount) >= count) return false;
+            });
+        }
+
+        return result;
+    };
+
+    Zentao.prototype.filterData = function(dataType, filter)
+    {
+        console.color('FilterData: ' + dataType + ',' + filter, 'h4|info');
+
+        var result = [], data = this.data[dataType];
+        if(!data) return false;
+
+        if(dataType === 'todo')
+        {
+            if(filter === 'today')
+            {
+                var today = Date.parseName('today');
+                data.each(function(idx, val)
+                {
+                    if(val.date >= today)
+                    {
+                        result.push(val);
+                    }
+                });
+            }
+            else if(filter === 'yestoday')
+            {
+                var today = Date.parseName('today');
+                var yestoday = today.clone().addDays(-1);
+                data.each(function(idx, val)
+                {
+                    if(val.date >= yestoday && val.date < today)
+                    {
+                        result.push(val);
+                    }
+                });
+            }
+            else if(filter === 'thisweek')
+            {
+                var thisweek = Date.parseName('thisweek');
+                data.each(function(idx, val)
+                {
+                    if(val.date >= thisweek)
+                    {
+                        result.push(val);
+                    }
+                });
+            }
+            else if(filter === 'thisweek')
+            {
+                var thisweek = Date.parseName('thisweek');
+                var lastweek = thisweek.clone().addDays(-7);
+                data.each(function(idx, val)
+                {
+                    if(val.date >= lastweek && val.date < thisweek)
+                    {
+                        result.push(val);
+                    }
+                });
+            }
+        }
+
+        console.log('FilterData:', result);
+        return result;
+    };
+
+    Zentao.prototype.loadData = function(dataType, successCallback, errorCallback, count)
     {
         console.color('LoadData: ' + dataType, 'h4|info');
 
@@ -558,6 +700,19 @@
             return false;
         }
 
+        if(typeof count === 'undefined')
+        {
+            var data = this.data[dataType];
+            if(data.data.length < 1)
+            {
+                count = 1000;
+            }
+            else
+            {
+                var pastTime = ((new Date()).getTime() - data.updateTime.getTime())/60000; // 分钟为单位
+                count = Math.max(1000, Math.min(20, Math.floor(pastTime * 0.5)));
+            }
+        }
         var that = this,
             url = this.concatUrl({module: 'my', method: dataType, type: 'all', pageID: 1, recTotal: 1000, recPerPage: 1000});
 
@@ -567,7 +722,7 @@
             if(dt['status'] === 'success')
             {
                 dt = JSON.parse(dt.data);
-                that.data.todos.load(dt);
+                that.data[dataType].load(dt);
                 successCallback && successCallback(dt);
             }
             else

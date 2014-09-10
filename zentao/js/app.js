@@ -7,29 +7,21 @@
     mui.ready(function()
     {
         mui.init({
-            swipeBack : false,
-            preloadPages: [
-            {
-                id : 'todos',
-                url : 'todos.html',
-                styles : {
-                    top : '44px',
-                    bottom : 0,
-                    bounce :'vertical',
-                    scrollIndicator : "none"
-                }
-            },
-            {
-                id : 'tasks',
-                url : 'tasks.html',
-                styles : {
-                    top : '44px',
-                    bottom : 0,
-                    bounce :'vertical',
-                    scrollIndicator : "none"
-                }
-            }]
+            swipeBack : false
         });
+
+        mui.createWindow({
+            url : 'todos.html',
+            styles : {
+                top : '44px',
+                bottom : 0,
+                bounce :'vertical',
+                scrollIndicator : "none"
+            },
+            preload: true
+        });
+
+        console.color('app ready', 'bgsuccess');
 
         handleLoginView();
     });
@@ -124,7 +116,7 @@
 
         mui.openWindow(
         {
-            id: 'todos',
+            id: 'todos.html',
             show:{
               aniShow: firstShow ? 'none' : 'slide-in-right' //页面显示动画，默认为”slide-in-right“；
             },
