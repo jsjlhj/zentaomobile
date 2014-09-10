@@ -44,6 +44,26 @@ Array.prototype.where = function(conditions, result) {
     return result;
 };
 
+Array.prototype.groupBy = function(key)
+{
+    var result = {};
+    this.forEach(function(val)
+    {
+        var keyName = val[key];
+        if(!keyName)
+        {
+            keyName = 'unkown';
+        }
+
+        if(!result[keyName])
+        {
+            result[keyName] = [];
+        }
+        result[keyName].push(val);
+    });
+    return result;
+}
+
 Array.prototype.has = function(conditions) {
     var result = false,
         cdt, ok, objVal;

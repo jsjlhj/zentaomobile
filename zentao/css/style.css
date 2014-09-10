@@ -54,6 +54,7 @@ button {outline:none}
 .mui-table-view-cell.pri-1 {border-left-color: #DD524D}
 .mui-table-view-cell.pri-2 {border-left-color: #ed9922}
 .mui-table-view-cell.pri-3 {border-left-color: #8A6DE9}
+.list-item-id {border: 1px solid #bbb; display: inline-block; margin-right: 5px; padding: 0 2px; font-size: 12px; line-height: 18px; color: #666; border-radius: 2px}
 
 .mui-slider-progress-bar + .mui-slider-group, .mui-slider-header + .mui-slider-group{border-top: 1px solid #ddd}
 .mui-slider-header {position: fixed; top: 0; left: 0; right: 0; z-index: 5; background: #EFEFF4; border-bottom: 1px solid #ddd}
