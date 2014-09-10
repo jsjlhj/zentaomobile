@@ -44,8 +44,30 @@ button {outline:none}
 .mui-title {height: 40px;}
 .mui-title > .mui-segmented-control {width: 50%; min-width: 200px}
 
+.mui-content-padded {margin: 10px}
+
 .btn-show-more.mui-btn-block {background-color: #f1f1f1; font-size: 15px; color: #999}
 .btn-show-more.mui-btn-block:active {background-color: #ccc; color: #888}
+
+.mui-table-view-cell {background-image: none; border-bottom: 1px solid #ddd}
+
+.mui-slider-progress-bar + .mui-slider-group {border-top: 1px solid #ddd}
+
+.dialog {position: absolute; left: 0; right: 0; background-color: rgba(255,255,255,.35); display: none; transition: opacity .15s, height .15s, top .1s; padding: 0;}
+.dialog-header {display: table; background-color: rgba(255,255,255, .35); padding-bottom: 35px; width: 100%}
+.dialog-header > .list-title {font-weight: bold; font-size: 18px}
+.dialog-header > .mui-icon, .dialog-header > .list-title {display: table-cell;}
+.dialog-header > .mui-icon {width: 35px;}
+.dialog-header > .mui-badge {top: auto; bottom: 0px; right: auto; left: 50px}
+body {transition: .1s filter .3s;}
+body.dialog-open > .mui-content {-webkit-filter: blur(6px);-moz-filter: blur(6px);-o-filter: blur(6px);-ms-filter: blur(6px);filter: blur(6px);}
+.dialog-footer {position: fixed; bottom: 0; width: 100%; background-color: #fff;}
+
+.dialog.show {opacity: 0; top: auto; bottom: auto; display: block; overflow: hidden;}
+.dialog.show.in {opacity: 1; top: 0!important; bottom: 0; overflow-y: auto; padding-bottom: 85px; height: 100%!important}
+
+.mui-col {float: left; padding: 5px;}
+.mui-row {padding: 10px; margin-left: -5px; margin-right: -5px; width: 100%}
 
 body,#content
 {
