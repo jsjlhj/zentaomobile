@@ -50,6 +50,10 @@ button {outline:none}
 .btn-show-more.mui-btn-block:active {background-color: #ccc; color: #888}
 
 .mui-table-view-cell {background-image: none; border-bottom: 1px solid #ddd}
+.mui-table-view-cell.pri {border-left: 5px solid #bbb}
+.mui-table-view-cell.pri-1 {border-left-color: #DD524D}
+.mui-table-view-cell.pri-2 {border-left-color: #ed9922}
+.mui-table-view-cell.pri-3 {border-left-color: #8A6DE9}
 
 .mui-slider-progress-bar + .mui-slider-group, .mui-slider-header + .mui-slider-group{border-top: 1px solid #ddd}
 .mui-slider-header {position: fixed; top: 0; left: 0; right: 0; z-index: 5; background: #EFEFF4; border-bottom: 1px solid #ddd}

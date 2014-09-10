@@ -14,6 +14,8 @@
   .mui-table-view-cell .mui-icon {opacity: 0.5}
   .mui-table-view-cell.mui-active .mui-icon {opacity: 0.95}
   .mui-table-view.list-todos-done .mui-table-view-cell {color: #999}
+  /*.list-todos-wait .mui-table-view-divider {background: #DD524D}*/
+  /*.list-todos-done .mui-table-view-divider {background: #4CD964}*/
   .dialog.todo-done .dialog-footer .mui-col-extra {display: none}
   .dialog.todo-done .dialog-footer .mui-col {width: 100%}
   </style>
@@ -109,12 +111,7 @@ mui.init(
 });
 
 var $dailog = $('#dialog');
-$('#dialog .dialog-footer .btn-back').on('click', function()
-{
-    $dailog.classList.remove('in');
-    document.body.classList.remove('dialog-open');
-    setTimeout(function(){$dailog.classList.remove('show');}, 100);
-});
+$('#dialog .dialog-footer .btn-back').on('tap', closeDialog);
 
 document.querySelector("#slider .mui-slider-group").addDelegateListener("tap", ".mui-table-view-cell", function(e)
 {
@@ -127,8 +124,16 @@ zentao.ready(function()
     reload();
 });
 
+function closeDialog()
+{
+    $dailog.classList.remove('in');
+    document.body.classList.remove('dialog-open');
+    setTimeout(function(){$dailog.classList.remove('show');}, 100);
+};
+
 function reload(callback)
 {
+    closeDialog();
     zentao.loadData('todo', function(data)
     {
         showAll();
@@ -195,6 +200,8 @@ function show(tab, data)
     {
         var item = document.createElement('li');
         item.classList.add('mui-table-view-cell');
+        item.classList.add('pri');
+        item.classList.add('pri-' + val.pri);
         item.setAttribute('id', 'item-' + val.id);
         item.setAttribute('data-id', val.id);
         var dateStr = '<span class="mui-badge' + (val.status === 'wait' && val.date < today ? ' mui-badge-warning' : '') + '">' + (tab === 'thisweek' ? val.date.getDayName() + ' ' : (tab === 'lastweek' ? '上' + val.date.getDayName() + ' ' : '')) + val.begin + '</span>';
