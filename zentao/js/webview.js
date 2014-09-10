@@ -2,14 +2,6 @@
 (function(mui, $)
 {
 
-    if (typeof Array.isArray === 'undefined')
-    {
-        Array.isArray = function(obj)
-        {
-            return Object.toString.call(obj) === '[object Array]';
-        }
-    };
-
     function shield() {return false;}// 空函数
     document.addEventListener('touchstart',shield,false);//取消浏览器的所有事件，使得active的样式在手机上正常生效
     // document.oncontextmenu=shield;//屏蔽选择函数
@@ -35,6 +27,8 @@
             duration : 400
         }
     });
+
+    mui.init();
 
     mui.plusReady(function()
     {
@@ -70,5 +64,32 @@
                 plus.runtime.quit();
             }
         },false);
+    });
+
+    /**
+     * hyperlink
+     */
+    mui.ready(function() {
+        mui('body').on('tap', 'a', function(e) {
+            var id = this.getAttribute('href');
+            if (id) {
+                if (~id.indexOf('.html')) {
+                    if (window.plus) {
+                        mui.openWindow({
+                            id: id,
+                            url: this.href,
+                            preload: $.os.ios ? false : true //TODO 暂时屏蔽IOS的预加载
+                        });
+                    } else {
+                        document.location.href = this.href;
+                    }
+                } else {
+                    if (typeof plus !== 'undefined') {
+                        plus.runtime.openURL(id);
+                    }
+                }
+            }
+
+        });
     });
 })(mui, $);
