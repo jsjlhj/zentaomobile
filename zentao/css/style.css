@@ -51,20 +51,22 @@ button {outline:none}
 
 .mui-table-view-cell {background-image: none; border-bottom: 1px solid #ddd}
 
-.mui-slider-progress-bar + .mui-slider-group {border-top: 1px solid #ddd}
+.mui-slider-progress-bar + .mui-slider-group, .mui-slider-header + .mui-slider-group{border-top: 1px solid #ddd}
+.mui-slider-header {position: fixed; top: 0; left: 0; right: 0; z-index: 5; background: #EFEFF4; border-bottom: 1px solid #ddd}
+.mui-slider-header + .mui-slider-group {margin-top: 40px;}
 
-.dialog {position: absolute; left: 0; right: 0; background-color: rgba(255,255,255,.35); display: none; transition: opacity .15s, height .15s, top .1s; padding: 0;}
+.dialog {position: fixed; left: 0; right: 0; background-color: #fff; display: none; transition: opacity .15s, height .15s, top .1s; padding: 0; z-index: 10; max-height: 100%}
 .dialog-header {display: table; background-color: rgba(255,255,255, .35); padding-bottom: 35px; width: 100%}
 .dialog-header > .list-title {font-weight: bold; font-size: 18px}
 .dialog-header > .mui-icon, .dialog-header > .list-title {display: table-cell;}
 .dialog-header > .mui-icon {width: 35px;}
 .dialog-header > .mui-badge {top: auto; bottom: 0px; right: auto; left: 50px}
-body {transition: .1s filter .3s;}
-body.dialog-open > .mui-content {-webkit-filter: blur(6px);-moz-filter: blur(6px);-o-filter: blur(6px);-ms-filter: blur(6px);filter: blur(6px);}
+/*body {transition: .1s filter .3s;}*/
+/*body.dialog-open > .mui-content {-webkit-filter: blur(3px);-moz-filter: blur(3px);-o-filter: blur(3px);-ms-filter: blur(3px);filter: blur(3px);}*/
 .dialog-footer {position: fixed; bottom: 0; width: 100%; background-color: #fff;}
 
 .dialog.show {opacity: 0; top: auto; bottom: auto; display: block; overflow: hidden;}
-.dialog.show.in {opacity: 1; top: 0!important; bottom: 0; overflow-y: auto; padding-bottom: 85px; height: 100%!important}
+.dialog.show.in {opacity: 1; top: 0!important; bottom: 0; overflow-y: auto; height: 100%!important}
 
 .mui-col {float: left; padding: 5px;}
 .mui-row {padding: 10px; margin-left: -5px; margin-right: -5px; width: 100%}

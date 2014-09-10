@@ -8,7 +8,7 @@
   <link href="css/style.css" rel="stylesheet"/>
   <link href="css/subpage.css" rel="stylesheet"/>
   <style>
-  body {height: 100%;}
+  body {height: 100%; background: #EFEFF4;}
   .mui-content {position: absolute; top: 0; right: 0; left: 0; bottom: 0;}
   .mui-content > .mui-slider {min-height: 100%;}
   .mui-table-view-cell .mui-icon {opacity: 0.5}
@@ -21,14 +21,16 @@
 <body>
 <div class="mui-content">
   <div id="slider" class="mui-slider">
-      <div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
-        <a class="mui-control-item mui-active" href="#today">今日</a>
-        <a class="mui-control-item" href="#yestoday">昨日</a>
-        <a class="mui-control-item" href="#thisweek">本周</a>
-        <a class="mui-control-item" href="#lastweek">上周</a>
+      <div id="sliderHeader" class="mui-slider-header">
+        <div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+          <a class="mui-control-item mui-active" href="#today">今日</a>
+          <a class="mui-control-item" href="#yestoday">昨日</a>
+          <a class="mui-control-item" href="#thisweek">本周</a>
+          <a class="mui-control-item" href="#lastweek">上周</a>
+        </div>
+        <div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-3"></div>
       </div>
-      <div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-3"></div>
-      <div class="mui-slider-group">
+      <div class="mui-slider-group" id="todoList">
         <div id="today" class="mui-slider-item mui-control-content mui-active">
           <ul class="mui-table-view list-todos list-todos-wait">
             <li class="mui-table-view-divider"><span class="mui-badge mui-badge-danger"><strong>0</strong> 未完成</span></li>
@@ -86,7 +88,25 @@
 <script src="js/zentao.js"></script>
 <script src="js/webview.js"></script>
 <script>
-mui.init({swipeBack : false});
+mui.init(
+{
+    swipeBack: false,
+
+    pullRefresh:
+    {
+        container: '#todoList',
+        down:
+        {
+            contentdown: "下拉可以刷新",
+            contentover: "释放立即刷新",
+            contentrefresh: "正在刷新...",
+            callback: function(callback)
+            {
+                reload(callback);
+            }
+        }
+    }
+});
 
 var $dailog = $('#dialog');
 $('#dialog .dialog-footer .btn-back').on('click', function()
@@ -104,15 +124,20 @@ document.querySelector("#slider .mui-slider-group").addDelegateListener("tap", "
 zentao.ready(function()
 {
     showAll();
-    console.color('zentao ready', 'h3|bgwarning');
+    reload();
+});
 
+function reload(callback)
+{
+    console.color('重新载入数据', 'bgdanger|h2');
     zentao.loadData('todo', function(data)
     {
         console.color('数据加载成功', 'bgsuccess');
         console.log(zentao.data);
         showAll();
+        callback && callback();
     });
-});
+}
 
 function showAll()
 {
@@ -197,7 +222,7 @@ function show(tab, data)
     $done.classList[doneCount ? 'remove' : 'add']('mui-hidden');
 };
 
-show('today', [{id: 36, name: '测试任务', status: 'wait'}, {id: 36, name: '测试任务2', status: 'wait'}, {id: 36, name: '测试任务3', status: 'wait4'}, {id: 36, name: '测试任务5', status: 'done'}, {id: 36, name: '测试任务6', status: 'done'}]);
+show('today', [{id: 36, name: '测试任务', status: 'wait'}, {id: 36, name: '测试任务2', status: 'wait'}, {id: 36, name: '测试任务3', status: 'wait4'}, {id: 36, name: '测试任务5', status: 'done'}, {id: 36, name: '测试任务6', status: 'done'},{id: 36, name: '测试任务', status: 'wait'}, {id: 36, name: '测试任务2', status: 'wait'}, {id: 36, name: '测试任务3', status: 'wait4'}, {id: 36, name: '测试任务5', status: 'done'}, {id: 36, name: '测试任务6', status: 'done'},{id: 36, name: '测试任务', status: 'wait'}, {id: 36, name: '测试任务2', status: 'wait'}, {id: 36, name: '测试任务3', status: 'wait4'}, {id: 36, name: '测试任务5', status: 'done'}, {id: 36, name: '测试任务6', status: 'done'}]);
 </script>
 </body>
 </html>

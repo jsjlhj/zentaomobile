@@ -3,6 +3,8 @@
     var $content = $('#content');
     var animateSpeed = 300;
     var firstShow = true;
+    var windows = {};
+    var mainView;
 
     mui.ready(function()
     {
@@ -11,22 +13,34 @@
             swipeBack: false
         });
 
-        mui.createWindow(
+        // mui.createWindow(
+        // {
+        //     url: 'todos.html',
+        //     styles:
+        //     {
+        //         top: '44px',
+        //         bottom: 0,
+        //         bounce: 'vertical',
+        //         scrollIndicator: "none"
+        //     },
+        //     preload: true
+        // });
+
+    });
+
+    mui.plusReady(function()
+    {
+        mainView = plus.webview.currentWebview();
+        windows.todo = plus.webview.create("todos.html", "todo", 
         {
-            url: 'todos.html',
-            styles:
-            {
-                top: '44px',
-                bottom: 0,
-                bounce: 'vertical',
-                scrollIndicator: "none"
-            },
-            preload: true
+            top: "44px",
+            bottom: "0px",
+            bounce: "vertical",
+            scrollIndicator: "none"
         });
 
-        console.color('app ready', 'bgsuccess');
-
         handleLoginView();
+        console.color('app plus ready', 'bgsuccess');
     });
 
     function handleLoginView()
@@ -118,20 +132,24 @@
 
     function openList(list)
     {
-        list = list || 'todos';
+        list = list || 'todo';
 
-        mui.openWindow(
-        {
-            id: 'todos.html',
-            show:
-            {
-                aniShow: firstShow ? 'none' : 'slide-in-right' //页面显示动画，默认为”slide-in-right“；
-            },
-            waiting:
-            {
-                title: '正在努力加载中...' //等待对话框上显示的提示内容
-            }
-        });
+        mainView.append(windows[list]);
+        console.log(mainView);
+        console.log(windows[list]);
+
+        // mui.openWindow(
+        // {
+        //     id: 'todos.html',
+        //     show:
+        //     {
+        //         aniShow: firstShow ? 'none' : 'slide-in-right' //页面显示动画，默认为”slide-in-right“；
+        //     },
+        //     waiting:
+        //     {
+        //         title: '正在努力加载中...' //等待对话框上显示的提示内容
+        //     }
+        // });
 
         firstShow = false;
     }
