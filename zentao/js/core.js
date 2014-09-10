@@ -23,9 +23,9 @@ if (!Array.prototype.forEach) {
     };
 };
 
-Array.prototype.where = function(conditions) {
-    var result = [],
-        cdt, ok, objVal;
+Array.prototype.where = function(conditions, result) {
+    result = result || [];
+    var cdt, ok, objVal;
     this.forEach(function(val) {
         ok = true;
         for (var key in conditions) {
