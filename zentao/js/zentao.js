@@ -6,6 +6,7 @@
     var store = window.store;
     var md5 = window.md5;
     var dataTypeSet = ',todo,task,bug,story,';
+    var cleanTags = {number: ['id', 'pri', 'storyID', 'projectID', 'storyVersion'], date: ['date', 'assignedDate', 'canceledDate', 'closedDate', 'deadline', 'estStarted', 'finishedDate', 'lastEditedDate', 'openedDate', 'realStarted']};
 
     function storeSet(key, value, ignoreAccount)
     {
@@ -109,18 +110,28 @@
         }
         else
         {
-            if (typeof objOrArray['id'] === 'string')
+            var oldVal;
+
+            // clean numbers
+            cleanTags.number.forEach(function(tag)
             {
-                objOrArray['id'] = parseInt(objOrArray['id']);
-            }
-            if (typeof objOrArray['pri'] === 'string')
+                oldVal = objOrArray[tag];
+                if(typeof oldVal === 'string')
+                {
+                    objOrArray[tag] = parseInt(oldVal);
+                }
+            });
+
+            // clean datetimes
+            cleanTags.date.forEach(function(tag)
             {
-                objOrArray['pri'] = parseInt(objOrArray['pri']);
-            }
-            if (typeof objOrArray['date'] === 'string')
-            {
-                objOrArray['date'] = new Date(Date.parse(objOrArray['date']));
-            }
+                oldVal = objOrArray[tag];
+                if(typeof oldVal === 'string')
+                {
+                    objOrArray[tag] = new Date(Date.parse(oldVal));
+                    if(isNaN(objOrArray[tag].getTime())) objOrArray[tag] = null;
+                }
+            });
             return objOrArray;
         }
     };
@@ -192,11 +203,11 @@
         var dt = this.data,
             dObj;
         this.updateTime = new Date();
-        if (this.account != data.account)
-        {
-            console.error('所获取的数据与当前帐号不匹配。');
-            return false;
-        }
+        // if (this.account != data.account)
+        // {
+        //     console.error('所获取的数据与当前帐号不匹配。');
+        //     return false;
+        // }
 
         data = data[this.name] || data[this.name + 's'];
 
@@ -213,6 +224,8 @@
                 dObj = obj;
             }
         }, data);
+
+        console.log(dt);
 
         this.sort();
         this.save();
@@ -722,6 +735,12 @@
                     }
                 });
             }
+        }
+        else if(dataType === 'task')
+        {
+            var cdt = {};
+            cdt[filter] = window.user.account;
+            data.data.where(cdt, result);
         }
 
         console.log('FilterData:', result);

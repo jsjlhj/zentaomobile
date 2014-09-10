@@ -146,7 +146,7 @@
 
     function openSubWin(list)
     {
-        list = list || 'todo';
+        list = list || 'task';
 
         windows[currentSub] && windows[currentSub].hide(subTabs[list] < subTabs[currentSub] ? 'slide-out-right' : 'slide-out-left', animateSpeed);
         if(!windows[list].parent())
@@ -157,6 +157,12 @@
         {
             windows[list].show(subTabs[list] > subTabs[currentSub] ? 'slide-in-right' : 'slide-in-left', animateSpeed);
         }
+
+        $('.open-subpage').forEach(function(el)
+        {
+            el.classList[el.getAttribute('data-id') === list ? 'add' : 'remove']('mui-active');
+        });
+
         currentSub = list;
     }
 
