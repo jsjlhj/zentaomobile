@@ -6,7 +6,38 @@
     var store = window.store;
     var md5 = window.md5;
     var dataTypeSet = ',todo,task,bug,story,';
-    var cleanTags = {number: ['id', 'pri', 'storyID', 'projectID', 'storyVersion'], date: ['date', 'assignedDate', 'canceledDate', 'closedDate', 'deadline', 'estStarted', 'finishedDate', 'lastEditedDate', 'openedDate', 'realStarted']};
+    var cleanTags = 
+    {
+        number: ['id', 'pri', 'storyID', 'projectID', 'storyVersion', 'consumed', 'left', 'estimate'],
+        date: ['date', 'assignedDate', 'canceledDate', 'closedDate', 'deadline', 'estStarted', 'finishedDate', 'lastEditedDate', 'openedDate', 'realStarted']
+    };
+    var statusInfo = 
+    {
+        task: 
+        {
+          'wait'   : {name: '未开始', color: 'primary'},
+          'doing'  : {name: '进行中', color: 'danger'},
+          'done'   : {name: '已完成', color: 'success'},
+          'pause'  : {name: '已暂停', color: 'warning'},
+          'cancel' : {name: '已取消', color: ''},
+          'closed' : {name: '已关闭', color: ''}
+        }
+    };
+    var typeNames = 
+    {
+        task:
+        {
+            'design': '设计',
+            'devel': '开发',
+            'test': '测试',
+            'study': '研究',
+            'discuss':'讨论',
+            'ui': '界面',
+            'affair': '事务',
+            'misc': '其他'
+        }
+    };
+
 
     function storeSet(key, value, ignoreAccount)
     {
@@ -132,6 +163,18 @@
                     if(isNaN(objOrArray[tag].getTime())) objOrArray[tag] = null;
                 }
             });
+
+            // added status info
+            if(objOrArray['status'] && statusInfo[this.name])
+            {
+                objOrArray['statusInfo'] = statusInfo[this.name][objOrArray['status']];
+            }
+
+            // added types info
+            if(objOrArray['type'] && typeNames[this.name])
+            {
+                objOrArray['typeName'] = typeNames[this.name][objOrArray['type']];
+            }
             return objOrArray;
         }
     };
@@ -201,7 +244,7 @@
     DataList.prototype.load = function(data)
     {
         var dt = this.data,
-            dObj;
+            dObj, idx;
         this.updateTime = new Date();
         // if (this.account != data.account)
         // {
@@ -221,7 +264,7 @@
             }
             else
             {
-                dObj = obj;
+                dt.splice(dt.indexOf(dObj), 1, obj);
             }
         }, data);
 
