@@ -50,19 +50,6 @@
       </div>
   </div>
 </div>
-<div id="dialog" class="dialog">
-  <div class="mui-table-view-cell dialog-header"><span class="mui-icon mui-icon-checkbox"></span> <span class="list-title"></span><span class="mui-badge"></span></div>
-  <div class="dialog-body">
-    <h5 class="mui-content-padded">描述</h5>
-    <div class="mui-content-padded item-desc"></div>
-  </div>
-  <div class="dialog-footer">
-    <div class="mui-row">
-      <div class="mui-col-xs-6 mui-col"><button class="mui-btn mui-btn-block mui-btn-outlined btn-back">返回</button></div>
-      <div class="mui-col-xs-6 mui-col mui-col-extra"><button class="mui-btn mui-btn-positive mui-btn-block">完成任务</button></div>
-    </div>
-  </div>
-</div>
 
 <script src="js/core.js"></script>
 <script src="js/$.js"></script>
@@ -72,15 +59,7 @@
 <script src="js/zentao.js"></script>
 <script src="js/webview.js"></script>
 <script>
-var taskStatus = 
-{
-  'wait'   : {name: '未开始', color: 'purple'},
-  'doing'  : {name: '进行中', color: 'danger'},
-  'done'   : {name: '已完成', color: 'success'},
-  'pause'  : {name: '已暂停', color: 'warning'},
-  'cancel' : {name: '已取消', color: ''},
-  'closed' : {name: '已关闭', color: ''}
-};
+var subTabs = ['assignedTo', 'openedBy', 'finishedBy', 'closedBy'];
 
 mui.init(
 {
@@ -102,9 +81,6 @@ mui.init(
     }
 });
 
-var $dailog = $('#dialog');
-$('#dialog .dialog-footer .btn-back').on('tap', closeDialog);
-
 document.querySelector("#slider .mui-slider-group").addDelegateListener("tap", ".mui-table-view-cell", function(e)
 {
     showItem(this.getAttribute('data-id'), this);
@@ -112,20 +88,12 @@ document.querySelector("#slider .mui-slider-group").addDelegateListener("tap", "
 
 zentao.ready(function()
 {
-    // showAll();
+    showAll();
     reload();
 });
 
-function closeDialog()
-{
-    $dailog.classList.remove('in');
-    document.body.classList.remove('dialog-open');
-    setTimeout(function(){$dailog.classList.remove('show');}, 100);
-};
-
 function reload(callback)
 {
-    closeDialog();
     zentao.loadData('task', function(data)
     {
         showAll();
@@ -135,36 +103,21 @@ function reload(callback)
 
 function showAll()
 {
-    show('assignedTo');
-    show('openedBy');
-    show('finishedBy');
-    show('closedBy');
+    subTabs.forEach(function(val)
+    {
+        show(val);
+    });
 }
 
 function showItem(id, $item)
 {
-    $item = $item || $('.mui-table-view-cell[data-id="' + id + '"]');
-    var item = zentao.data && zentao.data.task.getById(id);
-    if(item)
+    plus.webview.create("task.html", "task-" + id, 
     {
-        $('#dialog .dialog-header').innerHTML = $item.innerHTML;
-        $('#dialog .dialog-header .mui-badge').innerHTML = item.date.format('MM月dd日') + ' ' + item.begin + ' ~ ' + item.end;
-        $('#dialog .dialog-body .item-desc').innerHTML = item.desc;
-        $dailog.classList[item.status === 'done' ? 'add' : 'remove']('task-done');
-
-        $dailog.classList.add('show');
-        $dailog.style.height = $item.clientHeight + 'px';
-        $dailog.style.top = ($item.clientHeight + 40) + 'px';
-        setTimeout(function(){$dailog.classList.add('in'); document.body.classList.add('dialog-open');}, 100);
-    }
-    else // test code
-    {
-        $dailog.classList.add('show');
-        $dailog.style.height = $item.clientHeight + 'px';
-        $dailog.style.top = ($item.clientHeight + 40) + 'px';
-
-        setTimeout(function(){$dailog.classList.add('in'); document.body.classList.add('dialog-open');}, 100);
-    }
+        top: "44px",
+        bottom: "0px",
+        bounce: "vertical",
+        scrollIndicator: "none"
+    }, {dialogOptions: {id: id, type: 'task'}}).show('slide-in-right', 200);
 };
 
 function show(tab, data)
@@ -182,7 +135,7 @@ function show(tab, data)
 
     var groupedData = data.groupBy('projectID'),
         item;
-    console.log(groupedData);
+    console.log('groupedData', groupedData);
     for(var group in groupedData)
     {
         data = groupedData[group];
@@ -199,7 +152,7 @@ function show(tab, data)
             item.classList.add('pri-' + val.pri);
             item.setAttribute('id', 'item-' + val.id);
             item.setAttribute('data-id', val.id);
-            item.innerHTML = '<span class="list-title"><span class="list-item-id">' + val.id + '</span>' + val.name + '</span>' + '<span class="mui-badge mui-badge-' + taskStatus[val.status].color + '">' + taskStatus[val.status].name + '</span>';
+            item.innerHTML = '<span class="list-title"><span class="list-item-id">' + val.id + '</span>' + val.name + '</span>' + '<span class="mui-badge mui-badge-' + val.statusInfo.color + '">' + val.statusInfo.name + '</span>';
             $tasks.appendChild(item);
         });
     }
