@@ -8,8 +8,8 @@
     var dataTypeSet = ',todo,task,bug,story,';
     var cleanTags = 
     {
-        number: ['id', 'pri', 'storyID', 'projectID', 'storyVersion', 'consumed', 'left', 'estimate'],
-        date: ['date', 'assignedDate', 'canceledDate', 'closedDate', 'deadline', 'estStarted', 'finishedDate', 'lastEditedDate', 'openedDate', 'realStarted']
+        number: ['id', 'pri', 'storyID', 'projectID', 'storyVersion', 'consumed', 'left', 'estimate', 'severity'],
+        date: ['date', 'assignedDate', 'canceledDate', 'closedDate', 'deadline', 'estStarted', 'finishedDate', 'lastEditedDate', 'openedDate', 'realStarted', 'resolvedDate']
     };
     var statusInfo = 
     {
@@ -21,8 +21,36 @@
           'pause'  : {name: '已暂停', color: 'warning'},
           'cancel' : {name: '已取消', color: ''},
           'closed' : {name: '已关闭', color: ''}
+        },
+        bug:
+        {
+            'active'   : {name: '激活', color: 'danger'},
+            'resolved' : {name: '已解决', color: 'success'},
+            'closed'   : {name: '已关闭', color: ''}
+        },
+        story:
+        {
+            'draft'     : {name: '草稿', color: 'purple'},
+            'active'    : {name: '激活', color: 'success'},
+            'closed'    : {name: '已关闭', color: ''},
+            'changed'   : {name: '已变更', color: 'danger'}
         }
     };
+    var stageNames = 
+    {
+        story:
+        {
+            'wait'       : '未开始',
+            'planned'    : '已计划',
+            'projected'  : '已立项',
+            'developing' : '研发中',
+            'developed'  : '研发完毕',
+            'testing'    : '测试中',
+            'tested'     : '测试完毕',
+            'verified'   : '已验收',
+            'released'   : '已发布'
+        }
+    }
     var typeNames = 
     {
         task:
@@ -35,6 +63,22 @@
             'ui': '界面',
             'affair': '事务',
             'misc': '其他'
+        },
+        bug:
+        {
+            'codeerror'    : '代码错误',
+            'interface'    : '界面优化',
+            'designchange' : '设计变更',
+            'newfeature'   : '新增需求',
+            'designdefect' : '设计缺陷',
+            'config'       : '配置相关',
+            'install'      : '安装部署',
+            'security'     : '安全相关',
+            'performance'  : '性能问题',
+            'standard'     : '标准规范',
+            'automation'   : '测试脚本',
+            'trackthings'  : '事务跟踪',
+            'others'       : '其他'
         }
     };
 
@@ -170,10 +214,16 @@
                 objOrArray['statusInfo'] = statusInfo[this.name][objOrArray['status']];
             }
 
-            // added types info
+            // added types name
             if(objOrArray['type'] && typeNames[this.name])
             {
                 objOrArray['typeName'] = typeNames[this.name][objOrArray['type']];
+            }
+
+            // added stage name
+            if(objOrArray['stage'] && stageNames[this.name])
+            {
+                objOrArray['stageName'] = stageNames[this.name][objOrArray['stage']];
             }
             return objOrArray;
         }
@@ -252,7 +302,8 @@
         //     return false;
         // }
 
-        data = data[this.name] || data[this.name + 's'];
+        var setName = this.name === 'story' ? 'stories' : (this.name + s);
+        data = data[this.name] || data[setName];
 
         this.each(function(index, obj)
         {
@@ -779,7 +830,7 @@
                 });
             }
         }
-        else if(dataType === 'task')
+        else if(dataType === 'task' || dataType === 'bug' || dataType === 'story')
         {
             var cdt = {};
             cdt[filter] = window.user.account;

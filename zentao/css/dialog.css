@@ -10,15 +10,16 @@
 .dialog > header > .pri-icon.pri-2 {color: #fff; background: #ed9922}
 .dialog > header > .pri-icon.pri-3 {color: #fff; background: #8A6DE9}
 
-.dialog > header .item-id {border: 1px solid #bbb; display: inline-block; margin-right: 2px; padding: 1px 3px; font-size: 14px; line-height: 20px; color: #666; border-radius: 2px; min-width: 20px; text-align: center; background: #fff; vertical-align: top;}
+.dialog > header .item-id {border: 1px solid #bbb; display: inline-block; margin-right: 2px; padding: 1px 3px; font-size: 14px; line-height: 20px; color: #666; border-radius: 2px; min-width: 24px; text-align: center; background: #fff; vertical-align: top;}
 .dialog > header .item-id.pri {background: #999; color: #fff; border-color: #fff;}
 .dialog > header .item-id.pri.pri-1 {background: #DD524D;}
 .dialog > header .item-id.pri.pri-2 {background: #ed9922;}
 .dialog > header .item-id.pri.pri-3 {background: #8A6DE9;}
 
-.dialog > section {background: #fff}
-.dialog > section > h5 {padding: 10px; margin: 0}
+.dialog > section {background: #fff; border-top: 1px solid #e5e5e5; padding: 10px 0; margin-top: -1px}
+.dialog > section > h5 {padding: 0 10px 10px; margin: 0}
 .dialog > section > h5 + .mui-content-padded {margin-top: 0;}
+.dialog > section > .mui-content-padded p {color: inherit; font-size: inherit;}
 
 .dialog > footer {position: fixed; bottom: 0; left: 0; right: 0; background-color: #fff}
 .dialog.with-footer {padding-bottom: 87px;}

@@ -13,9 +13,9 @@
   .mui-content > .mui-slider {min-height: 100%;}
   .mui-table-view-cell .mui-icon {opacity: 0.5}
   .mui-table-view-cell.mui-active .mui-icon {opacity: 0.95}
-  .mui-table-view.list-bugs-done .mui-table-view-cell {color: #999}
-  .dialog.bug-done .dialog-footer .mui-col-extra {display: none}
-  .dialog.bug-done .dialog-footer .mui-col {width: 100%}
+  .mui-table-view.list-storys-done .mui-table-view-cell {color: #999}
+  .dialog.story-done .dialog-footer .mui-col-extra {display: none}
+  .dialog.story-done .dialog-footer .mui-col {width: 100%}
   </style>
 </head>
 <body>
@@ -25,26 +25,26 @@
         <div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
           <a class="mui-control-item mui-active" href="#assignedTo">指派给我</a>
           <a class="mui-control-item" href="#openedBy">由我创建</a>
-          <a class="mui-control-item" href="#resolvedBy">由我解决</a>
+          <a class="mui-control-item" href="#reviewedBy">由我评审</a>
           <a class="mui-control-item" href="#closedBy">由我关闭</a>
         </div>
         <div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-3"></div>
       </div>
-      <div class="mui-slider-group" id="bugList">
+      <div class="mui-slider-group" id="storyList">
         <div id="assignedTo" class="mui-slider-item mui-control-content mui-active">
-          <ul class="mui-table-view list-bugs">
+          <ul class="mui-table-view list-storys">
           </ul>
         </div>
         <div id="openedBy" class="mui-slider-item mui-control-content">
-          <ul class="mui-table-view list-bugs">
+          <ul class="mui-table-view list-storys">
           </ul>
         </div>
-        <div id="resolvedBy" class="mui-slider-item mui-control-content">
-          <ul class="mui-table-view list-bugs">
+        <div id="reviewedBy" class="mui-slider-item mui-control-content">
+          <ul class="mui-table-view list-storys">
           </ul>
         </div>
         <div id="closedBy" class="mui-slider-item mui-control-content">
-          <ul class="mui-table-view list-bugs">
+          <ul class="mui-table-view list-storys">
           </ul>
         </div>
       </div>
@@ -59,7 +59,7 @@
 <script src="js/zentao.js"></script>
 <script src="js/webview.js"></script>
 <script>
-var subTabs = ['assignedTo', 'openedBy', 'resolvedBy', 'closedBy'];
+var subTabs = ['assignedTo', 'openedBy', 'reviewedBy', 'closedBy'];
 
 mui.init(
 {
@@ -67,7 +67,7 @@ mui.init(
 
     pullRefresh:
     {
-        container: '#bugList',
+        container: '#storyList',
         down:
         {
             contentdown: "下拉可以刷新",
@@ -94,7 +94,7 @@ zentao.ready(function()
 
 function reload(callback)
 {
-    zentao.loadData('bug', function(data)
+    zentao.loadData('story', function(data)
     {
         showAll();
         callback && callback();
@@ -111,29 +111,29 @@ function showAll()
 
 function showItem(id, $item)
 {
-    plus.webview.create("bug.html", "bug-" + id, 
+    plus.webview.create("story.html", "story-" + id, 
     {
         top: "44px",
         bottom: "0px",
         bounce: "vertical",
         scrollIndicator: "none"
-    }, {dialogOptions: {id: id, type: 'bug'}}).show('slide-in-right', 200);
+    }, {dialogOptions: {id: id, type: 'story'}}).show('slide-in-right', 200);
 };
 
 function show(tab, data)
 {
-    data = data || zentao.filterData('bug', tab);
+    data = data || zentao.filterData('story', tab);
     var $tab = $('#' + tab),
-        $bugs = $('#' + tab + ' .list-bugs'),
+        $storys = $('#' + tab + ' .list-storys'),
         today = Date.parseName('today');
 
-    for(var i = $bugs.childNodes.length - 1; i >= 0; i--)
+    for(var i = $storys.childNodes.length - 1; i >= 0; i--)
     {
-        var child = $bugs.childNodes[i];
-        $bugs.removeChild(child);
+        var child = $storys.childNodes[i];
+        $storys.removeChild(child);
     }
 
-    var groupedData = data.groupBy('type'),
+    var groupedData = data.groupBy('product'),
         item;
     console.log('groupedData', groupedData);
     for(var group in groupedData)
@@ -141,8 +141,8 @@ function show(tab, data)
         data = groupedData[group];
         item = item = document.createElement('li');
         item.classList.add('mui-table-view-divider');
-        item.innerHTML = '<span class="mui-badge">' + data[0]['typeName'] + ' (<strong>' + data.length + '</strong>)</span>';
-        $bugs.appendChild(item);
+        item.innerHTML = '<span class="mui-badge">' + data[0]['productTitle'] + ' (<strong>' + data.length + '</strong>)</span>';
+        $storys.appendChild(item);
 
         data.forEach(function(val)
         {
@@ -153,7 +153,7 @@ function show(tab, data)
             item.setAttribute('id', 'item-' + val.id);
             item.setAttribute('data-id', val.id);
             item.innerHTML = '<span class="list-title"><span class="list-item-id">' + val.id + '</span>' + val.title + '</span>' + '<span class="mui-badge mui-badge-' + val.statusInfo.color + '">' + val.statusInfo.name + '</span>';
-            $bugs.appendChild(item);
+            $storys.appendChild(item);
         });
     }
 

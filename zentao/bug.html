@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>禅道</title>
+  <link href="css/mui.min.css" rel="stylesheet"/>
+  <link href="css/style.css" rel="stylesheet"/>
+  <link href="css/subpage.css" rel="stylesheet"/>
+  <link href="css/dialog.css" rel="stylesheet"/>
+  <style>
+    .dialog > header > div {padding-left: 30px; position: relative;}
+    #objStatus {position: absolute; right: 0; top: 4px; margin: 0}
+  </style>
+</head>
+<body ng-controller="DialogController">
+<div class="dialog with-footer" id="dialog">
+  <header class="pri">
+    <div class="pri-icon" id="priIcon" class="pri"><span class="obj-pri"></span></div>
+    <h3><span class="obj-id item-id pri" id="objID"></span> <span class="obj-title"></span></h3>
+    <div class="info">
+      <div class="block-lines">
+        <div class="small"><span class="text-muted">Bug类型: </span><strong class="obj-typeName"></strong></div>
+        <div class="small"><span class="text-muted">严重程度: </span><strong class="obj-severity"></strong></div>
+        <div class="small"><span class="text-muted">是否确认: </span><strong class="obj-confirm" id="objConfirm"></strong></div>
+      </div>
+      <div class="block-lines">
+        <div class="small"><span id="assignedTo" class="text-muted">指派给 <strong class="obj-assignedTo"></strong> 于 <strong class="obj-assignedDate" data-format="MM月dd日hh:mm"></strong></span><span id="noAssignedTo" class="text-muted">没有指派</span></div>
+        <div class="small text-muted">由 <strong class="obj-openedBy">openedBy</strong> 创建于 <strong class="obj-openedDate" data-format="MM月dd日hh:mm"></strong></div>
+      </div>
+      <div class="mui-badge" id="objStatus"></div>
+    </div>
+  </header>
+  <section>
+    <h5>用户环境</h5>
+    <table class="mui-table table-info">
+      <tr>
+        <th>操作系统</th>
+        <td class="obj-os" data-default="未指定"></td>
+      </tr>
+      <tr>
+        <th>浏览器</th>
+        <td class="obj-browser" data-default="未指定"></td>
+      </tr>
+    </table>
+  </section>
+  <section>
+    <h5>重现步骤</h5>
+    <div class="mui-content-padded obj-steps" data-default="<span class='small text-muted'>--- 没有描述 ---</span>">dfdsfdsfd</div>
+  </section>
+  <footer>
+    <div class="mui-row">
+      <div class="mui-col-xs-4 mui-col"><button class="mui-btn mui-btn-block mui-btn-outlined btn-back mui-action-back">返回</button></div>
+      <div class="mui-col-xs-4 mui-col mui-col-extra"><button class="mui-btn mui-btn-primary mui-btn-block">确认</button></div>
+      <div class="mui-col-xs-4 mui-col mui-col-extra"><button class="mui-btn mui-btn-success mui-btn-block">解决</button></div>
+    </div>
+  </footer>
+</div>
+<!-- <script src="js/angular/angular.min.js"></script> -->
+<script src="js/core.js"></script>
+<script src="js/$.js"></script>
+<script src="js/console.js"></script>
+<script src="js/store.js"></script>
+<script src="js/mui.js"></script>
+<script src="js/zentao.js"></script>
+<script src="js/webview.js"></script>
+<script src="js/dialog.js"></script>
+<script>
+var options,
+    currentView;
+var exampleData;
+zentao.ready(function()
+{
+    currentView = plus.webview.currentWebview();
+    options = currentView.dialogOptions;
+    $('#idid').innerHTML = options.id;
+
+    var obj = zentao.data[options.type].getById(options.id);
+    console.log(obj);
+    render(obj);
+});
+
+function render(obj)
+{
+    var doms, val, fmt, dft, dVal;
+    for(var name in obj)
+    {
+        doms = $(".obj-" + name),
+        val = obj[name];
+        if(doms.forEach)
+        {
+            doms.forEach(function(el)
+            {
+                fmt = el.getAttribute('data-format');
+                dft = el.getAttribute('data-default');
+                dVal = dft && (!val) ? dft : val;
+                el.innerHTML = fmt ? dVal.format(fmt) : dVal;
+            });
+        }
+        else
+        {
+            fmt = doms.getAttribute('data-format');
+            dft = doms.getAttribute('data-default');
+            dVal = dft && (!val) ? dft : val;
+            doms.innerHTML = fmt ? dVal.format(fmt) : dVal;
+        }
+    }
+
+    $("#dialog > header").classList.add('pri-' + obj.pri);
+    $("#priIcon").classList.add('pri-' + obj.pri);
+    $("#objID").classList.add('pri-' + obj.pri);
+    var $status = $('#objStatus');
+    $status.innerHTML = obj.statusInfo.name;
+    $status.classList.add('mui-badge-' + obj.statusInfo.color);
+    $("#assignedTo").classList[obj.assignedTo ? 'remove' : 'add']('mui-hidden');
+    $('#noAssignedTo').classList[obj.assignedTo ? 'add' : 'remove']('mui-hidden');
+    $('#objConfirm').innerHTML = obj.confirm === '0' ? '未确认' : '已确认';
+
+}
+
+var assignedDate = new Date(Date.parse("Fri Aug 01 2014 11:16:40 GMT+0800 (CST)"));
+</script>
+</body>
+</html>

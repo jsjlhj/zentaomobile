@@ -42,8 +42,8 @@ input[type="color"]:focus
 button {outline:none}
 
 .text-muted {color: #929292}
-.small {font-size: 12px}
-.block-lines > div {display: inline-block; margin-right: 10px;}
+.small {font-size: 14px}
+.block-lines > div {display: inline-block; margin-right: 15px;}
 
 .pri {border-left: 5px solid #bbb}
 .pri-1 {border-left-color: #DD524D}
@@ -80,6 +80,10 @@ button {outline:none}
 
 .mui-col {float: left; padding: 5px;}
 .mui-row {padding: 10px; margin-left: -5px; margin-right: -5px; width: 100%}
+
+.table-info {font-size: 14px;}
+.table-info td, .table th {padding: 2px 8px}
+.table-info th {color: #808080; text-align: right; width: 100px;}
 
 body,#content
 {

@@ -2,10 +2,11 @@
 {
     var $content = $('#content');
     var animateSpeed = 200;
-    var windows = {};
+    var windows = {todo: "todos.html", task: "tasks.html", bug: "bugs.html", story: "stories.html"};
     var mainView;
     var currentSub;
-    var subTabs = {todo: 1, bug: 2, task: 3};
+    var subTabs = {todo: 1, task: 2, bug: 3, story: 4};
+    var defaultTab = 'story';
 
     mui.ready(function()
     {
@@ -26,30 +27,6 @@
         }, false);
 
         mainView = plus.webview.currentWebview();
-        windows.todo = plus.webview.create("todos.html", "todo", 
-        {
-            top: "44px",
-            bottom: "0px",
-            bounce: "vertical",
-            scrollIndicator: "none"
-        });
-
-        windows.task = plus.webview.create("tasks.html", "task", 
-        {
-            top: "44px",
-            bottom: "0px",
-            bounce: "vertical",
-            scrollIndicator: "none"
-        });
-
-        windows.bug = plus.webview.create("bugs.html", "bug", 
-        {
-            top: "44px",
-            bottom: "0px",
-            bounce: "vertical",
-            scrollIndicator: "none"
-        });
-
         handleLoginView();
 
         handleSubpageNav();
@@ -154,11 +131,19 @@
 
     function openSubWin(list)
     {
-        list = list || 'task';
+        list = list || defaultTab;
 
         windows[currentSub] && windows[currentSub].hide(subTabs[list] < subTabs[currentSub] ? 'slide-out-right' : 'slide-out-left', animateSpeed);
-        if(!windows[list].parent())
+        if(typeof windows[list] === 'string')
         {
+            windows[list] = plus.webview.create(windows[list], list, 
+            {
+                top: "44px",
+                bottom: "0px",
+                bounce: "vertical",
+                scrollIndicator: "none"
+            });
+
             mainView.append(windows[list]);
         }
         else

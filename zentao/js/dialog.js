@@ -1,6 +1,6 @@
 (function(mui, $)
 {
-    mui.init(swipeBack: true);
+    mui.init({swipeBack: true});
     mui.plusReady(function()
     {
         // Android处理返回键
