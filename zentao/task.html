@@ -26,10 +26,11 @@
     <h3><span class="obj-id item-id pri" id="objID"></span> <span class="obj-name"></span></h3>
     <div class="info">
       <div class="block-lines">
+        <div class="small text-muted">所属项目：<strong class="obj-projectName"></strong></div>
         <div class="small"><strong>#<span class="obj-typeName"></span></strong> &nbsp;<span id="assignedTo" class="text-muted">指派给 <strong class="obj-assignedTo"></strong> 于 <strong class="obj-assignedDate" data-format="MM月dd日hh:mm"></strong></span><span id="noAssignedTo" class="text-muted">没有指派</span></div>
         <div class="small text-muted">由 <strong class="obj-openedBy">openedBy</strong> 创建于 <strong class="obj-openedDate" data-format="MM月dd日hh:mm"></strong></div>
-        <div class="mui-badge" id="objStatus"></div>
       </div>
+      <div class="mui-badge" id="objStatus"></div>
     </div>
   </header>
   <section id="timeBar">
@@ -74,8 +75,6 @@ zentao.ready(function()
 
 function render(obj)
 {
-    obj = obj || exampleData;
-
     var doms, val, fmt, dft, dVal;
     for(var name in obj)
     {
@@ -123,51 +122,6 @@ function render(obj)
 }
 
 var assignedDate = new Date(Date.parse("Fri Aug 01 2014 11:16:40 GMT+0800 (CST)"));
-exampleData = 
-{
-    assignedDate: assignedDate,
-    assignedTo: "",
-    canceledBy: "",
-    canceledDate: null,
-    closedBy: "",
-    closedDate: null,
-    closedReason: "",
-    consumed: 2,
-    deadline: null,
-    deleted: "0",
-    desc: "这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务这是一个测试任务",
-    estStarted: null,
-    estimate: 4,
-    finishedBy: "",
-    finishedDate: null,
-    fromBug: "0",
-    id: 37,
-    lastEditedBy: "",
-    lastEditedDate: null,
-    latestStoryVersion: null,
-    left: 1,
-    mailto: "",
-    module: "0",
-    name: "这是一个测试任务",
-    needConfirm: false,
-    openedBy: "admin",
-    openedDate: assignedDate,
-    pri: 3,
-    project: "1",
-    projectID: 1,
-    projectName: "企业网站第一期",
-    realStarted: null,
-    status: "wait",
-    statusInfo: {name: '已完成', color: 'success'},
-    story: "0",
-    storyID: null,
-    storyStatus: null,
-    storyTitle: null,
-    storyVersion: 0,
-    type: "study",
-    typeName: '学习'
-};
-// render();
 </script>
 </body>
 </html>
