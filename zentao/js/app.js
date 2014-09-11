@@ -17,6 +17,14 @@
 
     mui.plusReady(function()
     {
+        plus.key.addEventListener('backbutton', function()
+        {
+            if (confirm('确认退出？'))
+            {
+                plus.runtime.quit();
+            }
+        }, false);
+
         mainView = plus.webview.currentWebview();
         windows.todo = plus.webview.create("todos.html", "todo", 
         {

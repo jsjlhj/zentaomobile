@@ -1,4 +1,3 @@
-/* 全局共享变量 */
 (function(mui, $)
 {
     // 空函数
@@ -54,15 +53,6 @@
                 }
             }
         });
-
-        // Android处理返回键
-        plus.key.addEventListener('backbutton', function()
-        {
-            if (confirm('确认退出？'))
-            {
-                plus.runtime.quit();
-            }
-        }, false);
     });
 
     /**
