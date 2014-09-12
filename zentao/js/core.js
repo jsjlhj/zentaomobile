@@ -357,7 +357,12 @@ String.prototype.isNum = function(s) {
         return (r == s) ? true : false;
     }
     return false;
-}
+};
+
+String.prototype.startWith = function(str)
+{
+    return this.indexOf(str) === 0;
+};
 
 
 var div = document.createElement("div"),
