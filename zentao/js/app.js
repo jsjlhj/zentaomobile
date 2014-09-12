@@ -34,8 +34,6 @@
 
     mui.plusReady(function()
     {
-        plus.nativeUI.toast( "plusReady!");
-
         mainView = plus.webview.currentWebview();
         handleLoginView();
 
@@ -141,8 +139,20 @@
     function openSubWin(list)
     {
         list = list || defaultTab;
+        var currentWin = windows[currentSub];
 
-        windows[currentSub] && windows[currentSub].hide(subTabs[list] < subTabs[currentSub] ? 'slide-out-right' : 'slide-out-left', animateSpeed);
+        if(currentWin)
+        {
+            currentWin.hide(subTabs[list] < subTabs[currentSub] ? 'slide-out-right' : 'slide-out-left', animateSpeed);
+            var openeds = currentWin.opened();
+            openeds.forEach(function(opendedDialog)
+            {
+                if(opendedDialog.dialogOptions)
+                {
+                    opendedDialog.hide('zoom-out', 100);
+                }
+            });
+        }
         if(typeof windows[list] === 'string')
         {
             windows[list] = plus.webview.create(windows[list], list, 
