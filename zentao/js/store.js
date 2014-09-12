@@ -86,7 +86,7 @@
 
     /* Iterate all items with callback */
     Store.prototype.forEach = function(callback) {
-        for (var i = 0; i < storage.length; i++) {
+        for (var i = storage.length - 1; i >= 0; i--) {
             var key = storage.key(i);
             callback(key, store.get(key));
         }
