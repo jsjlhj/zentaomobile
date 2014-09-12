@@ -37,7 +37,6 @@
     {
         document.getElementById('subpageNav').addDelegateListener('tap', '.open-subpage', function()
         {
-            console.log('handleSubpageNav');
             openSubWin(this.getAttribute('data-id'));
         });
     };

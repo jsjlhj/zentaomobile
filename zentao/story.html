@@ -22,11 +22,13 @@
     <div class="info">
       <div class="block-lines">
         <div class="small"><span class="text-muted">所处阶段: </span><strong class="obj-stageName"></strong></div>
+        <div class="small"><span class="text-muted">预计工时: </span><strong class="obj-estimate"></strong></div>
+      </div>
+      <div class="block-lines">
         <div class="small"><span class="text-muted">所属产品: </span><strong class="obj-productTitle"></strong></div>
         <div class="small"><span class="text-muted">所属版本: </span><strong class="obj-planTitle"></strong></div>
       </div>
       <div class="block-lines">
-        <div class="small"><span class="text-muted">预计工时: </span><strong class="obj-estimate"></strong></div>
         <div class="small"><span id="assignedTo" class="text-muted">指派给 <strong class="obj-assignedTo"></strong> 于 <strong class="obj-assignedDate" data-format="MM月dd日hh:mm"></strong></span><span id="noAssignedTo" class="text-muted">没有指派</span></div>
         <div class="small text-muted">由 <strong class="obj-openedBy">openedBy</strong> 创建于 <strong class="obj-openedDate" data-format="MM月dd日hh:mm"></strong></div>
       </div>
@@ -68,7 +70,6 @@ zentao.ready(function()
     $('#idid').innerHTML = options.id;
 
     var obj = zentao.data[options.type].getById(options.id);
-    console.log(obj);
     render(obj);
 });
 
@@ -107,7 +108,6 @@ function render(obj)
     $("#assignedTo").classList[obj.assignedTo ? 'remove' : 'add']('mui-hidden');
     $('#noAssignedTo').classList[obj.assignedTo ? 'add' : 'remove']('mui-hidden');
     $('#objConfirm').innerHTML = obj.confirm === '1' ? '已确认' : '未确认';
-
 }
 
 var assignedDate = new Date(Date.parse("Fri Aug 01 2014 11:16:40 GMT+0800 (CST)"));

@@ -319,8 +319,6 @@
             }
         }, data);
 
-        console.log(dt);
-
         this.sort();
         this.save();
     };
@@ -341,9 +339,6 @@
 
         $.plusReady(function()
         {
-            console.color('Zentao Ready.', 'bgsuccess');
-            console.log('that.readyFns.length', that.readyFns.length);
-
             getUser();
             that.data = {
                 todo: new DataList('todo'),

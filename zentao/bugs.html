@@ -135,7 +135,6 @@ function show(tab, data)
 
     var groupedData = data.groupBy('type'),
         item;
-    console.log('groupedData', groupedData);
     for(var group in groupedData)
     {
         data = groupedData[group];
@@ -156,7 +155,6 @@ function show(tab, data)
             $bugs.appendChild(item);
         });
     }
-
 };
 </script>
 </body>

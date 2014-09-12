@@ -69,7 +69,6 @@ zentao.ready(function()
     $('#idid').innerHTML = options.id;
 
     var obj = zentao.data[options.type].getById(options.id);
-    console.log(obj);
     render(obj);
 });
 
@@ -111,11 +110,6 @@ function render(obj)
     // time bar
     var $timebar = $('#timeBar'),
         maxTime = Math.max(obj.consumed + obj.left, obj.estimate);
-        console.log(obj.estimate); //0
-        console.log(obj.left); //2
-        console.log(obj.consumed);//1
-        console.log(maxTime);//3
-        console.log((obj.estimate/maxTime));
     $timebar.classList[maxTime > obj.estimate ? 'add' : 'remove']('beyond');
     $('#timeBarEstimate').style.width = (obj.estimate/maxTime)*100 + '%';
     $('#timeBarConsumed').style.width = (obj.consumed/maxTime)*100 + '%';
