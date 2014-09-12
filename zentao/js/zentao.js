@@ -11,6 +11,7 @@
         number: ['id', 'pri', 'storyID', 'projectID', 'storyVersion', 'consumed', 'left', 'estimate', 'severity'],
         date: ['date', 'assignedDate', 'canceledDate', 'closedDate', 'deadline', 'estStarted', 'finishedDate', 'lastEditedDate', 'openedDate', 'realStarted', 'resolvedDate']
     };
+
     var statusInfo = 
     {
         task: 
@@ -36,6 +37,7 @@
             'changed'   : {name: '已变更', color: 'danger'}
         }
     };
+
     var stageNames = 
     {
         story:
@@ -82,77 +84,122 @@
         }
     };
 
+    var getEventName = function(et)
+    {
+        var dotIndex = et.indexOf('.');
+        if(dotIndex > 0)
+        {
+            return et.substr(0, dotIndex);
+        }
+        return et;
+    };
 
-    function storeSet(key, value, ignoreAccount)
+    var Storage = function()
+    {
+        window.store = window.store;
+    };
+
+    Storage.prototype.setPlus = function()
+    {
+        // window.store.setPlusStorage(window.plus);
+    };
+
+    Storage.prototype.set = function(key, value, ignoreAccount)
     {
         if (ignoreAccount)
         {
-            store.set(key, value);
+            window.store.set(key, value);
         }
-        else if (user && user.account)
+        else if (window.user && window.user.account)
         {
-            store.set(user.account + '::' + key, value);
+            window.store.set(window.user.account + '::' + key, value);
         }
         else
         {
             console.error('存储失败！无法获取用户数据。');
         }
-    }
+    };
 
-    function storeGet(key, defaultValue, ignoreAccount)
+    Storage.prototype.get = function(key, defaultValue, ignoreAccount)
     {
         if (ignoreAccount)
         {
-            return store.get(key, defaultValue);
+            return window.store.get(key, defaultValue);
         }
-        else if (user && user.account)
+        else if (window.user && window.user.account)
         {
-            return store.get(user.account + '::' + key, defaultValue);
+            return window.store.get(window.user.account + '::' + key, defaultValue);
         }
         else
         {
             console.error('获取存储数据失败！无法获取用户数据。');
         }
-    }
+    };
 
-    function getUser()
+    Storage.prototype.getUser = function()
     {
-        var account = store.get('account', '');
+        var account = window.store.get('account', '');
         if (account !== '')
         {
-            window.user = store.get('userlist',
-            {})[account];
+            window.user = window.store.get('userlist', {status: 'logout'})[account];
+            if(window.user.status === 'online')
+            {
+                if(new Date().getTime() - window.user.lastLoginTime > 1000 * 3600 * 24)
+                {
+                    window.user.status = 'offline';
+                }
+            }
         }
         else
         {
-            window.user = {};
+            window.user = {status: 'logout'};
         }
-        console.groupCollapsed('%cUSER: ' + user.account + '@' + user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
-        console.log(user);
+        console.groupCollapsed('%cUSER: ' + window.user.account + '@' + window.user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
+        console.log(window.user);
         console.groupEnd();
-    }
+        window.user = window.user;
+        return window.user;
+    };
 
-    function saveUser()
+    Storage.prototype.saveUser = function()
     {
-        var user = window.user;
-        if (user && user.account)
+        if (window.user && window.user.account)
         {
-            store.set('account', user.account);
-            var userlist = store.get('userlist',
+            window.store.set('account', window.user.account);
+            var userlist = window.store.get('userlist',
             {});
-            userlist[user.account] = user;
-            store.set('userlist', userlist);
+            userlist[window.user.account] = window.user;
+            window.store.set('userlist', userlist);
         }
         else
         {
             console.error('存储失败！无法获取用户数据。');
         }
-    }
+    };
+
+    Storage.prototype.clearUser = function(account)
+    {
+        account = account || window.user.account;
+        if(account === window.user.account)
+        {
+            window.store.remove('account');
+        }
+        account = '::' + account;
+        window.store.forEach(function(key)
+        {
+            if(key.startWith(account))
+            {
+                window.store.remove(key);
+            }
+        });
+    };
+
+    window.storage = new Storage();
 
     var DataList = function(name, data)
     {
         this.name = name;
-        var storeData = storeGet('datalist::' + this.name,
+        var storeData = window.storage.get('datalist::' + this.name,
         {
             data: [],
             updateTime: new Date(0)
@@ -231,7 +278,7 @@
 
     DataList.prototype.save = function()
     {
-        storeSet('datalist::' + this.name,
+        window.storage.set('datalist::' + this.name,
         {
             data: this.data,
             updateTime: this.updateTime
@@ -277,6 +324,27 @@
         return obj !== null;
     };
 
+    DataList.prototype.makeRead = function(id)
+    {
+        if(id !== undefined)
+        {
+            var item = this.getById(id);
+            if(item)
+            {
+                item.unread = false;
+                this.save();
+            }
+        }
+        else
+        {
+            this.each(function(idx, item)
+            {
+                item.unread = false;
+            });
+            this.save();
+        }
+    };
+
     DataList.prototype.each = function(fn, data)
     {
         data = data || this.data;
@@ -311,6 +379,7 @@
             dObj = this.getById(obj.id);
             if (dObj === null)
             {
+                obj.unread = true;
                 dt.push(obj);
             }
             else
@@ -335,11 +404,14 @@
     {
         var that = this;
         this.isReady = false;
+        this.eventDrawer = {};
         that.readyFns = [];
 
         $.plusReady(function()
         {
-            getUser();
+            window.storage.setPlus();
+            window.storage.getUser();
+
             that.data = {
                 todo: new DataList('todo'),
                 task: new DataList('task'),
@@ -347,36 +419,101 @@
                 story: new DataList('story')
             };
 
-            that.config = storeGet('zentaoConfig',
-            {});
-            that.session = storeGet('session',
-            {});
+            that.config = window.storage.get('zentaoConfig', {});
+            that.session = window.storage.get('session', {});
+
             setTimeout(function()
             {
-                that.ready()
+                that.trigger('ready');
+                that.isReady = true;
             }, 100);
         });
     };
 
+    Zentao.prototype.on = function(e, fn)
+    {
+        console.color("ZENTAO ON: " + e, 'h5|bgwarning');
+        var name = getEventName(e);
+        if(!this.eventDrawer[name])
+        {
+            this.eventDrawer[name] = [];
+        }
+        this.eventDrawer[name].push({name: e, fn: fn});
+        console.log('drawer:', this.eventDrawer);
+        return this;
+    };
+
+    Zentao.prototype.off = function(e)
+    {
+        var name = getEventName(e);
+        var drawer = this.eventDrawer[name];
+        if(drawer)
+        {
+            var et;
+            for (var i = drawer.length - 1; i >= 0; i--)
+            {
+                et = drawer[i];
+                if(e === et.name || et.name.startWith(e + '.'))
+                {
+                    drawer.splice(i, 1);
+                }
+            };
+        }
+        return this;
+    };
+
+    Zentao.prototype.trigger = function(e, pramas)
+    {
+        console.color("ZENTAO TRIGGER: " + e, 'h5|bgwarning');
+        console.log('drawer:', this.eventDrawer);
+        var name = getEventName(e);
+        var drawer = this.eventDrawer[name];
+        var result;
+        if(drawer)
+        {
+            var et;
+            for (var i = 0; i < drawer.length; ++i)
+            {
+                et = drawer[i];
+                if(e === et.name || et.name.startWith(e + '.'))
+                {
+                    result = et.fn(pramas);
+                }
+            };
+        }
+        return result;
+    };
+
     Zentao.prototype.ready = function(fn)
     {
-        if (typeof fn === 'function')
+        this.on('ready', fn);
+    };
+
+    Zentao.prototype.logout = function(clean, callback)
+    {
+        if(clean)
         {
-            this.readyFns.push(fn);
+            window.storage.clearUser();
         }
         else
         {
-            for (var i = 0; i < this.readyFns.length; ++i)
-            {
-                this.readyFns[i]();
-            };
+            window.user.status = 'logout';
+            window.user.pwdMd5 = null;
+            window.storage.saveUser();
         }
-        this.isReady = true;
+
+        callback && callback(clean);
     };
 
     /* Get zentao config and login in zentao */
     Zentao.prototype.login = function(loginkey, successCallback, errorCallback)
     {
+        if(this.trigger('logging') === false)
+        {
+            that.callWidthMessage(errorCallback, '登录被取消。');
+            return;
+        }
+
         var that = this;
         if (loginkey)
         {
@@ -384,13 +521,18 @@
             window.user.account = loginkey.account;
             window.user.pwdMd5 = loginkey.pwdMd5;
         }
+        var callError = function()
+        {
+            errorCallback && errorCallback();
+            that.trigger('logged', false);
+        };
 
         this.getConfig(function()
         {
             var checkVer = that.checkVersion();
             if (!checkVer.result)
             {
-                that.callWidthMessage(errorCallback, checkVer.message);
+                that.callWidthMessage(callError, checkVer.message);
                 return;
             }
 
@@ -404,12 +546,12 @@
                     that.getRole(function()
                     {
                         consolelog('4.成功获取角色。', 'success');
-                        storeSet('lastLoginTime', new Date());
                         successCallback && successCallback();
-                    }, errorCallback);
-                }, errorCallback);
-            }, errorCallback);
-        }, errorCallback);
+                        that.trigger('logged', true);
+                    }, callError);
+                }, callError);
+            }, callError);
+        }, callError);
     };
 
     Zentao.prototype.tryLogin = function(successCallback, errorCallback)
@@ -591,7 +733,7 @@
                 if (session.sessionID && session.sessionID != 'undefined')
                 {
                     that.session = session;
-                    storeSet('session', session);
+                    window.storage.set('session', session);
                     successCallback && successCallback(session);
                 }
                 else
@@ -624,7 +766,9 @@
             {
                 roleData = JSON.parse(roleData.data);
                 window.user.role = roleData.role;
-                saveUser();
+                window.user.status = 'online';
+                window.user.lastLoginTime = new Date().getTime();
+                window.storage.saveUser();
                 window.user.data = roleData;
                 successCallback && successCallback(roleData);
             }
@@ -644,7 +788,7 @@
             if (config.version)
             {
                 that.config = config;
-                storeSet('zentaoConfig', config);
+                window.storage.set('zentaoConfig', config);
                 successCallback && successCallback(config);
             }
             else
@@ -836,13 +980,23 @@
         return result;
     };
 
-    Zentao.prototype.loadData = function(dataType, successCallback, errorCallback, count)
+    Zentao.prototype.tryLoadData = function(dataType, successCallback, errorCallback, count)
     {
         console.color('LoadData: ' + dataType, 'h4|info');
 
         if (typeof dataType === 'undefined' || dataTypeSet.indexOf(',' + dataType + ',') < 0)
         {
             this.callWidthMessage(errorCallback, '无法加载数据，因为没有指定DataType或者指定的dataType不受支持。');
+            return false;
+        }
+
+        if(window.user.status !== 'online')
+        {
+            this.callWidthMessage(errorCallback, '请先登录。');
+            if(window.plus)
+            {
+                window.plus.nativeUI.toast('离线状态下，无法更新数据');
+            }
             return false;
         }
 
@@ -866,8 +1020,8 @@
                 method: dataType,
                 type: 'all',
                 pageID: 1,
-                recTotal: 1000,
-                recPerPage: 1000
+                recTotal: count,
+                recPerPage: count
             });
 
         $.get(url, function(response)
@@ -884,7 +1038,25 @@
                 that.callWidthMessage(errorCallback, '无法获取用户数据，请确保所登录的账户拥有超级model权限。禅道权限管理请参考：http://www.zentao.net/book/zentaopmshelp/71.html。')
             }
 
-        }, that.fnToCallWidthMessage(errorCallback, '无法获取数据，请检查网络。'));
+        }, that.fnToCallWidthMessage(errorCallback, '无法获取数据，请检查网络。'));        
+    }
+
+    Zentao.prototype.loadData = function(dataType, successCallback, errorCallback, count)
+    {
+        // if(window.user && window.user.status === 'online')
+        // {
+        //     this.tryLoadData(dataType, successCallback, errorCallback, count);
+        // }
+        // else
+        // {
+        //     var that = this;
+        //     this.login(null, function()
+        //     {
+        //         that.tryLoadData(dataType, successCallback, errorCallback, count);
+        //     }, this.fnToCallWidthMessage(errorCallback, '登录失败，无法从服务器加载数据。'));
+        // }
+        // 
+        this.tryLoadData(dataType, successCallback, errorCallback, count);
     }
 
     window.zentao = new Zentao();

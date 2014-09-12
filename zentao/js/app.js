@@ -7,7 +7,8 @@
         currentSub,
         subTabs         = {todo: 1, task: 2, bug: 3, story: 4},
         defaultTab      = 'story',
-        firstBackbutton = null;
+        firstBackbutton = null,
+        loginWindow;
 
     mui.init(
     {
@@ -28,112 +29,73 @@
         }
     });
 
-    mui.ready(function()
-    {
-    });
-
     mui.plusReady(function()
     {
         mainView = plus.webview.currentWebview();
-        handleLoginView();
-
-        handleSubpageNav();
-        console.color('app plus ready', 'bgsuccess');
-    });
-
-    function handleSubpageNav()
-    {
         document.getElementById('subpageNav').addDelegateListener('tap', '.open-subpage', function()
         {
             openSubWin(this.getAttribute('data-id'));
         });
-    };
 
-    function handleLoginView()
+        console.color('app plus ready', 'bgsuccess');
+    });
+
+    var $status = $('#userStatus');
+    zentao.on('logging', function()
+    {
+        $status.innerHTML = '登录中...';
+    }).on('logged', function(result)
+    {
+        if(result)
+        {
+            $status.innerHTML = '在线';
+        }
+        else
+        {
+            $status.innerHTML = '登录失败';
+            openLoginWindow();
+        }
+        openSubWin();
+    });
+
+    $status.on('tap', function()
     {
         var user = window.user;
-        var username = $('#username');
-        var password = $('#password');
-        var pwdMd5;
-        var address = $('#address');
-        var loginBtn = $('#loginBtn');
-        var tryLogin = function(silence)
+        if(!user || user.status != 'online')
         {
-            if (!silence)
-            {
-                if (address.value === '')
-                {
-                    alert('请输入禅道地址，包含“http://”。');
-                    return;
-                }
-                else if (username.value === '')
-                {
-                    alert('请输入用户名或者注册邮箱。');
-                    return;
-                }
-                else if (password.value === '')
-                {
-                    alert('请输入密码。');
-                    return;
-                }
-            }
+            openLoginWindow();
+        }
+    });
 
-            if (silence && (user.url || user.account || user.pwdMd5 || 1) === 1)
-            {
-                return;
-            }
+    zentao.ready(function()
+    {
+        var user = window.user;
 
-            loginBtn.disabled = 'disabled';
-            loginBtn.innerHTML = '正在登录...';
+        if(!user || user.status === 'logout')
+        {
+            $status.innerHTML = '请登录';
+            openLoginWindow();
+        }
+        else
+        {
+            $status.innerHTML = '离线';
+            zentao.login();
+        }
+    });
 
-            if (!silence)
+    function openLoginWindow()
+    {
+        if(!loginWindow)
+        {
+            loginWindow = plus.webview.create('login.html', 'login', 
             {
-                user.account = username.value;
-                user.pwdMd5 = window.md5(password.value);
-                user.url = address.value;
-            }
-
-            zentao.login(user, function()
-            {
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = '登录';
-                switchOutContent('login', 'list');
-                consolelog('登录成功。', 'bgsuccess|h5');
-
-                openSubWin();
-            }, function(response)
-            {
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = '登录';
-                if (!silence) alert('登录失败。' + (response ? response.message : ''));
+                top: "0px",
+                bottom: "0px",
+                bounce: "vertical",
+                scrollIndicator: "none"
             });
-
-            return false;
-        };
-
-        if (user.account) username.value = user.account;
-        if (user.url) address.value = user.url;
-
-        address.on('focus', function()
-        {
-            if (address.value === '')
-            {
-                address.value = 'http://';
-            }
-        }).on('blur', function()
-        {
-            if (address.value === 'http://')
-            {
-                address.value = '';
-            }
-        });
-
-        $('#loginBtn').on('click', function()
-        {
-            tryLogin(false);
-        });
-
-        tryLogin(true);
+        }
+        loginWindow.show('zoom-in', 200);
     }
 
     function openSubWin(list)

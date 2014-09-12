@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>禅道</title>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/style.css" rel="stylesheet"/>
+</head>
+<body>
+  <div class="mui-content">
+    <section id="login" class="content-view with-padding full show">
+      <div>
+        <div class="logo">
+          <img src="img/bg-zentao.png" alt="">
+        </div>
+        <div id="loginForm">
+          <div class="mui-input-group">
+             <input class="mui-input-clear" id="address" type="url" placeholder="禅道地址(例如：http://zentao.com)">
+            <input id="username" type="text" placeholder="用户名/注册邮箱">
+            <input id="password" type="password" placeholder="密码">
+          </div>
+          <button id="loginBtn" type="button" class="mui-btn mui-btn-primary mui-btn-block">登录</button>
+          <button id="backBtn" type="button" class="mui-btn mui-btn-block mui-hidden mui-action-back">返回</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<script src="js/core.js"></script>
+<script src="js/$.js"></script>
+<script src="js/console.js"></script>
+<script src="js/store.js"></script>
+<script src="js/md5.min.js"></script>
+<script src="js/mui.js"></script>
+<script src="js/zentao.js"></script>
+<script src="js/webview.js"></script>
+<script>
+zentao.on('ready', function()
+{
+    var wv = plus.webview.currentWebview();
+    if(window.user && window.user.status != 'logout')
+    {
+        $('#backBtn').classList.remove('mui-hidden');
+    }
+});
+
+function handleLoginView()
+{
+    var user = window.user;
+    var username = $('#username');
+    var password = $('#password');
+    var pwdMd5;
+    var address = $('#address');
+    var loginBtn = $('#loginBtn');
+    var tryLogin = function(silence)
+    {
+        if (!silence)
+        {
+            if (address.value === '')
+            {
+                alert('请输入禅道地址，包含“http://”。');
+                return;
+            }
+            else if (username.value === '')
+            {
+                alert('请输入用户名或者注册邮箱。');
+                return;
+            }
+            else if (password.value === '')
+            {
+                alert('请输入密码。');
+                return;
+            }
+        }
+
+        if (silence && (user.url || user.account || user.pwdMd5 || 1) === 1)
+        {
+            return;
+        }
+
+        loginBtn.disabled = 'disabled';
+        loginBtn.innerHTML = '正在登录...';
+
+        if (!silence)
+        {
+            user.account = username.value;
+            user.pwdMd5 = window.md5(password.value);
+            user.url = address.value;
+        }
+
+        zentao.login(user, function()
+        {
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '登录';
+            switchOutContent('login', 'list');
+            consolelog('登录成功。', 'bgsuccess|h5');
+
+            openSubWin();
+        }, function(response)
+        {
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '登录';
+            if (!silence) alert('登录失败。' + (response ? response.message : ''));
+        });
+
+        return false;
+    };
+
+    if (user.account) username.value = user.account;
+    if (user.url) address.value = user.url;
+
+    address.on('focus', function()
+    {
+        if (address.value === '')
+        {
+            address.value = 'http://';
+        }
+    }).on('blur', function()
+    {
+        if (address.value === 'http://')
+        {
+            address.value = '';
+        }
+    });
+
+    $('#loginBtn').on('click', function()
+    {
+        tryLogin(false);
+    });
+
+    tryLogin(true);
+}
+</script>
+</body>
+</html>
