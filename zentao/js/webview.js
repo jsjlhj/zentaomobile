@@ -6,14 +6,15 @@
         return false;
     }
 
-    document.addEventListener('touchstart', shield, false); //取消浏览器的所有事件，使得active的样式在手机上正常生效
-    // document.oncontextmenu=shield;//屏蔽选择函数
+    // 取消浏览器的所有事件，使得active的样式在手机上正常生效
+    document.addEventListener('touchstart', shield, false); 
+    // document.oncontextmenu = shield;//屏蔽选择函数
 
-    //全局配置(通常所有页面引用该配置，特殊页面使用mui.init({})来覆盖全局配置)
+    // 全局配置(通常所有页面引用该配置，特殊页面使用mui.init({})来覆盖全局配置)
     mui.initGlobal(
     {
         optimize: true,
-        swipeBack: true,
+        swipeBack: false,
         showAfterLoad: true,
         titleBar: false,
         show:

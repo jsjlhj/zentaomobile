@@ -1,30 +1,40 @@
 (function(mui, $)
 {
-    var $content = $('#content');
-    var animateSpeed = 200;
-    var windows = {todo: "todos.html", task: "tasks.html", bug: "bugs.html", story: "stories.html"};
-    var mainView;
-    var currentSub;
-    var subTabs = {todo: 1, task: 2, bug: 3, story: 4};
-    var defaultTab = 'story';
+    var $content        = $('#content'),
+        animateSpeed    = 200,
+        windows         = {todo: "todos.html", task: "tasks.html", bug: "bugs.html", story: "stories.html"},
+        mainView,
+        currentSub,
+        subTabs         = {todo: 1, task: 2, bug: 3, story: 4},
+        defaultTab      = 'story',
+        firstBackbutton = null;
+
+    mui.init(
+    {
+        swipeBack: false,
+        back: function()
+        {
+            if(!firstBackbutton)
+            {
+                window.plus.nativeUI.toast('再按一次退出应用');
+                firstBackbutton = new Date().getTime();
+                setTimeout(function(){firstBackbutton = null}, 1000);
+                return false;
+            }
+            else
+            {
+                return (new Date().getTime() - firstBackbutton) < 1000;
+            }
+        }
+    });
 
     mui.ready(function()
     {
-        mui.init(
-        {
-            swipeBack: false
-        });
     });
 
     mui.plusReady(function()
     {
-        plus.key.addEventListener('backbutton', function()
-        {
-            if (confirm('确认退出？'))
-            {
-                plus.runtime.quit();
-            }
-        }, false);
+        plus.nativeUI.toast( "plusReady!");
 
         mainView = plus.webview.currentWebview();
         handleLoginView();
