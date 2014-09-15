@@ -43,72 +43,63 @@ zentao.on('ready', function()
     {
         $('#backBtn').classList.remove('mui-hidden');
     }
+
+    handleLoginView(wv);
 });
 
-function handleLoginView()
+function handleLoginView(wv)
 {
-    var user = window.user;
     var username = $('#username');
     var password = $('#password');
     var pwdMd5;
     var address = $('#address');
     var loginBtn = $('#loginBtn');
-    var tryLogin = function(silence)
+    var tryLogin = function()
     {
-        if (!silence)
+        if (address.value === '')
         {
-            if (address.value === '')
-            {
-                alert('请输入禅道地址，包含“http://”。');
-                return;
-            }
-            else if (username.value === '')
-            {
-                alert('请输入用户名或者注册邮箱。');
-                return;
-            }
-            else if (password.value === '')
-            {
-                alert('请输入密码。');
-                return;
-            }
+            alert('请输入禅道地址，包含“http://”。');
+            return;
         }
-
-        if (silence && (user.url || user.account || user.pwdMd5 || 1) === 1)
+        else if (username.value === '')
         {
+            alert('请输入用户名或者注册邮箱。');
+            return;
+        }
+        else if (password.value === '')
+        {
+            alert('请输入密码。');
             return;
         }
 
         loginBtn.disabled = 'disabled';
         loginBtn.innerHTML = '正在登录...';
 
-        if (!silence)
+        zentao.login(
         {
-            user.account = username.value;
-            user.pwdMd5 = window.md5(password.value);
-            user.url = address.value;
-        }
-
-        zentao.login(user, function()
+            account : username.value,
+            pwdMd5  : window.md5(password.value),
+            url     : address.value
+        }, function()
         {
             loginBtn.disabled = false;
             loginBtn.innerHTML = '登录';
-            switchOutContent('login', 'list');
+            window.plus.nativeUI.toast('登录成功');
             consolelog('登录成功。', 'bgsuccess|h5');
 
-            openSubWin();
+            wv.close('zoom-out', 200);
         }, function(response)
         {
             loginBtn.disabled = false;
             loginBtn.innerHTML = '登录';
-            if (!silence) alert('登录失败。' + (response ? response.message : ''));
+            alert('登录失败。' + (response ? response.message : ''));
         });
 
         return false;
     };
 
-    if (user.account) username.value = user.account;
-    if (user.url) address.value = user.url;
+    if (window.user.account) username.value = window.user.account;
+    if (window.user.url) address.value      = window.user.url;
 
     address.on('focus', function()
     {
@@ -126,10 +117,8 @@ function handleLoginView()
 
     $('#loginBtn').on('click', function()
     {
-        tryLogin(false);
+        tryLogin();
     });
-
-    tryLogin(true);
 }
 </script>
 </body>

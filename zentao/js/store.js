@@ -56,7 +56,7 @@
     /* Get item value and deserialize it, if value is null and defaultValue been given then return defaultValue */
     Store.prototype.get = function(key, defaultValue) {
         var val = this.deserialize(this.getItem(key));
-        return (defaultValue !== undefined && (val === null || val === undefined)) ? defaultValue : val;
+        return (defaultValue !== undefined && (typeof val === 'undefined' || val === null || val === undefined)) ? defaultValue : val;
     };
 
     /* Get item key by index and deserialize it */

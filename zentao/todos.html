@@ -25,10 +25,10 @@
   <div id="slider" class="mui-slider">
       <div id="sliderHeader" class="mui-slider-header">
         <div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
-          <a class="mui-control-item mui-active" href="#today">今日</a>
-          <a class="mui-control-item" href="#yestoday">昨日</a>
-          <a class="mui-control-item" href="#thisweek">本周</a>
-          <a class="mui-control-item" href="#lastweek">上周</a>
+          <a class="mui-control-item mui-active" href="#today">今日 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-today"></span></a>
+          <a class="mui-control-item" href="#yestoday">昨日 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-yestoday"></span></a>
+          <a class="mui-control-item" href="#thisweek">本周 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-thisweek"></span></a>
+          <a class="mui-control-item" href="#lastweek">上周 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-lastweek"></span></a>
         </div>
         <div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-3"></div>
       </div>
@@ -116,6 +116,9 @@ $('#dialog .dialog-footer .btn-back').on('tap', closeDialog);
 
 document.querySelector("#slider .mui-slider-group").addDelegateListener("tap", ".mui-table-view-cell", function(e)
 {
+    this.classList.remove('unread');
+    
+    updateTabBadge(this.getAttribute('data-tab'));
     showItem(this.getAttribute('data-id'), this);
 });
 
@@ -124,6 +127,14 @@ zentao.ready(function()
     showAll();
     reload();
 });
+
+function updateTabBadge(tab, count)
+{
+    var $tabBadge = $('.tab-badge-' + tab);
+    count = count || (parseInt($tabBadge.innerHTML) - 1);
+    $tabBadge.classList[count > 0 ? 'remove' : 'add']('mui-hidden');
+    $tabBadge.innerHTML = count;
+}
 
 function closeDialog()
 {
@@ -134,12 +145,14 @@ function closeDialog()
 
 function reload(callback)
 {
+    if(!zentao.isReady) return;
+
     closeDialog();
     zentao.loadData('todo', function(data)
     {
         showAll();
         callback && callback();
-    });
+    }, callback);
 }
 
 function showAll()
@@ -148,6 +161,7 @@ function showAll()
     show('yestoday');
     show('thisweek');
     show('lastweek');
+    zentao.data['todo'].markRead();
 }
 
 function showItem(id, $item)
@@ -184,6 +198,7 @@ function show(tab, data)
         $done = $('#' + tab + ' .list-todos-done'),
         waitCount = 0,
         doneCount = 0,
+        unreadCount = 0,
         today = Date.parseName('today');
 
     for(var i = $wait.childNodes.length - 1; i >= 0; i--)
@@ -203,8 +218,14 @@ function show(tab, data)
         item.classList.add('mui-table-view-cell');
         item.classList.add('pri');
         item.classList.add('pri-' + val.pri);
+        if(val.unread)
+        {
+            item.classList.add('unread');
+            unreadCount++;
+        }
         item.setAttribute('id', 'item-' + val.id);
         item.setAttribute('data-id', val.id);
+        item.setAttribute('data-tab', tab);
         var dateStr = '<span class="mui-badge' + (val.status === 'wait' && val.date < today ? ' mui-badge-warning' : '') + '">' + (tab === 'thisweek' ? val.date.getDayName() + ' ' : (tab === 'lastweek' ? '上' + val.date.getDayName() + ' ' : '')) + val.begin + '</span>';
         if(val.status === 'wait')
         {
@@ -225,6 +246,8 @@ function show(tab, data)
 
     $wait.classList[waitCount ? 'remove' : 'add']('mui-hidden');
     $done.classList[doneCount ? 'remove' : 'add']('mui-hidden');
+
+    updateTabBadge(tab, unreadCount);
 };
 </script>
 </body>

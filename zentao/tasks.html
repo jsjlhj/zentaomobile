@@ -23,10 +23,10 @@
   <div id="slider" class="mui-slider">
       <div id="sliderHeader" class="mui-slider-header">
         <div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
-          <a class="mui-control-item mui-active" href="#assignedTo">指派给我</a>
-          <a class="mui-control-item" href="#openedBy">由我创建</a>
-          <a class="mui-control-item" href="#finishedBy">由我完成</a>
-          <a class="mui-control-item" href="#closedBy">由我关闭</a>
+          <a class="mui-control-item mui-active" href="#assignedTo">指派给我 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-assignedTo"></span></a>
+          <a class="mui-control-item" href="#openedBy">由我创建 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-openedBy"></span></a>
+          <a class="mui-control-item" href="#finishedBy">由我完成 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-finishedBy"></span></a>
+          <a class="mui-control-item" href="#closedBy">由我关闭 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-closedBy"></span></a>
         </div>
         <div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-3"></div>
       </div>
@@ -84,6 +84,8 @@ mui.init(
 
 document.querySelector("#slider .mui-slider-group").addDelegateListener("tap", ".mui-table-view-cell", function(e)
 {
+    this.classList.remove('unread');
+    updateTabBadge(this.getAttribute('data-tab'));
     showItem(this.getAttribute('data-id'), this);
 });
 
@@ -93,13 +95,28 @@ zentao.ready(function()
     reload();
 });
 
+function updateTabBadge(tab, count)
+{
+    var $tabBadge = $('.tab-badge-' + tab);
+    count = count || (parseInt($tabBadge.innerHTML) - 1);
+    $tabBadge.classList[count > 0 ? 'remove' : 'add']('mui-hidden');
+    $tabBadge.innerHTML = count;
+}
+
 function reload(callback)
 {
+    if(!zentao.isReady)
+    {
+        console.error('禅道未准备就绪，无法获取数据。');
+        throw new Error('禅道未准备就绪，无法获取数据');
+        return;
+    };
+
     zentao.loadData('task', function(data)
     {
         showAll();
         callback && callback();
-    });
+    }, callback);
 }
 
 function showAll()
@@ -108,6 +125,7 @@ function showAll()
     {
         show(val);
     });
+    zentao.data['task'].markRead();
 }
 
 function showItem(id, $item)
@@ -126,6 +144,7 @@ function show(tab, data)
     data = data || zentao.filterData('task', tab);
     var $tab = $('#' + tab),
         $tasks = $('#' + tab + ' .list-tasks'),
+        unreadCount = 0,
         today = Date.parseName('today');
 
     for(var i = $tasks.childNodes.length - 1; i >= 0; i--)
@@ -150,13 +169,20 @@ function show(tab, data)
             item.classList.add('mui-table-view-cell');
             item.classList.add('pri');
             item.classList.add('pri-' + val.pri);
+            if(val.unread)
+            {
+                item.classList.add('unread');
+                unreadCount++;
+            }
             item.setAttribute('id', 'item-' + val.id);
             item.setAttribute('data-id', val.id);
+            item.setAttribute('data-tab', tab);
             item.innerHTML = '<span class="list-title"><span class="list-item-id">' + val.id + '</span>' + val.name + '</span>' + '<span class="mui-badge mui-badge-' + val.statusInfo.color + '">' + val.statusInfo.name + '</span>';
             $tasks.appendChild(item);
         });
     }
 
+    updateTabBadge(tab, unreadCount);
 };
 </script>
 </body>

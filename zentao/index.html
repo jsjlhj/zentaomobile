@@ -6,11 +6,15 @@
     <title>禅道</title>
     <link href="css/mui.min.css" rel="stylesheet"/>
     <link href="css/style.css" rel="stylesheet"/>
+    <style>
+    #userStatus {color: #333; transition: opacity 0.5s;}
+    #userStatus.hide {opacity: 0}
+    </style>
 </head>
 <body>
   <header class="mui-bar mui-bar-nav">
     <button id="userStatus" class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">连接中…</button>
-    <a class="mui-icon mui-icon-cog mui-pull-right"></a>
+    <a id="settingBtn" class="mui-icon mui-icon-cog mui-pull-right"></a>
     <h1 class="mui-title">
       <div class="mui-segmented-control" id="subpageNav">
         <a class="mui-control-item mui-active open-subpage" href="###" data-id="todo">待办</a>

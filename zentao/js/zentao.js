@@ -133,6 +133,7 @@
         else
         {
             console.error('获取存储数据失败！无法获取用户数据。');
+            return defaultValue;
         }
     };
 
@@ -157,7 +158,6 @@
         console.groupCollapsed('%cUSER: ' + window.user.account + '@' + window.user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
         console.log(window.user);
         console.groupEnd();
-        window.user = window.user;
         return window.user;
     };
 
@@ -324,7 +324,7 @@
         return obj !== null;
     };
 
-    DataList.prototype.makeRead = function(id)
+    DataList.prototype.markRead = function(id)
     {
         if(id !== undefined)
         {
@@ -370,7 +370,7 @@
         //     return false;
         // }
 
-        var setName = this.name === 'story' ? 'stories' : (this.name + s);
+        var setName = this.name === 'story' ? 'stories' : (this.name + 's');
         data = data[this.name] || data[setName];
 
         this.each(function(index, obj)
@@ -424,8 +424,8 @@
 
             setTimeout(function()
             {
-                that.trigger('ready');
                 that.isReady = true;
+                that.trigger('ready');
             }, 100);
         });
     };
@@ -521,10 +521,15 @@
             window.user.account = loginkey.account;
             window.user.pwdMd5 = loginkey.pwdMd5;
         }
-        var callError = function()
+        var callError = function(message)
         {
-            errorCallback && errorCallback();
+            if(window.user.status === 'online')
+            {
+                window.user.status = 'offline';
+            }
+            window.storage.saveUser();
             that.trigger('logged', false);
+            return that.fnToCallWidthMessage(errorCallback, message);
         };
 
         this.getConfig(function()
@@ -548,10 +553,10 @@
                         consolelog('4.成功获取角色。', 'success');
                         successCallback && successCallback();
                         that.trigger('logged', true);
-                    }, callError);
-                }, callError);
-            }, callError);
-        }, callError);
+                    }, callError('在登录时无法获取角色。'));
+                }, callError('登录验证失败。'));
+            }, callError('在登录时获取Session失败。'));
+        }, callError('在登录时获取配置失败。'));
     };
 
     Zentao.prototype.tryLogin = function(successCallback, errorCallback)
@@ -567,7 +572,7 @@
             var status = JSON.parse(response);
             if (status['status'] === 'failed')
             {
-                that.callWidthMessage(errorCallback, '登录失败，请检查用户名和密码。');
+                that.callWidthMessage(errorCallback, '所提供的用户名和密码不正确。');
             }
             else
             {
@@ -575,13 +580,13 @@
             }
         }, function(xhr)
         {
-            if (xhr.status === 0)
+            if (xhr.status === 0 || xhr.status === 302)
             {
                 successCallback && successCallback(status);
             }
             else
             {
-                that.callWidthMessage(errorCallback, '登录失败。无法连接到服务器。');
+                that.callWidthMessage(errorCallback, '无法连接到服务器。xrh.status:' + xhr.status + ' -> ' + url + ':' + xhr.responseText);
             }
         });
     };
@@ -798,12 +803,12 @@
         }, that.fnToCallWidthMessage(errorCallback, '无法获取禅道配置，请检查禅道地址是否正确。'));
     };
 
-    Zentao.prototype.callWidthMessage = function(callback, message)
+    Zentao.prototype.callWidthMessage = function(callback, message, params)
     {
         callback && callback(
         {
             message: message
-        });
+        }, params);
     };
 
     Zentao.prototype.fnToCallWidthMessage = function(callback, message)
@@ -811,6 +816,14 @@
         var that = this;
         return function(params)
         {
+            if(typeof params === 'string')
+            {
+                message += params
+            }
+            else if(params && params.message)
+            {
+                message += params.message;
+            }
             that.callWidthMessage(callback, message, params);
         };
     }
@@ -956,7 +969,7 @@
                     }
                 });
             }
-            else if (filter === 'thisweek')
+            else if (filter === 'lastweek')
             {
                 var thisweek = Date.parseName('thisweek');
                 var lastweek = thisweek.clone().addDays(-7);
@@ -990,7 +1003,8 @@
             return false;
         }
 
-        if(window.user.status !== 'online')
+        var currentUser = window.storage.getUser();
+        if(!currentUser || currentUser.status !== 'online')
         {
             this.callWidthMessage(errorCallback, '请先登录。');
             if(window.plus)

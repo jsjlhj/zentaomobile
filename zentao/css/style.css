@@ -59,6 +59,7 @@ button {outline:none}
 .btn-show-more.mui-btn-block:active {background-color: #ccc; color: #888}
 
 .mui-table-view-cell {background-image: none; border-bottom: 1px solid #ddd}
+.mui-table-view-cell.unread {background: #FCF8E3}
 .list-item-id {border: 1px solid #bbb; display: inline-block; margin-right: 5px; padding: 0 2px; font-size: 12px; line-height: 18px; color: #666; border-radius: 2px; min-width: 20px; text-align: center;}
 
 .mui-slider-progress-bar + .mui-slider-group, .mui-slider-header + .mui-slider-group{border-top: 1px solid #ddd}

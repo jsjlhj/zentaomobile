@@ -6,9 +6,10 @@
         mainView,
         currentSub,
         subTabs         = {todo: 1, task: 2, bug: 3, story: 4},
-        defaultTab      = 'story',
+        defaultTab,
         firstBackbutton = null,
-        loginWindow;
+        loginWindow,
+        settingWindow;
 
     mui.init(
     {
@@ -46,15 +47,7 @@
         $status.innerHTML = '登录中...';
     }).on('logged', function(result)
     {
-        if(result)
-        {
-            $status.innerHTML = '在线';
-        }
-        else
-        {
-            $status.innerHTML = '登录失败';
-            openLoginWindow();
-        }
+        checkUserStatus();
         openSubWin();
     });
 
@@ -67,41 +60,86 @@
         }
     });
 
+    $('#settingBtn').on('tap', function()
+    {
+        settingWindow = plus.webview.create('setting.html', 'setting', 
+        {
+            top: "0px",
+            bottom: "0px",
+            bounce: "vertical",
+            scrollIndicator: "none"
+        });
+        settingWindow.addEventListener('close', checkUserStatus);
+        settingWindow.show('slide-in-right', 200);
+    });
+
     zentao.ready(function()
     {
-        var user = window.user;
+        checkUserStatus('mild', true);
+    });
 
+    function checkUserStatus(mild, first)
+    {
+        var md = mild && mild === 'mild';
+        var user = md ? window.user : window.storage.getUser();
+
+        $status.classList.remove('hide');
         if(!user || user.status === 'logout')
         {
             $status.innerHTML = '请登录';
+            $('#settingBtn').classList.add('mui-hidden');
             openLoginWindow();
+        }
+        else if(first)
+        {
+            user.status = 'offline';
+            $status.innerHTML = '离线';
+            if(md) zentao.login();
+            $('#settingBtn').classList.remove('mui-hidden');
+        }
+        else if(user.status === 'online')
+        {
+            $status.innerHTML = '在线';
+            setTimeout(function(){$status.classList.add('hide');}, 2000);
+            openSubWin();
+            $('#settingBtn').classList.remove('mui-hidden');
         }
         else
         {
             $status.innerHTML = '离线';
-            zentao.login();
+            if(md) zentao.login();
+            $('#settingBtn').classList.remove('mui-hidden');
         }
-    });
+    }
 
     function openLoginWindow()
     {
-        if(!loginWindow)
+        loginWindow = plus.webview.create('login.html', 'login', 
         {
-            loginWindow = plus.webview.create('login.html', 'login', 
-            {
-                top: "0px",
-                bottom: "0px",
-                bounce: "vertical",
-                scrollIndicator: "none"
-            });
-        }
+            top: "0px",
+            bottom: "0px",
+            bounce: "vertical",
+            scrollIndicator: "none"
+        });
+        loginWindow.addEventListener('close', checkUserStatus);
         loginWindow.show('zoom-in', 200);
     }
 
     function openSubWin(list)
     {
-        list = list || defaultTab;
+        if(!defaultTab)
+        {
+            defaultTab = window.storage.get('lastTab', 'todo');
+        }
+
+        list = list || currentSub || defaultTab;
         var currentWin = windows[currentSub];
+
+        if(currentWin && currentSub === list)
+        {
+            currentWin.evalJS('reload();');
+            return;
+        }
 
         if(currentWin)
         {
@@ -138,6 +176,7 @@
         });
 
         currentSub = list;
+        window.storage.set('lastTab', currentSub);
     }
 
     function switchOutContent(from, to, animation)
