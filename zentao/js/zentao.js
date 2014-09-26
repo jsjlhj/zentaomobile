@@ -401,7 +401,7 @@
 
     DataList.prototype.markRead = function(id)
     {
-        if(id !== undefined)
+        if(id)
         {
             var item = this.getById(id);
             if(item)

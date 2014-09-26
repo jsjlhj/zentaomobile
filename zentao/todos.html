@@ -99,8 +99,11 @@ mui.init(
 
 document.querySelector("#slider .mui-slider-group").addDelegateListener("tap", ".mui-table-view-cell", function(e)
 {
-    this.classList.remove('unread');
-    updateTabBadge(this.getAttribute('data-tab'));
+    if(this.classList.contains('unread'))
+    {
+        this.classList.remove('unread');
+        updateTabBadge(this.getAttribute('data-tab'));
+    }
     showItem(this.getAttribute('data-id'), this);
 });
 
@@ -113,7 +116,10 @@ zentao.ready(function()
 function updateTabBadge(tab, count)
 {
     var $tabBadge = $('.tab-badge-' + tab);
-    count = count || (parseInt($tabBadge.innerHTML) - 1);
+    if(typeof count === 'undefined')
+    {
+        count = (parseInt($tabBadge.innerHTML) - 1);
+    }
     $tabBadge.classList[count > 0 ? 'remove' : 'add']('mui-hidden');
     $tabBadge.innerHTML = count;
 }
@@ -186,7 +192,6 @@ function show(tab, data)
                 item.classList.add('unread');
                 unreadCount++;
             }
-            item.setAttribute('id', 'item-' + val.id);
             item.setAttribute('data-id', val.id);
             item.setAttribute('data-tab', tab);
             var dateStr = '<span class="mui-badge' + (val.status === 'wait' && val.date < today ? ' mui-badge-warning' : '') + '">' + (tab === 'thisweek' ? val.date.getDayName() + ' ' : (tab === 'lastweek' ? '上' + val.date.getDayName() + ' ' : '')) + val.begin + '</span>';
