@@ -72,8 +72,9 @@ function updateTabBadge(tab, count)
     }
 }
 
-function reload(callback)
+function reload(callback, offline)
 {
+    console.log('reload', callback, offline);
     if(!zentao.isReady)
     {
         throw new Error('禅道未准备就绪，无法获取数据');
@@ -89,15 +90,25 @@ function reload(callback)
             {
                 window.plus.nativeUI.toast('离线状态下，无法更新数据');
             }
+            showAll();
+            callback && callback();
             return false;
         }
     }
 
-    zentao.loadData(type, function(data)
+    if(offline)
     {
         showAll();
         callback && callback();
-    }, callback);
+    }
+    else
+    {
+        zentao.loadData(type, function(data)
+        {
+            showAll();
+            if(typeof callback === 'function') callback && callback();
+        }, callback);
+    }
 }
 
 function showAll()

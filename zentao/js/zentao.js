@@ -5,8 +5,7 @@
 
     var store = window.store;
     var md5 = window.md5;
-    var dataTypeSet = ',todo,task,bug,story,';
-
+    var dataTypeSet = ['todo', 'task', 'bug', 'story'];
     var cleanMaps =
     {
         number: ['id', 'pri', 'storyID', 'projectID', 'storyVersion', 'consumed', 'left', 'estimate', 'severity'],
@@ -254,6 +253,17 @@
     var DataList = function(name, data)
     {
         this.name = name;
+        this.loadFromStore();
+        this.account = window.user['account'];
+        this.clean();
+        if (data)
+        {
+            this.load(data);
+        }
+    };
+
+    DataList.prototype.loadFromStore = function()
+    {
         var storeData = window.storage.get('datalist::' + this.name,
         {
             data: [],
@@ -265,24 +275,19 @@
         {
             this.updateTime = new Date(Date.parse(this.updateTime));
         }
-        this.account = window.user['account'];
-        this.clean();
-        if (data)
-        {
-            this.load(data);
-        }
     };
 
     DataList.prototype.clean = function(objOrArray)
     {
         objOrArray = objOrArray || this.data;
+        var that = this;
 
         if (Array.isArray(objOrArray))
         {
-            this.each(function(index, obj)
+            objOrArray.forEach(function(obj)
             {
-                obj = this.clean(obj);
-            }, objOrArray);
+                obj = that.clean(obj);
+            });
             return objOrArray;
         }
         else
@@ -362,14 +367,15 @@
 
     DataList.prototype.getById = function(id)
     {
-        var result = null;
+        var result = null,
+            that   = this;
         if (typeof id === 'string')
         {
             id = parseInt(id);
         }
         if (typeof id === 'number')
         {
-            this.each(function(index, obj)
+            this.data.forEach(function(obj)
             {
                 if (obj.id === id)
                 {
@@ -412,7 +418,7 @@
         }
         else
         {
-            this.each(function(idx, item)
+            this.data.forEach(function(item)
             {
                 item.unread = false;
             });
@@ -420,23 +426,10 @@
         }
     };
 
-    DataList.prototype.each = function(fn, data)
-    {
-        data = data || this.data;
-        var result;
-        for (var i = 0; i < data.length; ++i)
-        {
-            result = fn.call(this, i, data[i]);
-            if (result === false)
-            {
-                break;
-            }
-        };
-    };
-
     DataList.prototype.load = function(data)
     {
         var dt = this.data,
+            that = this,
             dObj, idx;
         this.updateTime = new Date();
         // if (this.account != data.account)
@@ -448,10 +441,10 @@
         var setName = this.name === 'story' ? 'stories' : (this.name + 's');
         data = data[this.name] || data[setName];
 
-        this.each(function(index, obj)
+        data.forEach(function(obj)
         {
-            obj = this.clean(obj);
-            dObj = this.getById(obj.id);
+            obj = that.clean(obj);
+            dObj = that.getById(obj.id);
             if (dObj === null)
             {
                 obj.unread = true;
@@ -461,7 +454,8 @@
             {
                 dt.splice(dt.indexOf(dObj), 1, obj);
             }
-        }, data);
+            
+        });
 
         this.sort();
         this.save();
@@ -479,6 +473,7 @@
     {
         var that = this;
         this.isReady = false;
+        this.syncId = 0;
         this.eventDrawer = {};
         that.readyFns = [];
 
@@ -944,7 +939,7 @@
 
         console.color('GetData: ' + dataType + ',' + start + ',' + count, 'h4|info');
 
-        if (typeof dataType === 'undefined' || dataTypeSet.indexOf(',' + dataType + ',') < 0)
+        if (typeof dataType === 'undefined' || dataTypeSet.indexOf(dataType) < 0)
         {
             console.error('无法检索数据，因为没有指定DataType或者指定的dataType不受支持。');
             return false;
@@ -979,7 +974,7 @@
             thisCount = 0;
         if (type === 'function')
         {
-            data.each(function(index, obj)
+            data.forEach(function(obj)
             {
                 if (start(obj))
                 {
@@ -990,7 +985,7 @@
         }
         else
         {
-            data.each(function(index, obj)
+            data.forEach(function(obj)
             {
                 if (obj[type] < start)
                 {
@@ -1011,16 +1006,20 @@
             data = this.data[dataType];
         if (!data) return false;
 
+        data.loadFromStore();
+
         if (dataType === 'todo')
         {
             if (filter === 'today')
             {
                 var today = Date.parseName('today');
-                data.each(function(idx, val)
+                data.data.forEach(function(val)
                 {
+                    console.log(val);
                     if (val.date >= today)
                     {
                         result.push(val);
+                        console.log('push today', result);
                     }
                 });
             }
@@ -1028,7 +1027,7 @@
             {
                 var today = Date.parseName('today');
                 var yestoday = today.clone().addDays(-1);
-                data.each(function(idx, val)
+                data.data.forEach(function(val)
                 {
                     if (val.date >= yestoday && val.date < today)
                     {
@@ -1039,7 +1038,7 @@
             else if (filter === 'thisweek')
             {
                 var thisweek = Date.parseName('thisweek');
-                data.each(function(idx, val)
+                data.data.forEach(function(val)
                 {
                     if (val.date >= thisweek)
                     {
@@ -1051,7 +1050,7 @@
             {
                 var thisweek = Date.parseName('thisweek');
                 var lastweek = thisweek.clone().addDays(-7);
-                data.each(function(idx, val)
+                data.data.forEach(function(val)
                 {
                     if (val.date >= lastweek && val.date < thisweek)
                     {
@@ -1075,7 +1074,7 @@
     {
         console.color('LoadData: ' + dataType, 'h4|info');
 
-        if (typeof dataType === 'undefined' || dataTypeSet.indexOf(',' + dataType + ',') < 0)
+        if (typeof dataType === 'undefined' || dataTypeSet.indexOf(dataType) < 0)
         {
             this.callWidthMessage(errorCallback, '无法加载数据，因为没有指定DataType或者指定的dataType不受支持。');
             return false;
@@ -1127,7 +1126,7 @@
             }
 
         }, that.fnToCallWidthMessage(errorCallback, '无法获取数据，请检查网络。'));
-    }
+    };
 
     Zentao.prototype.loadData = function(dataType, successCallback, errorCallback, count)
     {
@@ -1145,7 +1144,42 @@
         // }
         // 
         this.tryLoadData(dataType, successCallback, errorCallback, count);
+    };
+
+    Zentao.prototype.startAutoSync = function(interval, successCallback, errorCallback)
+    {
+        if(!interval) interval = window.storage.get('syncInterval', 5000);
+        var that = this;
+        this.autoSyncId = setInterval(function(){that.sync('AUTO', successCallback, errorCallback)}, interval);
+    };
+
+    Zentao.prototype.stopAutoSync = function()
+    {
+        if(this.autoSyncId) clearInterval(this.autoSyncId);
+        this.autoSyncId = null;
     }
+
+    Zentao.prototype.sync = function(tab, successCallback, errorCallback)
+    {
+        var that = this;
+        if(tab === 'AUTO' || typeof tab === 'undefined')
+        {
+            tab = dataTypeSet[(this.syncId++)%dataTypeSet.length];
+        }
+        var params = {tab: tab};
+        that.trigger('syncing', params);
+        that.loadData(tab, function()
+        {
+            params.result = true;
+            successCallback && successCallback(params);
+            that.trigger('sync', params);
+        }, function(e){
+            params.result = false;
+            params.e = e;
+            errorCallback && errorCallback(params);
+            that.trigger('sync', params);
+        });
+    };
 
     window.zentao = new Zentao();
 }(mui);

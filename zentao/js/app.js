@@ -51,7 +51,29 @@
     }).on('logged', function(result)
     {
         checkUserStatus();
-    }).on('ready', function(){openSubWin();});
+    }).on('syncing', function()
+    {
+        startSync();
+    }).on('sync', function(e)
+    {
+        if(e.result)
+        {
+            console.color('SYNC>>> ' + e.tab, 'h5|bgdanger');
+            var currentWin = windows[e.tab];
+            if(currentWin && currentWin.evalJS)
+            {
+                currentWin.evalJS('reload(null, true);');
+            }
+        }
+        endSync();
+    }).on('ready', function()
+    {
+        openSubWin(null, true);
+        if(window.storage.get('autoSync', true))
+        {
+            zentao.startAutoSync();
+        }
+    });
 
     $status.on('tap', function()
     {
@@ -133,7 +155,7 @@
         loginWindow.show('zoom-in', 200);
     }
 
-    function openSubWin(list)
+    function openSubWin(list, offline)
     {
         if(!defaultTab)
         {
@@ -145,7 +167,7 @@
 
         if(currentWin && currentSub === list)
         {
-            currentWin.evalJS('reload();');
+            currentWin.evalJS(offline? 'reload(null, true);' : 'reload();');
             return;
         }
 
