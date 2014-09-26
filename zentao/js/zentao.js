@@ -880,10 +880,13 @@
 
     Zentao.prototype.callWidthMessage = function(callback, message, params)
     {
-        callback && callback(
+        if(typeof callback === 'function')
         {
-            message: message
-        }, params);
+            callback && callback(
+            {
+                message: message
+            }, params);
+        }
     };
 
     Zentao.prototype.fnToCallWidthMessage = function(callback, message)
@@ -1082,10 +1085,6 @@
         if(!currentUser || currentUser.status !== 'online')
         {
             this.callWidthMessage(errorCallback, '请先登录。');
-            if(window.plus)
-            {
-                window.plus.nativeUI.toast('离线状态下，无法更新数据');
-            }
             return false;
         }
 
@@ -1127,7 +1126,7 @@
                 that.callWidthMessage(errorCallback, '无法获取用户数据，请确保所登录的账户拥有超级model权限。禅道权限管理请参考：http://www.zentao.net/book/zentaopmshelp/71.html。')
             }
 
-        }, that.fnToCallWidthMessage(errorCallback, '无法获取数据，请检查网络。'));        
+        }, that.fnToCallWidthMessage(errorCallback, '无法获取数据，请检查网络。'));
     }
 
     Zentao.prototype.loadData = function(dataType, successCallback, errorCallback, count)

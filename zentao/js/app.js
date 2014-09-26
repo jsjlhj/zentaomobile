@@ -51,8 +51,7 @@
     }).on('logged', function(result)
     {
         checkUserStatus();
-        openSubWin();
-    });
+    }).on('ready', function(){openSubWin();});
 
     $status.on('tap', function()
     {

@@ -59,86 +59,9 @@
 <script src="js/mui.js"></script>
 <script src="js/zentao.js"></script>
 <script src="js/webview.js"></script>
+<script src="js/listview.js"></script>
 <script>
-var subTabs = ['assignedTo', 'openedBy', 'reviewedBy', 'closedBy'];
-
-mui.init(
-{
-    swipeBack: false,
-
-    pullRefresh:
-    {
-        container: '#storyList',
-        down:
-        {
-            contentdown: "下拉可以刷新",
-            contentover: "释放立即刷新",
-            contentrefresh: "正在刷新...",
-            callback: function(callback)
-            {
-                reload(callback);
-            }
-        }
-    }
-});
-
-document.querySelector("#slider .mui-slider-group").addDelegateListener("tap", ".mui-table-view-cell", function(e)
-{
-    if(this.classList.contains('unread'))
-    {
-        this.classList.remove('unread');
-        updateTabBadge(this.getAttribute('data-tab'));
-    }
-    showItem(this.getAttribute('data-id'), this);
-});
-
-zentao.ready(function()
-{
-    showAll();
-    reload();
-});
-
-function updateTabBadge(tab, count)
-{
-    var $tabBadge = $('.tab-badge-' + tab);
-    if(typeof count === 'undefined')
-    {
-        count = (parseInt($tabBadge.innerHTML) - 1);
-    }
-    $tabBadge.classList[count > 0 ? 'remove' : 'add']('mui-hidden');
-    $tabBadge.innerHTML = count;
-}
-
-function reload(callback)
-{
-    if(!zentao.isReady) return;
-
-    zentao.loadData('story', function(data)
-    {
-        showAll();
-        callback && callback();
-    }, callback);
-}
-
-function showAll()
-{
-    subTabs.forEach(function(val)
-    {
-        show(val);
-    });
-    zentao.data['story'].markRead();
-}
-
-function showItem(id, $item)
-{
-    plus.webview.create("story.html", "story-" + id, 
-    {
-        top: "44px",
-        bottom: "0px",
-        bounce: "vertical",
-        scrollIndicator: "none"
-    }, {dialogOptions: {id: id, type: 'story'}}).show('slide-in-right', 200);
-};
+listView({type: 'story', tabs: ['assignedTo', 'openedBy', 'reviewedBy', 'closedBy']});
 
 function show(tab, data)
 {
@@ -170,6 +93,7 @@ function show(tab, data)
             item.classList.add('mui-table-view-cell');
             item.classList.add('pri');
             item.classList.add('pri-' + val.pri);
+            item.classList.add('item-id-' + val.id);
             if(val.unread)
             {
                 item.classList.add('unread');
