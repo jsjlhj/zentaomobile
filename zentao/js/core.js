@@ -313,7 +313,7 @@ Date.prototype.clearTime = function()
     this.setMinutes(0);
     this.setSeconds(0);
     this.setMilliseconds(0);
-    return;
+    return this;
 };
 
 Date.prototype.getDaysInMonth = function()
@@ -346,6 +346,18 @@ Date.prototype.getLastWeekday = function(day)
 Date.prototype.isSameDay = function(date)
 {
     return date.toDateString() === this.toDateString();
+};
+
+Date.prototype.isSameWeek = function(date)
+{
+    var weekStart = this.getLastWeekday();
+    var weekEnd = weekStart.clone().addDays(7);
+    return date >= weekStart && date < weekEnd;
+};
+
+Date.prototype.isSameYear = function(date)
+{
+    return this.getFullYear() === date.getFullYear();
 };
 
 /**

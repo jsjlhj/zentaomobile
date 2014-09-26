@@ -52,7 +52,7 @@
       </div>
   </div>
 </div>
-<div id="dialog" class="dialog">
+<!-- <div id="dialog" class="dialog">
   <div class="mui-table-view-cell dialog-header"><span class="mui-icon mui-icon-checkbox"></span> <span class="list-title"></span><span class="mui-badge"></span></div>
   <div class="dialog-body">
     <h5 class="mui-content-padded">描述</h5>
@@ -64,7 +64,7 @@
       <div class="mui-col-xs-6 mui-col mui-col-extra"><button class="mui-btn mui-btn-positive mui-btn-block">完成任务</button></div>
     </div>
   </div>
-</div>
+</div> -->
 
 <script src="js/core.js"></script>
 <script src="js/$.js"></script>
@@ -75,6 +75,8 @@
 <script src="js/zentao.js"></script>
 <script src="js/webview.js"></script>
 <script>
+var subTabs = ['today', 'yestoday', 'thisweek', 'lastweek'];
+
 mui.init(
 {
     swipeBack: false,
@@ -95,13 +97,9 @@ mui.init(
     }
 });
 
-var $dailog = $('#dialog');
-$('#dialog .dialog-footer .btn-back').on('tap', closeDialog);
-
 document.querySelector("#slider .mui-slider-group").addDelegateListener("tap", ".mui-table-view-cell", function(e)
 {
     this.classList.remove('unread');
-    
     updateTabBadge(this.getAttribute('data-tab'));
     showItem(this.getAttribute('data-id'), this);
 });
@@ -120,18 +118,10 @@ function updateTabBadge(tab, count)
     $tabBadge.innerHTML = count;
 }
 
-function closeDialog()
-{
-    $dailog.classList.remove('in');
-    document.body.classList.remove('dialog-open');
-    setTimeout(function(){$dailog.classList.remove('show');}, 100);
-};
-
 function reload(callback)
 {
     if(!zentao.isReady) return;
 
-    closeDialog();
     zentao.loadData('todo', function(data)
     {
         showAll();
@@ -150,86 +140,69 @@ function showAll()
 
 function showItem(id, $item)
 {
-    $item = $item || $('.mui-table-view-cell[data-id="' + id + '"]');
-    var item = zentao.data && zentao.data.todo.getById(id);
-    if(item)
+    plus.webview.create("todo.html", "todo-" + id, 
     {
-        $('#dialog .dialog-header').innerHTML = $item.innerHTML;
-        $('#dialog .dialog-header .mui-badge').innerHTML = item.date.format('MM月dd日') + ' ' + item.begin + ' ~ ' + item.end;
-        $('#dialog .dialog-body .item-desc').innerHTML = item.desc;
-        $dailog.classList[item.status === 'done' ? 'add' : 'remove']('todo-done');
-
-        $dailog.classList.add('show');
-        $dailog.style.height = $item.clientHeight + 'px';
-        $dailog.style.top = ($item.clientHeight + 40) + 'px';
-        setTimeout(function(){$dailog.classList.add('in'); document.body.classList.add('dialog-open');}, 100);
-    }
-    else // test code
-    {
-        $dailog.classList.add('show');
-        $dailog.style.height = $item.clientHeight + 'px';
-        $dailog.style.top = ($item.clientHeight + 40) + 'px';
-
-        setTimeout(function(){$dailog.classList.add('in'); document.body.classList.add('dialog-open');}, 100);
-    }
+        top: "44px",
+        bottom: "0px",
+        bounce: "vertical",
+        scrollIndicator: "none"
+    }, {dialogOptions: {id: id, type: 'todo'}}).show('slide-in-right', 200);
 };
 
 function show(tab, data)
 {
     data = data || zentao.filterData('todo', tab);
-    var $tab = $('#' + tab),
-        $wait = $('#' + tab + ' .list-todos-wait'),
-        $done = $('#' + tab + ' .list-todos-done'),
-        waitCount = 0,
-        doneCount = 0,
+    var $tab        = $('#' + tab),
+        $todos      = $('#' + tab + ' .list-todos'),
         unreadCount = 0,
-        today = Date.parseName('today');
+        waitCount   = 0,
+        doneCount   = 0,
+        today       = Date.parseName('today');
 
-    for(var i = $wait.childNodes.length - 1; i >= 0; i--)
+    for(var i = $todos.childNodes.length - 1; i >= 0; i--)
     {
-        var child = $wait.childNodes[i];
-        if(!(child.classList && child.classList.contains('mui-table-view-divider'))) $wait.removeChild(child);
-    }
-    for(var i = $done.childNodes.length - 1; i >= 0; i--)
-    {
-        var child = $done.childNodes[i];
-        if(!(child.classList && child.classList.contains('mui-table-view-divider'))) $done.removeChild(child);
+        var child = $todos.childNodes[i];
+        $todos.removeChild(child);
     }
 
-    data.forEach(function(val)
+    var groupedData = data.groupBy('status'),
+        item;
+    for(var group in groupedData)
     {
-        var item = document.createElement('li');
-        item.classList.add('mui-table-view-cell');
-        item.classList.add('pri');
-        item.classList.add('pri-' + val.pri);
-        if(val.unread)
-        {
-            item.classList.add('unread');
-            unreadCount++;
-        }
-        item.setAttribute('id', 'item-' + val.id);
-        item.setAttribute('data-id', val.id);
-        item.setAttribute('data-tab', tab);
-        var dateStr = '<span class="mui-badge' + (val.status === 'wait' && val.date < today ? ' mui-badge-warning' : '') + '">' + (tab === 'thisweek' ? val.date.getDayName() + ' ' : (tab === 'lastweek' ? '上' + val.date.getDayName() + ' ' : '')) + val.begin + '</span>';
-        if(val.status === 'wait')
-        {
-            item.innerHTML = '<span class="mui-icon mui-icon-checkbox"></span> <span class="list-title">' + val.name + '</span>' + dateStr;
-            $wait.appendChild(item);
-            waitCount++;
-        }
-        else
-        {
-            item.innerHTML = '<span class="mui-icon mui-icon-checkbox-checked"></span> <span class="list-title">' + val.name + '</span>' + dateStr;
-            $done.appendChild(item);
-            doneCount++;
-        }
-    });
+        data = groupedData[group];
+        item = document.createElement('li');
+        item.classList.add('mui-table-view-divider');
+        item.innerHTML = '<span class="mui-badge mui-badge-' + data[0]['statusColor'] + '">' + data[0]['statusName'] + ' (<strong>' + data.length + '</strong>)</span>';
+        $todos.appendChild(item);
 
-    $('#' + tab + ' .list-todos-wait .mui-table-view-divider .mui-badge > strong').innerHTML = waitCount;
-    $('#' + tab + ' .list-todos-done .mui-table-view-divider .mui-badge > strong').innerHTML = doneCount;
-
-    $wait.classList[waitCount ? 'remove' : 'add']('mui-hidden');
-    $done.classList[doneCount ? 'remove' : 'add']('mui-hidden');
+        data.forEach(function(val)
+        {
+            var item = document.createElement('li');
+            item.classList.add('mui-table-view-cell');
+            item.classList.add('pri');
+            item.classList.add('pri-' + val.pri);
+            if(val.unread)
+            {
+                item.classList.add('unread');
+                unreadCount++;
+            }
+            item.setAttribute('id', 'item-' + val.id);
+            item.setAttribute('data-id', val.id);
+            item.setAttribute('data-tab', tab);
+            var dateStr = '<span class="mui-badge' + (val.status === 'wait' && val.date < today ? ' mui-badge-warning' : '') + '">' + (tab === 'thisweek' ? val.date.getDayName() + ' ' : (tab === 'lastweek' ? '上' + val.date.getDayName() + ' ' : '')) + val.begin + '</span>';
+            if(val.status === 'wait')
+            {
+                item.innerHTML = '<span class="mui-icon mui-icon-checkbox"></span> <span class="list-title">' + val.name + '</span>' + dateStr;
+                waitCount++;
+            }
+            else
+            {
+                item.innerHTML = '<span class="mui-icon mui-icon-checkbox-checked"></span> <span class="list-title">' + val.name + '</span>' + dateStr;
+                doneCount++;
+            }
+            $todos.appendChild(item);
+        });
+    }
 
     updateTabBadge(tab, unreadCount);
 };

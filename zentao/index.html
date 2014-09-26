@@ -7,13 +7,28 @@
     <link href="css/mui.min.css" rel="stylesheet"/>
     <link href="css/style.css" rel="stylesheet"/>
     <style>
-    #userStatus {color: #333; transition: opacity 0.5s;}
-    #userStatus.hide {opacity: 0}
+    @-webkit-keyframes loggingFlash
+    {
+      0% {background-color: #F0AD4E; border-width: 1px; opacity: 1}
+      50% {background-color: #ffdeaf; border-width: 7px; opacity: 0.8}
+    }
+    @-webkit-keyframes syncingFlash
+    {
+      0% {background-color: #4CD964; border-width: 1px; opacity: 1}
+      50% {background-color: #b9ffc5; border-width: 7px; opacity: 0.8}
+    }
+
+    #userStatusName {color: #333; transition: opacity 0.5s;}
+    #userStatus.hide-name #userStatusName {opacity: 0}
+    #userStatusIcon {display: inline-block; width: 14px; height: 14px; border-radius: 7px; border: 1px solid #808080; background-color: #e5e5e5; transition: all 0.5s;}
+    #userStatus[data-status="online"] #userStatusIcon {background: #4CD964; border-color: #27b43f; border-style: solid}
+    #userStatus[data-status="logging"] #userStatusIcon {background: #F0AD4E; border-color: #dfa655; -webkit-animation: loggingFlash 1.5s ease 0 infinite normal; animation: loggingFlash 1.5s ease 0 infinite normal;}
+    #userStatus.syncing[data-status="online"] #userStatusIcon {background: #4CD964; border-color: #27b43f; -webkit-animation: syncingFlash 1.5s ease 0 infinite normal; animation: syncingFlash 1.5s ease 0 infinite normal;}
     </style>
 </head>
 <body>
   <header class="mui-bar mui-bar-nav">
-    <button id="userStatus" class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">连接中…</button>
+    <button data-status="logging" id="userStatus" class="syncing mui-btn mui-btn-link mui-btn-nav mui-pull-left"><span id="userStatusIcon"></span> <span id="userStatusName">连接中…</span></button>
     <a id="settingBtn" class="mui-icon mui-icon-cog mui-pull-right"></a>
     <h1 class="mui-title">
       <div class="mui-segmented-control" id="subpageNav">

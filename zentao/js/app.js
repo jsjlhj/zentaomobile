@@ -41,10 +41,13 @@
         console.color('app plus ready', 'bgsuccess');
     });
 
-    var $status = $('#userStatus');
+    var $status     = $('#userStatus'),
+        $statusName = $('#userStatusName'),
+        $settingBtn = $('#settingBtn');
     zentao.on('logging', function()
     {
-        $status.innerHTML = '登录中...';
+        $statusName.innerHTML = '登录中...';
+        $status.setAttribute('data-status', 'logging');
     }).on('logged', function(result)
     {
         checkUserStatus();
@@ -80,36 +83,42 @@
 
     function checkUserStatus(mild, first)
     {
-        var md = mild && mild === 'mild';
+        var md = mild === 'mild';
         var user = md ? window.user : window.storage.getUser();
+        var status = user.status;
 
-        $status.classList.remove('hide');
+        $status.classList.remove('hide-name');
         if(!user || user.status === 'logout')
         {
-            $status.innerHTML = '请登录';
-            $('#settingBtn').classList.add('mui-hidden');
+            $statusName.innerHTML = '请登录';
+            $settingBtn.classList.add('mui-hidden');
+            status = 'offline';
             openLoginWindow();
         }
         else if(first)
         {
             user.status = 'offline';
-            $status.innerHTML = '离线';
+            status = 'offline';
+            $statusName.innerHTML = '离线';
             if(md) zentao.login();
-            $('#settingBtn').classList.remove('mui-hidden');
+            $settingBtn.classList.remove('mui-hidden');
         }
         else if(user.status === 'online')
         {
-            $status.innerHTML = '在线';
-            setTimeout(function(){$status.classList.add('hide');}, 2000);
+            $statusName.innerHTML = '在线';
+            status = 'online';
+            setTimeout(function(){$status.classList.add('hide-name');}, 2000);
             openSubWin();
-            $('#settingBtn').classList.remove('mui-hidden');
+            $settingBtn.classList.remove('mui-hidden');
         }
         else
         {
-            $status.innerHTML = '离线';
+            $statusName.innerHTML = '离线';
+            status = 'offline';
             if(md) zentao.login();
-            $('#settingBtn').classList.remove('mui-hidden');
+            $settingBtn.classList.remove('mui-hidden');
         }
+        $status.setAttribute('data-status', status);
     }
 
     function openLoginWindow()

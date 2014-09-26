@@ -17,8 +17,15 @@
             {
                 status:
                 {
-                    'wait'      : {name: '未完成', color: 'danger'},
-                    'done'      : {name: '已完成', color: 'success'}
+                    'wait'      : {name: '未完成', color: 'warning'},
+                    'done'      : {name: '已完成', color: 'success'},
+                    'doing'     : {name: '进行中', color: 'danger'},
+                },
+                type:
+                {
+                    'custom' : '自定义',
+                    'bug'    : 'Bug',
+                    'task'   : 'task'
                 }
             },
             task:
@@ -89,6 +96,44 @@
                     'tested'     : '测试完毕',
                     'verified'   : '已验收',
                     'released'   : '已发布'
+                }
+            }
+        },
+        filter:
+        {
+            todo:
+            {
+                when: function(obj)
+                {
+                    var today = new Date(),
+                        date  = '';
+                    if(obj.date.isSameDay(today))
+                    {
+                        date = '今天';
+                    }
+                    else if(obj.date.isSameDay(today.clone().addDays(-1)))
+                    {
+                        date = '昨天';
+                    }
+                    else if(obj.date.isSameWeek(today))
+                    {
+                        date = obj.date.getDayName();
+                    }
+                    // special description when date is in lastweek
+                    // else if(obj.date.isSameWeek(today.clone().addDays(-7)))
+                    // {
+                    //     date = '上' + obj.date.getDayName();
+                    // }
+                    else if(obj.date.isSameYear(today))
+                    {
+                        date = obj.date.format('MM月dd日');
+                    }
+                    else
+                    {
+                        date = obj.date.format('yyyy年MM月dd日');
+                    }
+
+                    return date;
                 }
             }
         }
@@ -285,6 +330,23 @@
                     }
                 }
             }
+
+            // apply filter
+            var filters = cleanMaps.filter[this.name],
+                filter,
+                result;
+            for(var key in filters)
+            {
+                filter = filters[key];
+                if(typeof filter === 'function')
+                {
+                    result = filter(objOrArray);
+                    if(result !== undefined)
+                    {
+                        objOrArray[key] = result;
+                    }
+                }
+            }
             return objOrArray;
         }
     };
@@ -452,7 +514,7 @@
             this.eventDrawer[name] = [];
         }
         this.eventDrawer[name].push({name: e, fn: fn});
-        console.log('drawer:', this.eventDrawer);
+        // console.log('drawer:', this.eventDrawer);
         return this;
     };
 
@@ -478,7 +540,7 @@
     Zentao.prototype.trigger = function(e, pramas)
     {
         console.color("ZENTAO TRIGGER: " + e, 'h5|bgwarning');
-        console.log('drawer:', this.eventDrawer);
+        // console.log('drawer:', this.eventDrawer);
         var name = getEventName(e);
         var drawer = this.eventDrawer[name];
         var result;

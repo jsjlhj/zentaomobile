@@ -153,7 +153,7 @@ function show(tab, data)
     for(var group in groupedData)
     {
         data = groupedData[group];
-        item = item = document.createElement('li');
+        item = document.createElement('li');
         item.classList.add('mui-table-view-divider');
         item.innerHTML = '<span class="mui-badge">' + data[0]['typeName'] + ' (<strong>' + data.length + '</strong>)</span>';
         $bugs.appendChild(item);
