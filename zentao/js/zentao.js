@@ -6,83 +6,93 @@
     var store = window.store;
     var md5 = window.md5;
     var dataTypeSet = ',todo,task,bug,story,';
-    var cleanTags = 
+
+    var cleanMaps =
     {
         number: ['id', 'pri', 'storyID', 'projectID', 'storyVersion', 'consumed', 'left', 'estimate', 'severity'],
-        date: ['date', 'assignedDate', 'canceledDate', 'closedDate', 'deadline', 'estStarted', 'finishedDate', 'lastEditedDate', 'openedDate', 'realStarted', 'resolvedDate']
-    };
-
-    var statusInfo = 
-    {
-        task: 
+        date: ['date', 'assignedDate', 'canceledDate', 'closedDate', 'deadline', 'estStarted', 'finishedDate', 'lastEditedDate', 'openedDate', 'realStarted', 'resolvedDate'],
+        expand:
         {
-          'wait'   : {name: '未开始', color: 'primary'},
-          'doing'  : {name: '进行中', color: 'danger'},
-          'done'   : {name: '已完成', color: 'success'},
-          'pause'  : {name: '已暂停', color: 'warning'},
-          'cancel' : {name: '已取消', color: ''},
-          'closed' : {name: '已关闭', color: ''}
-        },
-        bug:
-        {
-            'active'   : {name: '激活', color: 'danger'},
-            'resolved' : {name: '已解决', color: 'success'},
-            'closed'   : {name: '已关闭', color: ''}
-        },
-        story:
-        {
-            'draft'     : {name: '草稿', color: 'purple'},
-            'active'    : {name: '激活', color: 'success'},
-            'closed'    : {name: '已关闭', color: ''},
-            'changed'   : {name: '已变更', color: 'danger'}
-        }
-    };
-
-    var stageNames = 
-    {
-        story:
-        {
-            'wait'       : '未开始',
-            'planned'    : '已计划',
-            'projected'  : '已立项',
-            'developing' : '研发中',
-            'developed'  : '研发完毕',
-            'testing'    : '测试中',
-            'tested'     : '测试完毕',
-            'verified'   : '已验收',
-            'released'   : '已发布'
+            todo:
+            {
+                status:
+                {
+                    'wait'      : {name: '未完成', color: 'danger'},
+                    'done'      : {name: '已完成', color: 'success'}
+                }
+            },
+            task:
+            {
+                status:
+                {
+                  'wait'   : {name: '未开始', color: 'primary'},
+                  'doing'  : {name: '进行中', color: 'danger'},
+                  'done'   : {name: '已完成', color: 'success'},
+                  'pause'  : {name: '已暂停', color: 'warning'},
+                  'cancel' : {name: '已取消', color: ''},
+                  'closed' : {name: '已关闭', color: ''}
+                },
+                type:
+                {
+                    'design'  : '设计',
+                    'devel'   : '开发',
+                    'test'    : '测试',
+                    'study'   : '研究',
+                    'discuss' :'讨论',
+                    'ui'      : '界面',
+                    'affair'  : '事务',
+                    'misc'    : '其他'
+                }
+            },
+            bug:
+            {
+                status:
+                {
+                    'active'   : {name: '激活',   color: 'danger'},
+                    'resolved' : {name: '已解决', color: 'success'},
+                    'closed'   : {name: '已关闭', color: ''}
+                },
+                type:
+                {
+                    'codeerror'    : '代码错误',
+                    'interface'    : '界面优化',
+                    'designchange' : '设计变更',
+                    'newfeature'   : '新增需求',
+                    'designdefect' : '设计缺陷',
+                    'config'       : '配置相关',
+                    'install'      : '安装部署',
+                    'security'     : '安全相关',
+                    'performance'  : '性能问题',
+                    'standard'     : '标准规范',
+                    'automation'   : '测试脚本',
+                    'trackthings'  : '事务跟踪',
+                    'others'       : '其他'
+                }
+            },
+            story:
+            {
+                status:
+                {
+                    'draft'     : {name: '草稿',   color: 'purple'},
+                    'active'    : {name: '激活',   color: 'success'},
+                    'closed'    : {name: '已关闭', color: ''},
+                    'changed'   : {name: '已变更', color: 'danger'}
+                },
+                stage:
+                {
+                    'wait'       : '未开始',
+                    'planned'    : '已计划',
+                    'projected'  : '已立项',
+                    'developing' : '研发中',
+                    'developed'  : '研发完毕',
+                    'testing'    : '测试中',
+                    'tested'     : '测试完毕',
+                    'verified'   : '已验收',
+                    'released'   : '已发布'
+                }
+            }
         }
     }
-    var typeNames = 
-    {
-        task:
-        {
-            'design': '设计',
-            'devel': '开发',
-            'test': '测试',
-            'study': '研究',
-            'discuss':'讨论',
-            'ui': '界面',
-            'affair': '事务',
-            'misc': '其他'
-        },
-        bug:
-        {
-            'codeerror'    : '代码错误',
-            'interface'    : '界面优化',
-            'designchange' : '设计变更',
-            'newfeature'   : '新增需求',
-            'designdefect' : '设计缺陷',
-            'config'       : '配置相关',
-            'install'      : '安装部署',
-            'security'     : '安全相关',
-            'performance'  : '性能问题',
-            'standard'     : '标准规范',
-            'automation'   : '测试脚本',
-            'trackthings'  : '事务跟踪',
-            'others'       : '其他'
-        }
-    };
 
     var getEventName = function(et)
     {
@@ -235,7 +245,7 @@
             var oldVal;
 
             // clean numbers
-            cleanTags.number.forEach(function(tag)
+            cleanMaps.number.forEach(function(tag)
             {
                 oldVal = objOrArray[tag];
                 if(typeof oldVal === 'string')
@@ -245,7 +255,7 @@
             });
 
             // clean datetimes
-            cleanTags.date.forEach(function(tag)
+            cleanMaps.date.forEach(function(tag)
             {
                 oldVal = objOrArray[tag];
                 if(typeof oldVal === 'string')
@@ -255,22 +265,25 @@
                 }
             });
 
-            // added status info
-            if(objOrArray['status'] && statusInfo[this.name])
+            // added expand attribute
+            var expands = cleanMaps.expand[this.name];
+            for(var key in expands)
             {
-                objOrArray['statusInfo'] = statusInfo[this.name][objOrArray['status']];
-            }
-
-            // added types name
-            if(objOrArray['type'] && typeNames[this.name])
-            {
-                objOrArray['typeName'] = typeNames[this.name][objOrArray['type']];
-            }
-
-            // added stage name
-            if(objOrArray['stage'] && stageNames[this.name])
-            {
-                objOrArray['stageName'] = stageNames[this.name][objOrArray['stage']];
+                if(objOrArray[key]) // e.g. key = 'status'
+                {
+                    var epd = expands[key][objOrArray[key]]; // e.g. epd = {name: '', ...} or ''
+                    if(typeof epd === 'object')
+                    {
+                        for(var name in epd)
+                        {
+                            objOrArray[key + name.upperCaseFirstLetter()] = epd[name];
+                        }
+                    }
+                    else
+                    {
+                        objOrArray[key + 'Name'] = epd;
+                    }
+                }
             }
             return objOrArray;
         }

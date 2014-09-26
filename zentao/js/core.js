@@ -409,6 +409,12 @@ String.prototype.startWith = function(str)
     return this.indexOf(str) === 0;
 };
 
+String.prototype.upperCaseFirstLetter = function(str)
+{
+    if(this.length > 1) return this.substring(0,1).toUpperCase()+ this.substring(1);
+    else return this.toUpperCase();
+};
+
 
 var div = document.createElement("div"),
     prefix = ["moz", "webkit", "ms", "o"].filter(function(prefix)
@@ -516,4 +522,13 @@ function getElementViewTop(element)
         var elementScrollTop = document.documentElement.scrollTop;　　　　
     }　　　　
     return actualTop - elementScrollTop;　　
+}
+
+function isPlainObject(obj)
+{
+    Object.getPrototypeOf || (Object.getPrototypeOf = function(obj)
+    {
+        return obj.__proto__ || obj.prototype || (obj.constructor && obj.constructor.prototype) || Object.prototype;
+    });
+    return obj != null && typeof(obj) == "object" && Object.getPrototypeOf(obj) == Object.prototype;
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>禅道</title>
+  <title>禅道待办</title>
   <link href="css/mui.min.css" rel="stylesheet"/>
   <link href="css/style.css" rel="stylesheet"/>
   <link href="css/subpage.css" rel="stylesheet"/>
@@ -14,8 +14,8 @@
   .mui-table-view-cell .mui-icon {opacity: 0.5}
   .mui-table-view-cell.mui-active .mui-icon {opacity: 0.95}
   .mui-table-view.list-todos-done .mui-table-view-cell {color: #999}
-  /*.list-todos-wait .mui-table-view-divider {background: #DD524D}*/
-  /*.list-todos-done .mui-table-view-divider {background: #4CD964}*/
+  .list-todos-wait .mui-table-view-divider .mui-badge {background: #DD524D; color: #fff;}
+  .list-todos-done .mui-table-view-divider .mui-badge {background: #4CD964; color: #fff;}
   .dialog.todo-done .dialog-footer .mui-col-extra {display: none}
   .dialog.todo-done .dialog-footer .mui-col {width: 100%}
   </style>
@@ -34,35 +34,19 @@
       </div>
       <div class="mui-slider-group" id="todoList">
         <div id="today" class="mui-slider-item mui-control-content mui-active">
-          <ul class="mui-table-view list-todos list-todos-wait">
-            <li class="mui-table-view-divider"><span class="mui-badge mui-badge-danger"><strong>0</strong> 未完成</span></li>
-          </ul>
-          <ul class="mui-table-view list-todos list-todos-done">
-            <li class="mui-table-view-divider"><span class="mui-badge mui-badge-success"><strong>0</strong> 已完成</span></li>
+          <ul class="mui-table-view list-todos">
           </ul>
         </div>
         <div id="yestoday" class="mui-slider-item mui-control-content">
-          <ul class="mui-table-view list-todos list-todos-wait">
-            <li class="mui-table-view-divider"><span class="mui-badge mui-badge-danger"><strong>0</strong> 未完成</span></li>
-          </ul>
-          <ul class="mui-table-view list-todos list-todos-done">
-            <li class="mui-table-view-divider"><span class="mui-badge mui-badge-success"><strong>0</strong> 已完成</span></li>
+          <ul class="mui-table-view list-todos">
           </ul>
         </div>
         <div id="thisweek" class="mui-slider-item mui-control-content">
-          <ul class="mui-table-view list-todos list-todos-wait">
-            <li class="mui-table-view-divider"><span class="mui-badge mui-badge-danger"><strong>0</strong> 未完成</span></li>
-          </ul>
-          <ul class="mui-table-view list-todos list-todos-done">
-            <li class="mui-table-view-divider"><span class="mui-badge mui-badge-success"><strong>0</strong> 已完成</span></li>
+          <ul class="mui-table-view list-todos">
           </ul>
         </div>
         <div id="lastweek" class="mui-slider-item mui-control-content">
-          <ul class="mui-table-view list-todos list-todos-wait">
-            <li class="mui-table-view-divider"><span class="mui-badge mui-badge-danger"><strong>0</strong> 未完成</span></li>
-          </ul>
-          <ul class="mui-table-view list-todos list-todos-done">
-            <li class="mui-table-view-divider"><span class="mui-badge mui-badge-success"><strong>0</strong> 已完成</span></li>
+          <ul class="mui-table-view list-todos">
           </ul>
         </div>
       </div>

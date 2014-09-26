@@ -103,8 +103,8 @@ function render(obj)
     $("#priIcon").classList.add('pri-' + obj.pri);
     $("#objID").classList.add('pri-' + obj.pri);
     var $status = $('#objStatus');
-    $status.innerHTML = obj.statusInfo.name;
-    $status.classList.add('mui-badge-' + obj.statusInfo.color);
+    $status.innerHTML = obj.statusName;
+    $status.classList.add('mui-badge-' + obj.statusColor);
     $("#assignedTo").classList[obj.assignedTo ? 'remove' : 'add']('mui-hidden');
     $('#noAssignedTo').classList[obj.assignedTo ? 'add' : 'remove']('mui-hidden');
     $('#objConfirm').innerHTML = obj.confirm === '1' ? '已确认' : '未确认';

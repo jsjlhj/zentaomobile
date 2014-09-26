@@ -172,7 +172,7 @@ function show(tab, data)
             item.setAttribute('id', 'item-' + val.id);
             item.setAttribute('data-id', val.id);
             item.setAttribute('data-tab', tab);
-            item.innerHTML = '<span class="list-title"><span class="list-item-id">' + val.id + '</span>' + val.title + '</span>' + '<span class="mui-badge mui-badge-' + val.statusInfo.color + '">' + val.statusInfo.name + '</span>';
+            item.innerHTML = '<span class="list-title"><span class="list-item-id">' + val.id + '</span>' + val.title + '</span>' + '<span class="mui-badge mui-badge-' + val.statusColor + '">' + val.statusName + '</span>';
             $storys.appendChild(item);
         });
     }
