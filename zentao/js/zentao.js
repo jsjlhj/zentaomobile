@@ -508,6 +508,18 @@
         });
     };
 
+    Zentao.prototype.unreadCount = function(tab)
+    {
+        if(tab) return this.data[tab].getUnreadCount();
+
+        var count = 0;
+        for(var t in this.data)
+        {
+            count += this.data[t].getUnreadCount();
+        }
+        return count;
+    };
+
     Zentao.prototype.on = function(e, fn)
     {
         console.color("ZENTAO ON: " + e, 'h5|bgwarning');
@@ -1185,6 +1197,12 @@
         {
             params.result = true;
             params.unreadCount = that.data[tab].getUnreadCount();
+
+            if(zentao.runningInBackground)
+            {
+                plus.runtime.setBadgeNumber(zentao.unreadCount());
+            }
+
             successCallback && successCallback(params);
             that.trigger('sync', params);
         }, function(e){

@@ -43,9 +43,16 @@
             zentao.data[tab].getUnreadCount(true);
         });
 
+        // Bind custom events
         window.addEventListener('startSync', startSync, false);
         window.addEventListener('stopSync', stopSync, false);
+
+        // Bind html5+ events
         document.addEventListener('netchange', onNetChange, false);
+        document.addEventListener('pause', onPause, false);
+        document.addEventListener('resume', onResume, false);
+
+        window.plus.navigator.setStatusBarBackground( "#FAFAFA" );
 
         console.color('app plus ready', 'bgsuccess');
     });
@@ -125,6 +132,18 @@
         {
             zentao.login();
         }
+    }
+
+    function onResume()
+    {
+        zentao.runningInBackground = false;
+        console.color('RUNNING IN FRONT', 'bgsuccess');
+    }
+
+    function onPause()
+    {
+        zentao.runningInBackground = true;
+        console.color('RUNNING IN BACKGROUND', 'bgdanger');
     }
 
     function onNetChange()
