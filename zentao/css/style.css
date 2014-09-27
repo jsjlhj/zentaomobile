@@ -76,8 +76,8 @@ button {outline:none}
 /*body.dialog-open > .mui-content {-webkit-filter: blur(3px);-moz-filter: blur(3px);-o-filter: blur(3px);-ms-filter: blur(3px);filter: blur(3px);}*/
 .dialog-footer {position: fixed; bottom: 0; width: 100%; background-color: #fff;}
 
-.dialog.show {opacity: 0; top: auto; bottom: auto; display: block; overflow: hidden;}
-.dialog.show.in {opacity: 1; top: 0!important; bottom: 0; overflow-y: auto; height: 100%!important}
+.dialog.show {opacity: 0; top: 0; bottom: auto; display: block; height:100%; overflow: hidden; overflow-y: auto}
+.dialog.show.in {opacity: 1; top: 0!important; bottom: 0;}
 
 .mui-col {float: left; padding: 5px;}
 .mui-row {padding: 10px; margin-left: -5px; margin-right: -5px; width: 100%}

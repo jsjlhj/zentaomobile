@@ -47,6 +47,10 @@
         // Bind custom events
         window.addEventListener('startSync', startSync, false);
         window.addEventListener('stopSync', stopSync, false);
+        window.addEventListener('restartSync', function()
+        {
+            zentao.restartAutoSync();
+        }, false);
 
         // Bind html5+ events
         document.addEventListener('netchange', onNetChange, false);
@@ -104,7 +108,7 @@
             }
 
 
-            if(zentao.runningInBackground)
+            if(window.storage.get('receiveNotify', true) && zentao.runningInBackground)
             {
                 var unreadCount = e.unreadCount;
                 plus.runtime.setBadgeNumber(unreadCount);
@@ -147,7 +151,7 @@
 
     $('#settingBtn').on('tap', function()
     {
-        settingWindow = plus.webview.create('setting.html', 'setting', 
+        settingWindow = plus.webview.create('setting/index.html', 'setting', 
         {
             top             : "0px",
             bottom          : "0px",

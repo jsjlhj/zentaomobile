@@ -1210,7 +1210,8 @@
 
     Zentao.prototype.startAutoSync = function(interval, successCallback, errorCallback)
     {
-        if(!interval) interval = window.storage.get('syncInterval', 6000);
+        if(!interval) interval = window.storage.get('syncInterval', 6000) / dataTabsSet.length;
+        console.color('startAutoSync:' + interval, 'h3|bgdanger');
         var that = this;
         this.autoSyncId = setInterval(function(){that.sync('AUTO', successCallback, errorCallback)}, interval);
     };
@@ -1219,7 +1220,13 @@
     {
         if(this.autoSyncId) clearInterval(this.autoSyncId);
         this.autoSyncId = null;
-    }
+    };
+
+    Zentao.prototype.restartAutoSync = function(interval, successCallback, errorCallback)
+    {
+        this.stopAutoSync();
+        this.startAutoSync(interval, successCallback, errorCallback);
+    };
 
     Zentao.prototype.sync = function(tab, successCallback, errorCallback)
     {
