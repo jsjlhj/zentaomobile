@@ -1,5 +1,6 @@
 var subTabs,
-    type;
+    type,
+    mainview;
 
 function listView(options)
 {
@@ -42,6 +43,7 @@ function listView(options)
 
     zentao.ready(function()
     {
+        mainview = plus.webview.currentWebview().parent();
         showAll();
         reload(true);
     });
@@ -74,11 +76,13 @@ function updateTabBadge(tab, count)
 
 function reload(callback, offline)
 {
-    console.log('reload', callback, offline);
+    console.color('RELOAD offline=' + offline, 'h5|bginfo');
+    console.log('callback', callback);
+
     if(!zentao.isReady)
     {
-        throw new Error('禅道未准备就绪，无法获取数据');
-        return;
+        if(typeof callback === 'function') callback();
+        return false;
     };
 
     if(callback !== true) // checkuser status
@@ -90,24 +94,27 @@ function reload(callback, offline)
             {
                 window.plus.nativeUI.toast('离线状态下，无法更新数据');
             }
-            showAll();
-            callback && callback();
-            return false;
+            offline = true;
         }
     }
 
     if(offline)
     {
         showAll();
-        callback && callback();
     }
     else
     {
+        var callCallback = function()
+        {
+            if(typeof callback === 'function') callback();
+            mui.fire(mainview, 'stopSync');
+        }
+        mui.fire(mainview, 'startSync');
         zentao.loadData(type, function(data)
         {
             showAll();
-            if(typeof callback === 'function') callback && callback();
-        }, callback);
+            callCallback();
+        }, callCallback);
     }
 }
 

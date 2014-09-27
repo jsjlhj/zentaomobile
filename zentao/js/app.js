@@ -38,6 +38,9 @@
             openSubWin(this.getAttribute('data-id'));
         });
 
+        window.addEventListener('startSync', startSync);
+        window.addEventListener('stopSync', stopSync);
+
         console.color('app plus ready', 'bgsuccess');
     });
 
@@ -58,14 +61,14 @@
     {
         if(e.result)
         {
-            console.color('SYNC>>> ' + e.tab, 'h5|bgdanger');
+            console.color('SYNC>>> ' + e.tab, 'h5|bginfo');
             var currentWin = windows[e.tab];
             if(currentWin && currentWin.evalJS)
             {
                 currentWin.evalJS('reload(null, true);');
             }
         }
-        endSync();
+        stopSync();
     }).on('ready', function()
     {
         openSubWin(null, true);
@@ -222,5 +225,17 @@
             from.classList.remove('show');
             $content.classList.remove('switching');
         }, animateSpeed);
+    }
+
+    function startSync()
+    {
+        $('#userStatus').classList.add('syncing');
+        console.log('startSync');
+    }
+
+    function stopSync()
+    {
+        $('#userStatus').classList.remove('syncing');
+        console.log('stopSync');
     }
 })(mui, $);

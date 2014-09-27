@@ -136,7 +136,7 @@
                 }
             }
         }
-    }
+    };
 
     var getEventName = function(et)
     {
@@ -1015,11 +1015,9 @@
                 var today = Date.parseName('today');
                 data.data.forEach(function(val)
                 {
-                    console.log(val);
                     if (val.date >= today)
                     {
                         result.push(val);
-                        console.log('push today', result);
                     }
                 });
             }
@@ -1148,7 +1146,7 @@
 
     Zentao.prototype.startAutoSync = function(interval, successCallback, errorCallback)
     {
-        if(!interval) interval = window.storage.get('syncInterval', 5000);
+        if(!interval) interval = window.storage.get('syncInterval', 60000);
         var that = this;
         this.autoSyncId = setInterval(function(){that.sync('AUTO', successCallback, errorCallback)}, interval);
     };
