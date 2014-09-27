@@ -11,6 +11,7 @@
         loginWindow,
         isLoging        = false,
         network         = 'wifi',
+        lastPush        = null,
         settingWindow;
 
     mui.init(
@@ -54,6 +55,19 @@
 
         window.plus.navigator.setStatusBarBackground( "#FAFAFA" );
 
+        plus.push.addEventListener('click', function(msg)
+        {
+            if(lastPush)
+            {
+                openSubWin(lastPush.tab, true);
+                $('#tab-' + lastPush.tab).classList.remove('unread');
+                if(lastPush.unreadCount === 1 && lastPush.latestItem)
+                {
+                    mui.fire(windows[currentTab], 'showItem', lastPush.latestItem.id);
+                }
+            }
+        }, false);
+
         console.color('app plus ready', 'bgsuccess');
     });
 
@@ -87,6 +101,29 @@
             if(e.tab != currentTab && e.unreadCount)
             {
                 $('#tab-' + e.tab).classList.add('unread');
+            }
+
+
+            if(zentao.runningInBackground)
+            {
+                var unreadCount = e.unreadCount;
+                plus.runtime.setBadgeNumber(unreadCount);
+
+                if(unreadCount)
+                {
+                    var message;
+                    lastPush = e;
+                    if(unreadCount > 1)
+                    {
+                        message = '收到' + unreadCount + '个新的' + zentao.dataTabs[e.tab].name;
+                    }
+                    else
+                    {
+                        message = '新的' + zentao.dataTabs[e.tab].name + ": " + (e.latestItem.name || e.latestItem.title);
+                    }
+                    plus.push.createMessage(message, "LocalMSG", {cover: true, test: 'testtest4343'});
+                    console.color('消息已推送：' + message, 'h3|info');
+                }
             }
         }
         stopSync();
@@ -137,6 +174,8 @@
     function onResume()
     {
         zentao.runningInBackground = false;
+        plus.runtime.setBadgeNumber(0);
+        plus.push.clear();
         console.color('RUNNING IN FRONT', 'bgsuccess');
     }
 

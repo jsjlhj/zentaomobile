@@ -45,13 +45,14 @@ function listView(options)
     mui.plusReady(function()
     {
         window.addEventListener('reloadData', function(e){reload(e.detail)});
+        window.addEventListener('showItem', function(e){showItem(e.detail)});
     });
 
     zentao.ready(function()
     {
         mainview = plus.webview.currentWebview().parent();
-        showAll();
-        reload({offline: true});
+        showAll(false);
+        // reload({offline: false, markRead: false});
     });
 }
 

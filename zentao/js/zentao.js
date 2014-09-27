@@ -5,7 +5,14 @@
 
     var store = window.store;
     var md5 = window.md5;
-    var dataTypeSet = ['todo', 'task', 'bug', 'story'];
+    var dataTabs =
+    {
+        todo: {name: '待办'},
+        task: {name: '任务'},
+        bug: {name: 'Bug'},
+        story: {name: '需求'}
+    };
+    var dataTabsSet = ['todo', 'task', 'bug', 'story'];
     var cleanMaps =
     {
         number: ['id', 'pri', 'storyID', 'projectID', 'storyVersion', 'consumed', 'left', 'estimate', 'severity'],
@@ -256,7 +263,6 @@
         this.loadFromStore();
         this.account = window.user['account'];
         this.clean();
-        this.unreadCount = 0;
         if (data)
         {
             this.load(data);
@@ -414,6 +420,7 @@
             if(item)
             {
                 item.unread = false;
+                this.unreadCount--;
                 this.save();
             }
         }
@@ -424,6 +431,7 @@
                 item.unread = false;
             });
             this.save();
+            this.unreadCount = 0;
         }
     };
 
@@ -449,8 +457,13 @@
             if (dObj === null)
             {
                 obj.unread = true;
-                that.unreadCount++;
                 dt.push(obj);
+                that.unreadCount++;
+
+                if(!that.latestItem || that.latestItem.id < obj.id)
+                {
+                    that.latestItem = obj;
+                }
             }
             else
             {
@@ -469,6 +482,20 @@
         return count;
     };
 
+    DataList.prototype.getUnreadItems = function(muted)
+    {
+        var unreadItems = [];
+        this.data.forEach(function(item)
+        {
+            if(item.unread)
+            {
+                if(muted) item.unread = false;
+                unreadItems.push(item);
+            }
+        });
+        return unreadItems;
+    };
+
     DataList.prototype.sort = function(fn)
     {
         this.data.sort(fn || function(a, b)
@@ -484,18 +511,20 @@
         this.syncId = 0;
         this.eventDrawer = {};
         that.readyFns = [];
+        this.dataTabs = dataTabs;
+        this.dataTabsSet = dataTabsSet;
 
         $.plusReady(function()
         {
             window.storage.setPlus();
             window.storage.getUser();
 
-            that.data = {
-                todo: new DataList('todo'),
-                task: new DataList('task'),
-                bug: new DataList('bug'),
-                story: new DataList('story')
-            };
+            that.data = {};
+            dataTabsSet.forEach(function(val)
+            {
+                that.data[val] = new DataList(val);
+                
+            });
 
             that.config = window.storage.get('zentaoConfig', {});
             that.session = window.storage.get('session', {});
@@ -507,6 +536,16 @@
             }, 100);
         });
     };
+
+    Zentao.prototype.hasTab = function(tab)
+    {
+        dataTabsSet.forEach(function(val)
+        {
+            if(tab === val) return true;
+            
+        });
+        return false;
+    }
 
     Zentao.prototype.unreadCount = function(tab)
     {
@@ -958,7 +997,7 @@
 
         console.color('GetData: ' + dataType + ',' + start + ',' + count, 'h4|info');
 
-        if (typeof dataType === 'undefined' || dataTypeSet.indexOf(dataType) < 0)
+        if (typeof dataType === 'undefined' || this.hasTab(dataType))
         {
             console.error('无法检索数据，因为没有指定DataType或者指定的dataType不受支持。');
             return false;
@@ -1091,13 +1130,13 @@
     {
         console.color('LoadData: ' + dataType, 'h4|info');
 
-        if(zentao.network === 'disconnect')
+        if(this.network === 'disconnect')
         {
             this.callWidthMessage(errorCallback, '没有连接网络。');
             return false;
         }
 
-        if (typeof dataType === 'undefined' || dataTypeSet.indexOf(dataType) < 0)
+        if (typeof dataType === 'undefined' || this.hasTab(dataType))
         {
             this.callWidthMessage(errorCallback, '无法加载数据，因为没有指定DataType或者指定的dataType不受支持。');
             return false;
@@ -1184,25 +1223,20 @@
 
     Zentao.prototype.sync = function(tab, successCallback, errorCallback)
     {
-        if(zentao.network === 'disconnect') return;
+        if(this.network === 'disconnect') return;
 
         var that = this;
         if(tab === 'AUTO' || typeof tab === 'undefined')
         {
-            tab = dataTypeSet[(this.syncId++)%dataTypeSet.length];
+            tab = dataTabsSet[(this.syncId++)%dataTabsSet.length];
         }
         var params = {tab: tab};
         that.trigger('syncing', params);
         that.loadData(tab, function()
         {
             params.result = true;
-            params.unreadCount = that.data[tab].getUnreadCount();
-
-            if(zentao.runningInBackground)
-            {
-                plus.runtime.setBadgeNumber(zentao.unreadCount());
-            }
-
+            params.unreadCount = that.data[tab].getUnreadCount(that.runningInBackground);
+            params.latestItem = that.data[tab].latestItem;
             successCallback && successCallback(params);
             that.trigger('sync', params);
         }, function(e){
