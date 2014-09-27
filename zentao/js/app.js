@@ -63,9 +63,9 @@
         {
             console.color('SYNC>>> ' + e.tab, 'h5|bginfo');
             var currentWin = windows[e.tab];
-            if(currentWin && currentWin.evalJS)
+            if(typeof currentWin === 'object')
             {
-                currentWin.evalJS('reload(null, true);');
+                mui.fire(currentWin, 'reloadData', {offline: true});
             }
         }
         stopSync();
@@ -170,7 +170,7 @@
 
         if(currentWin && currentSub === list)
         {
-            currentWin.evalJS(offline? 'reload(null, true);' : 'reload();');
+            mui.fire(currentWin, 'reloadData', {offline: offline});
             return;
         }
 

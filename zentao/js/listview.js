@@ -1,6 +1,7 @@
 var subTabs,
     type,
-    mainview;
+    mainview,
+    isLoading;
 
 function listView(options)
 {
@@ -41,11 +42,16 @@ function listView(options)
         showItem(this.getAttribute('data-id'), this);
     });
 
+    mui.plusReady(function()
+    {
+        window.addEventListener('reloadData', function(e){reload(e.detail)});
+    });
+
     zentao.ready(function()
     {
         mainview = plus.webview.currentWebview().parent();
         showAll();
-        reload(true);
+        reload({offline: true});
     });
 }
 
@@ -74,18 +80,23 @@ function updateTabBadge(tab, count)
     }
 }
 
-function reload(callback, offline)
+function reload(options)
 {
-    console.color('RELOAD offline=' + offline, 'h5|bginfo');
-    console.log('callback', callback);
+    console.color('RELOAD' 'h5|bginfo');
+    console.log('options', options);
 
-    if(!zentao.isReady)
+    if(typeof options === 'function')
     {
-        if(typeof callback === 'function') callback();
-        return false;
-    };
+        options = {callback: options};
+    }
 
-    if(callback !== true) // checkuser status
+    if(!zentao.isReady || isLoading)
+    {
+        options.callback && options.callback();
+        return false;
+    }
+
+    if(options.checkStatus)
     {
         var currentUser = window.storage.getUser();
         if(!currentUser || currentUser.status !== 'online')
@@ -94,11 +105,11 @@ function reload(callback, offline)
             {
                 window.plus.nativeUI.toast('离线状态下，无法更新数据');
             }
-            offline = true;
+            options.offline = true;
         }
     }
 
-    if(offline)
+    if(options.offline)
     {
         showAll();
     }
@@ -106,9 +117,12 @@ function reload(callback, offline)
     {
         var callCallback = function()
         {
-            if(typeof callback === 'function') callback();
+            options.callback && options.callback();
             mui.fire(mainview, 'stopSync');
+            isLoading = false;
         }
+
+        isLoading = true;
         mui.fire(mainview, 'startSync');
         zentao.loadData(type, function(data)
         {
