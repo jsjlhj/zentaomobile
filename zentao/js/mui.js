@@ -1013,8 +1013,11 @@ window.mui = mui;
         if (!webview.preloaded) {
             $.fire(webview, 'preload');
             var list = webview.children();
-            for (var i = 0; i < list.length; i++) {
-                $.fire(list[i], 'preload');
+            if(list)
+            {
+                for (var i = 0; i < list.length; i++) {
+                    $.fire(list[i], 'preload');
+                }
             }
             webview.preloaded = true;
         }
