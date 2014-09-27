@@ -91,10 +91,10 @@
     {
         settingWindow = plus.webview.create('setting.html', 'setting', 
         {
-            top: "0px",
-            bottom: "0px",
-            bounce: "vertical",
-            scrollIndicator: "none"
+            top             : "0px",
+            bottom          : "0px",
+            bounce          : "vertical",
+            scrollIndicator : "none"
         });
         settingWindow.addEventListener('close', checkUserStatus);
         settingWindow.show('slide-in-right', 200);
@@ -107,22 +107,22 @@
 
     function checkUserStatus(mild, first)
     {
-        var md = mild === 'mild';
-        var user = md ? window.user : window.storage.getUser();
+        var md     = mild === 'mild';
+        var user   = md ? window.user : window.storage.getUser();
         var status = user.status;
 
         $status.classList.remove('hide-name');
         if(!user || user.status === 'logout')
         {
             $statusName.innerHTML = '请登录';
+            status                = 'offline';
             $settingBtn.classList.add('mui-hidden');
-            status = 'offline';
             openLoginWindow();
         }
         else if(first)
         {
-            user.status = 'offline';
-            status = 'offline';
+            user.status           = 'offline';
+            status                = 'offline';
             $statusName.innerHTML = '离线';
             if(md) zentao.login();
             $settingBtn.classList.remove('mui-hidden');
@@ -130,7 +130,7 @@
         else if(user.status === 'online')
         {
             $statusName.innerHTML = '在线';
-            status = 'online';
+            status                = 'online';
             setTimeout(function(){$status.classList.add('hide-name');}, 2000);
             openSubWin();
             $settingBtn.classList.remove('mui-hidden');
@@ -149,10 +149,10 @@
     {
         loginWindow = plus.webview.create('login.html', 'login', 
         {
-            top: "0px",
-            bottom: "0px",
-            bounce: "vertical",
-            scrollIndicator: "none"
+            top             : "0px",
+            bottom          : "0px",
+            bounce          : "vertical",
+            scrollIndicator : "none"
         });
         loginWindow.addEventListener('close', checkUserStatus);
         loginWindow.show('zoom-in', 200);
@@ -190,10 +190,10 @@
         {
             windows[list] = plus.webview.create(windows[list], list, 
             {
-                top: "44px",
-                bottom: "0px",
-                bounce: "vertical",
-                scrollIndicator: "none"
+                top             : "44px",
+                bottom          : "0px",
+                bounce          : "vertical",
+                scrollIndicator : "none"
             });
 
             mainView.append(windows[list]);

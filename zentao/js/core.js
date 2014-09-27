@@ -423,7 +423,7 @@ String.prototype.startWith = function(str)
 
 String.prototype.upperCaseFirstLetter = function(str)
 {
-    if(this.length > 1) return this.substring(0,1).toUpperCase()+ this.substring(1);
+    if (this.length > 1) return this.substring(0, 1).toUpperCase() + this.substring(1);
     else return this.toUpperCase();
 };
 

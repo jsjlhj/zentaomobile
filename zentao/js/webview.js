@@ -19,8 +19,8 @@
         titleBar: false,
         show:
         {
-            aniShow: 'slide-in-right',
-            duration: 400
+            aniShow  : 'slide-in-right',
+            duration : 400
         }
     });
 
@@ -41,9 +41,9 @@
                 {
                     $.openWindow(
                     {
-                        id: id,
-                        url: this.href,
-                        preload: true //TODO 等show，hide事件，动画都完成后放开预加载
+                        id      : id,
+                        url     : this.href,
+                        preload : true //TODO 等show，hide事件，动画都完成后放开预加载
                     });
                 }
                 else
@@ -70,9 +70,9 @@
                     {
                         mui.openWindow(
                         {
-                            id: id,
-                            url: this.href,
-                            preload: $.os.ios ? false : true //TODO 暂时屏蔽IOS的预加载
+                            id      : id,
+                            url     : this.href,
+                            preload : $.os.ios ? false : true //TODO 暂时屏蔽IOS的预加载
                         });
                     }
                     else
