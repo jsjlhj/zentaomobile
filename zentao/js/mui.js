@@ -1070,7 +1070,6 @@ window.mui = mui;
                 //                        }
                 //                    }//哎。多增加点时间。否则会发现提前hide主窗口后，动画还没结束，导致看到了主屏幕
                 //                }, webviewCache.show.duration + 1000);
-
                 webviewCache.afterShowMethodName && webview.evalJS(webviewCache.afterShowMethodName + '(\'' + JSON.stringify(params) + '\')');
                 return this;
             } else { //非预加载

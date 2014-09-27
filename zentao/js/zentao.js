@@ -607,7 +607,6 @@
             }
             window.storage.saveUser();
             that.trigger('logged', false);
-            return that.fnToCallWidthMessage(errorCallback, message);
         };
 
         this.getConfig(function()
@@ -631,10 +630,10 @@
                         consolelog('4.成功获取角色。', 'success');
                         successCallback && successCallback();
                         that.trigger('logged', true);
-                    }, callError('在登录时无法获取角色。'));
-                }, callError('登录验证失败。'));
-            }, callError('在登录时获取Session失败。'));
-        }, callError('在登录时获取配置失败。'));
+                    }, that.fnToCallWidthMessage(callError, '在登录时无法获取角色。'));
+                }, that.fnToCallWidthMessage(callError, '登录验证失败。'));
+            }, that.fnToCallWidthMessage(callError, '在登录时获取Session失败。'));
+        }, that.fnToCallWidthMessage(callError, '在登录时获取配置失败。'));
     };
 
     Zentao.prototype.tryLogin = function(successCallback, errorCallback)
@@ -1080,6 +1079,12 @@
     {
         console.color('LoadData: ' + dataType, 'h4|info');
 
+        if(zentao.network === 'disconnect')
+        {
+            this.callWidthMessage(errorCallback, '没有连接网络。');
+            return false;
+        }
+
         if (typeof dataType === 'undefined' || dataTypeSet.indexOf(dataType) < 0)
         {
             this.callWidthMessage(errorCallback, '无法加载数据，因为没有指定DataType或者指定的dataType不受支持。');
@@ -1167,6 +1172,8 @@
 
     Zentao.prototype.sync = function(tab, successCallback, errorCallback)
     {
+        if(zentao.network === 'disconnect') return;
+
         var that = this;
         if(tab === 'AUTO' || typeof tab === 'undefined')
         {

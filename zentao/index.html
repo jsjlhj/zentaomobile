@@ -21,9 +21,11 @@
     #userStatusName {color: #333; transition: opacity 0.5s;}
     #userStatus.hide-name #userStatusName {opacity: 0}
     #userStatusIcon {display: inline-block; width: 14px; height: 14px; border-radius: 7px; border: 1px solid #808080; background-color: #e5e5e5; transition: all 0.5s;}
+    #userStatus[data-status="disconnect"] #userStatusName {color: #DD524D}
+    #userStatus[data-status="disconnect"] #userStatusIcon {border-color: #DD524D;}
     #userStatus[data-status="online"] #userStatusIcon {background: #4CD964; border-color: #27b43f; border-style: solid}
-    #userStatus[data-status="logging"] #userStatusIcon {background: #F0AD4E; border-color: #dfa655; -webkit-animation: loggingFlash 1.5s ease 0 infinite normal; animation: loggingFlash 1.5s ease 0 infinite normal;}
-    #userStatus.syncing[data-status="online"] #userStatusIcon {background: #4CD964; border-color: #27b43f; -webkit-animation: syncingFlash 1.5s ease 0 infinite normal; animation: syncingFlash 1.5s ease 0 infinite normal;}
+    #userStatus[data-status="logging"] #userStatusIcon {background: #F0AD4E; border-color: #dfa655; -webkit-animation: loggingFlash 1s ease 0 infinite normal; animation: loggingFlash 1s ease 0 infinite normal;}
+    #userStatus.syncing[data-status="online"] #userStatusIcon {background: #4CD964; border-color: #27b43f; -webkit-animation: syncingFlash 1/s ease 0 infinite normal; animation: syncingFlash 1s ease 0 infinite normal;}
 
     .open-subpage.unread:after {border-radius: 4px; display: inline-block; width: 8px; height: 8px; background-color: red; content: ' '; margin-left: 3px;}
     </style>
