@@ -4,7 +4,7 @@
         animateSpeed    = 200,
         windows         = {todo: "todos.html", task: "tasks.html", bug: "bugs.html", story: "stories.html"},
         mainView,
-        currentSub,
+        currentTab,
         subTabs         = {todo: 1, task: 2, bug: 3, story: 4},
         defaultTab,
         firstBackbutton = null,
@@ -35,7 +35,10 @@
         mainView = plus.webview.currentWebview();
         document.getElementById('subpageNav').addDelegateListener('tap', '.open-subpage', function()
         {
-            openSubWin(this.getAttribute('data-id'));
+            var tab = this.getAttribute('data-id');
+            openSubWin(tab);
+            this.classList.remove('unread');
+            zentao.data[tab].getUnreadCount(true);
         });
 
         window.addEventListener('startSync', startSync);
@@ -66,6 +69,11 @@
             if(typeof currentWin === 'object')
             {
                 mui.fire(currentWin, 'reloadData', {offline: true});
+            }
+
+            if(e.tab != currentTab && e.unreadCount)
+            {
+                $('#tab-' + e.tab).classList.add('unread');
             }
         }
         stopSync();
@@ -165,10 +173,10 @@
             defaultTab = window.storage.get('lastTab', 'todo');
         }
 
-        list = list || currentSub || defaultTab;
-        var currentWin = windows[currentSub];
+        list = list || currentTab || defaultTab;
+        var currentWin = windows[currentTab];
 
-        if(currentWin && currentSub === list)
+        if(currentWin && currentTab === list)
         {
             mui.fire(currentWin, 'reloadData', {offline: offline});
             return;
@@ -176,7 +184,7 @@
 
         if(currentWin)
         {
-            currentWin.hide(subTabs[list] < subTabs[currentSub] ? 'slide-out-right' : 'slide-out-left', animateSpeed);
+            currentWin.hide(subTabs[list] < subTabs[currentTab] ? 'slide-out-right' : 'slide-out-left', animateSpeed);
             var openeds = currentWin.opened();
             openeds.forEach(function(opendedDialog)
             {
@@ -200,7 +208,7 @@
         }
         else
         {
-            windows[list].show(subTabs[list] > subTabs[currentSub] ? 'slide-in-right' : 'slide-in-left', animateSpeed);
+            windows[list].show(subTabs[list] > subTabs[currentTab] ? 'slide-in-right' : 'slide-in-left', animateSpeed);
         }
 
         $('.open-subpage').forEach(function(el)
@@ -208,23 +216,8 @@
             el.classList[el.getAttribute('data-id') === list ? 'add' : 'remove']('mui-active');
         });
 
-        currentSub = list;
-        window.storage.set('lastTab', currentSub);
-    }
-
-    function switchOutContent(from, to, animation)
-    {
-        if (typeof animation === 'undefined') animation = 'zoom';
-        if (typeof from === 'string') from = $('#' + from);
-        if (typeof to === 'string') to = $('#' + to);
-        from.classList.add(animation + '-out');
-        if (to) to.classList.add('show');
-        $content.classList.add('switching');
-        setTimeout(function()
-        {
-            from.classList.remove('show');
-            $content.classList.remove('switching');
-        }, animateSpeed);
+        currentTab = list;
+        window.storage.set('lastTab', currentTab);
     }
 
     function startSync()

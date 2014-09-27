@@ -84,7 +84,6 @@ function show(tab, data)
         data = groupedData[group];
         item = item = document.createElement('li');
         item.classList.add('mui-table-view-divider');
-        item.classList.add('item-id-' + val.id);
         item.innerHTML = '<span class="mui-badge">' + data[0]['projectName'] + ' (<strong>' + data.length + '</strong>)</span>';
         $tasks.appendChild(item);
 
@@ -101,6 +100,7 @@ function show(tab, data)
             }
             item.setAttribute('data-id', val.id);
             item.setAttribute('data-tab', tab);
+            item.classList.add('item-id-' + val.id);
             item.innerHTML = '<span class="list-title"><span class="list-item-id">' + val.id + '</span>' + val.name + '</span>' + '<span class="mui-badge mui-badge-' + val.statusColor + '">' + val.statusName + '</span>';
             $tasks.appendChild(item);
         });

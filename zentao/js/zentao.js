@@ -256,6 +256,7 @@
         this.loadFromStore();
         this.account = window.user['account'];
         this.clean();
+        this.unreadCount = 0;
         if (data)
         {
             this.load(data);
@@ -448,17 +449,24 @@
             if (dObj === null)
             {
                 obj.unread = true;
+                that.unreadCount++;
                 dt.push(obj);
             }
             else
             {
                 dt.splice(dt.indexOf(dObj), 1, obj);
             }
-            
         });
 
         this.sort();
         this.save();
+    };
+
+    DataList.prototype.getUnreadCount = function(muted)
+    {
+        var count = this.unreadCount;
+        if(muted) this.unreadCount = 0;
+        return count;
     };
 
     DataList.prototype.sort = function(fn)
@@ -1146,7 +1154,7 @@
 
     Zentao.prototype.startAutoSync = function(interval, successCallback, errorCallback)
     {
-        if(!interval) interval = window.storage.get('syncInterval', 60000);
+        if(!interval) interval = window.storage.get('syncInterval', 6000);
         var that = this;
         this.autoSyncId = setInterval(function(){that.sync('AUTO', successCallback, errorCallback)}, interval);
     };
@@ -1169,6 +1177,7 @@
         that.loadData(tab, function()
         {
             params.result = true;
+            params.unreadCount = that.data[tab].getUnreadCount();
             successCallback && successCallback(params);
             that.trigger('sync', params);
         }, function(e){

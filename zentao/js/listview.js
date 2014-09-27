@@ -22,7 +22,7 @@ function listView(options)
                 contentrefresh : "正在刷新...",
                 callback       : function(callback)
                 {
-                    reload(callback);
+                    reload({callback: callback, makeRead: true});
                 }
             }
         }
@@ -82,7 +82,7 @@ function updateTabBadge(tab, count)
 
 function reload(options)
 {
-    console.color('RELOAD' 'h5|bginfo');
+    console.color('RELOAD', 'h5|bginfo');
     console.log('options', options);
 
     if(typeof options === 'function')
@@ -111,7 +111,7 @@ function reload(options)
 
     if(options.offline)
     {
-        showAll();
+        showAll(options.makeRead);
     }
     else
     {
@@ -126,19 +126,23 @@ function reload(options)
         mui.fire(mainview, 'startSync');
         zentao.loadData(type, function(data)
         {
-            showAll();
+            showAll(options.makeRead);
             callCallback();
         }, callCallback);
     }
 }
 
-function showAll()
+function showAll(makeRead)
 {
     subTabs.forEach(function(val)
     {
         show(val);
     });
-    zentao.data[type].markRead();
+    if(makeRead)
+    {
+        zentao.data[type].markRead();
+        zentao.data[type].getUnreadCount(true);
+    }
 }
 
 function showItem(id, $item)
