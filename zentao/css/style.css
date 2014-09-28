@@ -72,8 +72,6 @@ button {outline:none}
 .dialog-header > .mui-icon, .dialog-header > .list-title {display: table-cell;}
 .dialog-header > .mui-icon {width: 35px;}
 .dialog-header > .mui-badge {top: auto; bottom: 0px; right: auto; left: 50px}
-/*body {transition: .1s filter .3s;}*/
-/*body.dialog-open > .mui-content {-webkit-filter: blur(3px);-moz-filter: blur(3px);-o-filter: blur(3px);-ms-filter: blur(3px);filter: blur(3px);}*/
 .dialog-footer {position: fixed; bottom: 0; width: 100%; background-color: #fff;}
 
 .dialog.show {opacity: 0; top: 0; bottom: auto; display: block; height:100%; overflow: hidden; overflow-y: auto}

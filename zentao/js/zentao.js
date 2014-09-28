@@ -620,18 +620,24 @@
 
     Zentao.prototype.logout = function(clean, callback)
     {
-        if(clean)
+        var that = this;
+        var afterLogout = function()
         {
-            window.storage.clearUser();
-        }
-        else
-        {
-            window.user.status = 'logout';
-            window.user.pwdMd5 = null;
-            window.storage.saveUser();
+            if(clean)
+            {
+                window.storage.clearUser();
+            }
+            else
+            {
+                window.user.status = 'logout';
+                window.user.pwdMd5 = null;
+                window.storage.saveUser();
+            }
+
+            callback && callback(clean);
         }
 
-        callback && callback(clean);
+        $.get(this.concatUrl({module: 'user', method: 'logout'}), afterLogout, afterLogout);
     };
 
     /* Get zentao config and login in zentao */
@@ -658,6 +664,7 @@
             }
             window.storage.saveUser();
             that.trigger('logged', false);
+            errorCallback && errorCallback(message);
         };
 
         this.getConfig(function()

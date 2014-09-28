@@ -43,6 +43,11 @@ zentao.on('ready', function()
     {
         $('#backBtn').classList.remove('mui-hidden');
     }
+    else if(window.user && window.user.status == 'online')
+    {
+        window.plus.nativeUI.toast('已登录。');
+        wv.close('zoom-out', 200);
+    }
 
     handleLoginView(wv);
 });
@@ -92,7 +97,7 @@ function handleLoginView(wv)
         {
             loginBtn.disabled = false;
             loginBtn.innerHTML = '登录';
-            alert('登录失败。' + (response ? response.message : ''));
+            alert((response ? response.message : '登录失败。'));
         });
 
         return false;

@@ -35,6 +35,8 @@
 
     mui.plusReady(function()
     {
+        setTimeout(plus.navigator.closeSplashscreen, 200);
+
         mainView = plus.webview.currentWebview();
         document.getElementById('subpageNav').addDelegateListener('tap', '.open-subpage', function()
         {
