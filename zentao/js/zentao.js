@@ -7,10 +7,10 @@
     var md5 = window.md5;
     var dataTabs =
     {
-        todo: {name: '待办'},
-        task: {name: '任务'},
-        bug: {name: 'Bug'},
-        story: {name: '需求'}
+        todo: {name: '待办', syncId: 0, subsSet: ['today', 'yestoday', 'thisweek', 'lastweek']},
+        task: {name: '任务', syncId: 0, subsSet: ['assignedTo', 'openedBy', 'finishedBy']},
+        bug: {name: 'Bug', syncId: 0, subsSet: ['assignedTo', 'openedBy', 'resolvedBy']},
+        story: {name: '需求', syncId: 0, subsSet: ['assignedTo', 'openedBy', 'reviewedBy']}
     };
     var dataTabsSet = ['todo', 'task', 'bug', 'story'];
     var cleanMaps =
@@ -1254,14 +1254,21 @@
     {
         if(this.network === 'disconnect') return;
 
+        var subTab = 'all';
         var that = this;
         if(tab === 'AUTO' || typeof tab === 'undefined')
         {
             tab = dataTabsSet[(this.syncId++)%dataTabsSet.length];
         }
+        if(tab != 'todo' && !this.isNewVersion)
+        {
+            var subsSet =  dataTabs[tab].subsSet;
+            subTab = subsSet[(dataTabs[tab].syncId++)%subsSet.length];
+        }
+
         var params = {tab: tab};
         that.trigger('syncing', params);
-        that.loadData(tab, function()
+        that.loadData({type: tab, tab: subTab}, function()
         {
             params.result = true;
             params.unreadCount = that.data[tab].getUnreadCount(that.runningInBackground);

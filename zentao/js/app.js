@@ -41,6 +41,7 @@
         document.getElementById('subpageNav').addDelegateListener('tap', '.open-subpage', function()
         {
             var tab = this.getAttribute('data-id');
+            $('#appTitle').innerHTML = zentao.dataTabs[tab].name;
             openSubWin(tab);
             this.classList.remove('unread');
             zentao.data[tab].getUnreadCount(true);
@@ -335,7 +336,7 @@
             windows[options.tab] = plus.webview.create(windows[options.tab], options.tab, 
             {
                 top             : "44px",
-                bottom          : "0px",
+                bottom          : "60px",
                 bounce          : "vertical",
                 scrollIndicator : "none"
             });

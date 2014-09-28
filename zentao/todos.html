@@ -18,6 +18,8 @@
   .list-todos-done .mui-table-view-divider .mui-badge {background: #4CD964; color: #fff;}
   .dialog.todo-done .dialog-footer .mui-col-extra {display: none}
   .dialog.todo-done .dialog-footer .mui-col {width: 100%}
+
+  .mui-table-view-cell > .list-title {padding-right: 90px;}
   </style>
 </head>
 <body>
@@ -108,12 +110,12 @@ function show(tab, data)
             var dateStr = '<span class="mui-badge' + (val.status === 'wait' && val.date < today ? ' mui-badge-warning' : '') + '">' + (tab === 'thisweek' ? val.date.getDayName() + ' ' : (tab === 'lastweek' ? '上' + val.date.getDayName() + ' ' : '')) + val.begin + '</span>';
             if(val.status === 'wait')
             {
-                item.innerHTML = '<span class="mui-icon mui-icon-checkbox"></span> <span class="list-title">' + val.name + '</span>' + dateStr;
+              item.innerHTML = '<span class="list-title"><span class="mui-icon mui-icon-checkbox"></span> <span class="list-title-name">' + val.name + '</span></span>' + dateStr;
                 waitCount++;
             }
             else
             {
-                item.innerHTML = '<span class="mui-icon mui-icon-checkbox-checked"></span> <span class="list-title">' + val.name + '</span>' + dateStr;
+              item.innerHTML = '<span class="list-title"><span class="mui-icon mui-icon-checkbox-checked"></span> <span class="list-title-name">' + val.name + '</span></span>' + dateStr;
                 doneCount++;
             }
             $todos.appendChild(item);

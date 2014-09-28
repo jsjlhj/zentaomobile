@@ -155,7 +155,7 @@ function showItem(id, $item)
     plus.webview.create(type + ".html", type + "-" + id, 
     {
         top             : "44px",
-        bottom          : "0px",
+        bottom          : "60px",
         bounce          : "vertical",
         scrollIndicator : "none"
     }, {dialogOptions: {id: id, type: type}}).show('slide-in-right', 200);

@@ -26,9 +26,8 @@
           <a class="mui-control-item mui-active" href="#assignedTo">指派给我 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-assignedTo"></span></a>
           <a class="mui-control-item" href="#openedBy">由我创建 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-openedBy"></span></a>
           <a class="mui-control-item" href="#reviewedBy">由我评审 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-reviewedBy"></span></a>
-          <a class="mui-control-item" href="#closedBy">由我关闭 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-closedBy"></span></a>
         </div>
-        <div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-3"></div>
+        <div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-4"></div>
       </div>
       <div class="mui-slider-group" id="storyList">
         <div id="assignedTo" class="mui-slider-item mui-control-content mui-active">
@@ -61,7 +60,7 @@
 <script src="js/webview.js"></script>
 <script src="js/listview.js"></script>
 <script>
-listView({type: 'story', tabs: ['assignedTo', 'openedBy', 'reviewedBy', 'closedBy']});
+listView({type: 'story', tabs: ['assignedTo', 'openedBy', 'reviewedBy']});
 
 function show(tab, data)
 {

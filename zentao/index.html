@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
     <title>禅道</title>
     <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/font-awesome.min.css" rel="stylesheet"/>
     <link href="css/style.css" rel="stylesheet"/>
     <style>
     @-webkit-keyframes loggingFlash
@@ -20,34 +21,50 @@
 
     #userStatusName {color: #333; transition: opacity 0.5s;}
     #userStatus.hide-name #userStatusName {opacity: 0}
-    #userStatusIcon {display: inline-block; width: 14px; height: 14px; border-radius: 7px; border: 1px solid #808080; background-color: #e5e5e5; transition: all 0.5s;}
+    #userStatusIcon {display: inline-block; width: 14px; height: 14px; border-radius: 7px; border: 1px solid #808080; background-color: #e5e5e5; transition: all 0.5s; margin-left: 5px;}
     #userStatus[data-status="disconnect"] #userStatusName {color: #DD524D}
     #userStatus[data-status="disconnect"] #userStatusIcon {border-color: #DD524D;}
+    #userStatus[data-status="online"] {transition: all 0.5s 5s; opacity: 0}
+    #userStatus.syncing[data-status="online"] {transition: all 0.5s; opacity: 1;}
     #userStatus[data-status="online"] #userStatusIcon {background: #4CD964; border-color: #27b43f; border-style: solid}
     #userStatus[data-status="logging"] #userStatusIcon {background: #F0AD4E; border-color: #dfa655; -webkit-animation: loggingFlash 1s ease 0 infinite normal; animation: loggingFlash 1s ease 0 infinite normal;}
-    #userStatus.syncing[data-status="online"] #userStatusIcon {background: #4CD964; border-color: #27b43f; -webkit-animation: syncingFlash 1/s ease 0 infinite normal; animation: syncingFlash 1s ease 0 infinite normal;}
+    #userStatus.syncing[data-status="online"] #userStatusIcon {background: #4CD964; border-color: #27b43f; -webkit-animation: syncingFlash 1s ease 0 infinite normal; animation: syncingFlash 1s ease 0 infinite normal;}
 
-    .open-subpage.unread:after {border-radius: 4px; display: inline-block; width: 8px; height: 8px; background-color: red; content: ' '; margin-left: 3px;}
+    .open-subpage.unread {position: relative;}
+    .open-subpage.unread .mui-icon, .open-subpage.unread .mui-tab-label {z-index: 5}
+    .open-subpage.unread:after {border-radius: 4px; display: block; width: 8px; height: 8px; background-color: red; content: ' '; position: absolute; left: 51%; top: 10px; z-index: 10}
     </style>
 </head>
 <body>
   <header class="mui-bar mui-bar-nav">
     <button data-status="logging" id="userStatus" class="syncing mui-btn mui-btn-link mui-btn-nav mui-pull-left"><span id="userStatusIcon"></span> <span id="userStatusName">连接中…</span></button>
     <a id="settingBtn" class="mui-icon mui-icon-cog mui-pull-right"></a>
-    <h1 class="mui-title">
-      <div class="mui-segmented-control" id="subpageNav">
-        <a class="mui-control-item mui-active open-subpage" href="###" data-id="todo" id="tab-todo">待办</a>
-        <a class="mui-control-item open-subpage" href="###" data-id="task" id="tab-task">任务</a>
-        <a class="mui-control-item open-subpage" href="###" data-id="bug" id="tab-bug">Bug</a>
-        <a class="mui-control-item open-subpage" href="###" data-id="story" id="tab-story">需求</a>
-      </div>
-    </h1>
+    <h1 class="mui-title" id="appTitle">禅道</h1>
   </header>
 
   <div id="content">
     <section id="list" class="content-view">
     </section>
   </div>
+
+  <nav class="mui-bar mui-bar-tab" id="subpageNav">
+    <a class="mui-tab-item open-subpage mui-active" href="#todo" data-id="todo" id="tab-todo">
+      <span class="mui-icon"><i class="fa fa-check-square-o"></i></span>
+      <span class="mui-tab-label">待办</span>
+    </a>
+    <a class="mui-tab-item open-subpage" href="#task" data-id="task" id="tab-task">
+      <span class="mui-icon"><i class="fa fa-tasks"></i></span>
+      <span class="mui-tab-label">任务</span>
+    </a>
+    <a class="mui-tab-item open-subpage" href="#bug" data-id="bug" id="tab-bug">
+      <span class="mui-icon"><i class="fa fa-bug"></i></span>
+      <span class="mui-tab-label">Bug</span>
+    </a>
+    <a class="mui-tab-item open-subpage" href="#story" data-id="story" id="tab-story">
+      <span class="mui-icon"><i class="fa fa-lightbulb-o"></i></span>
+      <span class="mui-tab-label">需求</span>
+    </a>
+  </nav>
 
 <script src="js/core.js"></script>
 <script src="js/$.js"></script>

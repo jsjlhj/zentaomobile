@@ -9,15 +9,17 @@
   <link href="css/subpage.css" rel="stylesheet"/>
   <link href="css/dialog.css" rel="stylesheet"/>
   <style>
-    .dialog > header > div {padding-left: 30px; position: relative;}
-    #objStatus {position: absolute; right: 0; top: 4px; margin: 0}
   </style>
 </head>
 <body ng-controller="DialogController">
 <div class="dialog with-footer" id="dialog">
   <header class="pri">
     <div class="pri-icon" id="priIcon" class="pri"><span class="obj-pri"></span></div>
-    <h3><span class="obj-id item-id pri" id="objID"></span> <span class="obj-title"></span></h3>
+    <div class='dialog-title'>
+      <div class="dialog-title-left"><span class="obj-id item-id pri" id="objID">&nbsp;</span></div>
+      <div class="dialog-title-center"><h4><span class="obj-title"></span></h4></div>
+      <div class="dialog-title-right"><div class="mui-badge" id="objStatus"></div></div>
+    </div>
     <div class="info">
       <div class="block-lines">
         <div class="small"><span class="text-muted">Bug类型: </span><strong class="obj-typeName"></strong></div>
@@ -28,7 +30,7 @@
         <div class="small"><span id="assignedTo" class="text-muted">指派给 <strong class="obj-assignedTo"></strong> 于 <strong class="obj-assignedDate" data-format="MM月dd日hh:mm"></strong></span><span id="noAssignedTo" class="text-muted">没有指派</span></div>
         <div class="small text-muted">由 <strong class="obj-openedBy">openedBy</strong> 创建于 <strong class="obj-openedDate" data-format="MM月dd日hh:mm"></strong></div>
       </div>
-      <div class="mui-badge" id="objStatus"></div>
+      
     </div>
   </header>
   <section>
