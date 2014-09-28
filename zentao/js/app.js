@@ -65,7 +65,7 @@
         {
             if(lastPush)
             {
-                openSubWin(lastPush.tab, true);
+                openSubWin({tab: lastPush.tab, offline: true});
                 $('#tab-' + lastPush.tab).classList.remove('unread');
                 if(lastPush.unreadCount === 1 && lastPush.latestItem)
                 {
@@ -135,7 +135,7 @@
         stopSync();
     }).on('ready', function()
     {
-        openSubWin(null, true);
+        openSubWin({offline: true});
         if(window.storage.get('autoSync', true))
         {
             zentao.startAutoSync();
@@ -227,7 +227,7 @@
     function checkUserStatus(mild, first)
     {
         var md     = mild === 'mild';
-        var user   = md ? window.user : window.storage.getUser();
+        var user   = window.storage.getUser();
 
         $status.classList.remove('hide-name');
         if(!user || user.status === 'logout')
@@ -253,7 +253,7 @@
             {
                 if(user.status === 'online') $status.classList.add('hide-name');
             }, 2000);
-            openSubWin();
+            openSubWin({checkStatus: true});
             $settingBtn.classList.remove('mui-hidden');
         }
         else if(user.status === 'disconnect')
@@ -294,25 +294,33 @@
         loginWindow.show('zoom-in', 200);
     }
 
-    function openSubWin(list, offline)
+    function openSubWin(options)
     {
+        if(typeof options === 'string')
+        {
+            options = {tab: options};
+        }
+
+        if(!options) options = {};
+
         if(!defaultTab)
         {
             defaultTab = window.storage.get('lastTab', 'todo');
         }
 
-        list = list || currentTab || defaultTab;
+        options.tab = options.tab || currentTab || defaultTab;
+
         var currentWin = windows[currentTab];
 
-        if(currentWin && currentTab === list)
+        if(currentWin && currentTab === options.tab)
         {
-            mui.fire(currentWin, 'reloadData', {offline: offline});
+            mui.fire(currentWin, 'reloadData', options);
             return;
         }
 
         if(currentWin)
         {
-            currentWin.hide(subTabs[list] < subTabs[currentTab] ? 'slide-out-right' : 'slide-out-left', animateSpeed);
+            currentWin.hide(subTabs[options.tab] < subTabs[currentTab] ? 'slide-out-right' : 'slide-out-left', animateSpeed);
             var openeds = currentWin.opened();
             openeds.forEach(function(opendedDialog)
             {
@@ -322,9 +330,9 @@
                 }
             });
         }
-        if(typeof windows[list] === 'string')
+        if(typeof windows[options.tab] === 'string')
         {
-            windows[list] = plus.webview.create(windows[list], list, 
+            windows[options.tab] = plus.webview.create(windows[options.tab], options.tab, 
             {
                 top             : "44px",
                 bottom          : "0px",
@@ -332,19 +340,19 @@
                 scrollIndicator : "none"
             });
 
-            mainView.append(windows[list]);
+            mainView.append(windows[options.tab]);
         }
         else
         {
-            windows[list].show(subTabs[list] > subTabs[currentTab] ? 'slide-in-right' : 'slide-in-left', animateSpeed);
+            windows[options.tab].show(subTabs[options.tab] > subTabs[currentTab] ? 'slide-in-right' : 'slide-in-left', animateSpeed);
         }
 
         $('.open-subpage').forEach(function(el)
         {
-            el.classList[el.getAttribute('data-id') === list ? 'add' : 'remove']('mui-active');
+            el.classList[el.getAttribute('data-id') === options.tab ? 'add' : 'remove']('mui-active');
         });
 
-        currentTab = list;
+        currentTab = options.tab;
         window.storage.set('lastTab', currentTab);
     }
 

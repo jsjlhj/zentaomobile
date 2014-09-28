@@ -544,3 +544,24 @@ function isPlainObject(obj)
     });
     return obj != null && typeof(obj) == "object" && Object.getPrototypeOf(obj) == Object.prototype;
 }
+
+
+function versionToNumber(ver)
+{
+    ver = ver.split('.', 3);
+    var num = '';
+    for(var i = 0; i < ver.length; i++)
+    {
+        var v = ver[i];
+        while(v.length < 4)
+        {
+            v += '0';
+        }
+        num += v;
+    }
+    while(num.length < 12)
+    {
+        num += '0';
+    }
+    return parseInt(num);
+}

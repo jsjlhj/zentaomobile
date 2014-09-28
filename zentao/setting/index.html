@@ -97,8 +97,7 @@ zentao.on('ready', function()
 
     $('#logoutBtn').on('tap', function()
     {
-        zentao.logout();
-        wv.close('zoom-out', 200);
+        zentao.logout(false, function(){wv.close('zoom-out', 200);});
     });
 
     $('#openUserUrl').on('tap', function()

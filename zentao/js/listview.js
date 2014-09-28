@@ -125,7 +125,11 @@ function reload(options)
 
         isLoading = true;
         mui.fire(mainview, 'startSync');
-        zentao.loadData(type, function(data)
+        zentao.loadData(
+        {
+            type: type,
+            tab: $('#sliderSegmentedControl .mui-control-item.mui-active').getAttribute('href').substr(1)
+        }, function(data)
         {
             showAll(options.makeRead);
             callCallback();

@@ -162,7 +162,7 @@
 
     Storage.prototype.setPlus = function()
     {
-        // window.store.setPlusStorage(window.plus);
+        window.store.setPlusStorage(window.plus);
     };
 
     Storage.prototype.set = function(key, value, ignoreAccount)
@@ -216,6 +216,10 @@
         {
             window.user = {status: 'logout'};
         }
+
+        this.config = window.storage.get('zentaoConfig', this.config);
+        this.session = window.storage.get('session', this.session);
+
         console.groupCollapsed('%cUSER: ' + window.user.account + '@' + window.user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
         console.log(window.user);
         console.groupEnd();
@@ -441,11 +445,11 @@
             that = this,
             dObj, idx;
         this.updateTime = new Date();
-        // if (this.account != data.account)
-        // {
-        //     console.error('所获取的数据与当前帐号不匹配。');
-        //     return false;
-        // }
+        if (this.account != window.user.account)
+        {
+            this.loadFromStore();
+            console.color('所获取的数据与当前帐号不匹配。已重新从磁盘读取', 'h3|danger');
+        }
 
         var setName = this.name === 'story' ? 'stories' : (this.name + 's');
         data = data[this.name] || data[setName];
@@ -473,6 +477,8 @@
 
         this.sort();
         this.save();
+
+        console.log(this);
     };
 
     DataList.prototype.getUnreadCount = function(muted)
@@ -525,9 +531,6 @@
                 that.data[val] = new DataList(val);
                 
             });
-
-            that.config = window.storage.get('zentaoConfig', {});
-            that.session = window.storage.get('session', {});
 
             setTimeout(function()
             {
@@ -730,11 +733,11 @@
     {
         var url = window.user.url,
             user = window.user,
-            session = this.session,
+            session = window.storage.session,
             viewType = params.viewType || 'json',
             moduleName = params.module,
             methodName = params.method,
-            requestType = (this.config.requestType || 'get').toLowerCase();
+            requestType = (window.storage.config.requestType || 'get').toLowerCase();
 
         if (requestType === 'get')
         {
@@ -872,7 +875,7 @@
 
                 if (session.sessionID && session.sessionID != 'undefined')
                 {
-                    that.session = session;
+                    window.storage.session = session;
                     window.storage.set('session', session);
                     successCallback && successCallback(session);
                 }
@@ -922,12 +925,13 @@
     Zentao.prototype.getConfig = function(successCallback, errorCallback)
     {
         var that = this;
-        $.get(window.user.url + '/index.php?mode=getconfig', function(response)
+        var url = window.user.url + '/index.php?mode=getconfig';
+        $.get(url, function(response)
         {
             var config = JSON.parse(response);
             if (config.version)
             {
-                that.config = config;
+                window.storage.config = config;
                 window.storage.set('zentaoConfig', config);
                 successCallback && successCallback(config);
             }
@@ -935,7 +939,7 @@
             {
                 that.callWidthMessage(errorCallback, '获取配置信息不正确，请确保所登录的账户拥有超级model权限。禅道权限管理请参考：http://www.zentao.net/book/zentaopmshelp/71.html。');
             }
-        }, that.fnToCallWidthMessage(errorCallback, '无法获取禅道配置，请检查禅道地址是否正确。'));
+        }, that.fnToCallWidthMessage(errorCallback, '无法获取禅道配置，请检查禅道地址是否正确。' + url));
     };
 
     Zentao.prototype.callWidthMessage = function(callback, message, params)
@@ -968,7 +972,8 @@
 
     Zentao.prototype.checkVersion = function()
     {
-        var version = this.config.version.toLowerCase();
+        
+        var version = window.storage.config.version.toLowerCase();
         var isPro = version.indexOf('pro');
 
         if (isPro)
@@ -976,16 +981,18 @@
             version = version.replace('pro', '');
         }
 
-        var verNum = parseFloat(version);
+        var verNum = versionToNumber(version);
         var result = {
             result: false
         };
 
-        if (isPro && verNum < 1.3)
+        this.isNewVersion = (isPro && verNum > versionToNumber('4.1')) || (!isPro && verNum >= versionToNumber('6.2'));
+
+        if (isPro && verNum < versionToNumber('1.3'))
         {
             result.message = '你的当前版本是' + version + '，请升级至pro1.3以上';
         }
-        else if (!isPro && verNum < 4)
+        else if (!isPro && verNum < versionToNumber('4'))
         {
             result.message = '你的当前版本是' + version + '，请升级至4.0以上';
         }
@@ -1133,9 +1140,16 @@
         return result;
     };
 
-    Zentao.prototype.tryLoadData = function(dataType, successCallback, errorCallback, count)
+    Zentao.prototype.tryLoadData = function(options, successCallback, errorCallback, count)
     {
-        console.color('LoadData: ' + dataType, 'h4|info');
+        if(typeof options === 'string')
+        {
+            options = {type: options};
+        }
+
+        if(this.isNewVersion || !options.tab) options.tab = 'all';
+
+        console.color('LoadData: type=' + options.type + ', tab=' + options.tab, 'h4|info');
 
         if(this.network === 'disconnect')
         {
@@ -1143,9 +1157,9 @@
             return false;
         }
 
-        if (typeof dataType === 'undefined' || this.hasTab(dataType))
+        if (typeof options.type === 'undefined' || this.hasTab(options.type))
         {
-            this.callWidthMessage(errorCallback, '无法加载数据，因为没有指定DataType或者指定的dataType不受支持。');
+            this.callWidthMessage(errorCallback, '无法加载数据，因为没有指定DataType或者指定的options.type不受支持。');
             return false;
         }
 
@@ -1158,7 +1172,7 @@
 
         if (typeof count === 'undefined')
         {
-            var data = this.data[dataType];
+            var data = this.data[options.type];
             if (data.data.length < 1)
             {
                 count = 1000;
@@ -1173,8 +1187,8 @@
             url = this.concatUrl(
             {
                 module: 'my',
-                method: dataType,
-                type: 'all',
+                method: options.type,
+                type: options.tab,
                 pageID: 1,
                 recTotal: count,
                 recPerPage: count
@@ -1186,18 +1200,19 @@
             if (dt['status'] === 'success')
             {
                 dt = JSON.parse(dt.data);
-                that.data[dataType].load(dt);
+                that.data[options.type].load(dt);
                 successCallback && successCallback(dt);
             }
             else
             {
+                that.isNewVersion = false;
                 that.callWidthMessage(errorCallback, '无法获取用户数据，请确保所登录的账户拥有超级model权限。禅道权限管理请参考：http://www.zentao.net/book/zentaopmshelp/71.html。')
             }
 
         }, that.fnToCallWidthMessage(errorCallback, '无法获取数据，请检查网络。'));
     };
 
-    Zentao.prototype.loadData = function(dataType, successCallback, errorCallback, count)
+    Zentao.prototype.loadData = function(options, successCallback, errorCallback, count)
     {
         // if(window.user && window.user.status === 'online')
         // {
@@ -1212,12 +1227,12 @@
         //     }, this.fnToCallWidthMessage(errorCallback, '登录失败，无法从服务器加载数据。'));
         // }
         // 
-        this.tryLoadData(dataType, successCallback, errorCallback, count);
+        this.tryLoadData(options, successCallback, errorCallback, count);
     };
 
     Zentao.prototype.startAutoSync = function(interval, successCallback, errorCallback)
     {
-        if(!interval) interval = window.storage.get('syncInterval', 6000) / dataTabsSet.length;
+        if(!interval) interval = window.storage.get('syncInterval', 20000) / dataTabsSet.length;
         console.color('startAutoSync:' + interval, 'h3|bgdanger');
         var that = this;
         this.autoSyncId = setInterval(function(){that.sync('AUTO', successCallback, errorCallback)}, interval);

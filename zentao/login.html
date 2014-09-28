@@ -21,7 +21,7 @@
             <input id="password" type="password" placeholder="密码">
           </div>
           <button id="loginBtn" type="button" class="mui-btn mui-btn-primary mui-btn-block">登录</button>
-          <button id="backBtn" type="button" class="mui-btn mui-btn-block mui-hidden mui-action-back">返回</button>
+          <button id="backBtn" type="button" class="mui-btn mui-btn-block mui-hidden mui-action-back">离线使用</button>
         </div>
       </div>
     </section>
@@ -59,6 +59,7 @@ function handleLoginView(wv)
     var pwdMd5;
     var address = $('#address');
     var loginBtn = $('#loginBtn');
+
     var tryLogin = function()
     {
         if (address.value === '')
