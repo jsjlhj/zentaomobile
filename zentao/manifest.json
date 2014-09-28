@@ -129,7 +129,7 @@
 				"aliasname": "",/*Android必选，打包证书别名*/
 				"permissions": [] /*使用 Native.js 调用原生安卓 API 需要申请的系统权限，用户可以添加多个权限的字符串*/
 			},
-			"orientation": ["portrait-primary","portrait-secondary","landscape-secondary","landscape-primary"],/*必选*/
+			"orientation": ["portrait-primary","portrait-secondary"],/*必选*/
 			"icons": {
 				"ios": {
 					"prerendered": "", /*必选，是否高亮显示*/
