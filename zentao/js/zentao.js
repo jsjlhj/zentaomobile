@@ -1147,7 +1147,7 @@
             options = {type: options};
         }
 
-        if(this.isNewVersion || !options.tab) options.tab = 'all';
+        if(options.type === 'todo' || this.isNewVersion || !options.tab) options.tab = 'all';
 
         console.color('LoadData: type=' + options.type + ', tab=' + options.tab, 'h4|info');
 
