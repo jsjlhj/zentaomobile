@@ -3,7 +3,7 @@
 	"id": "H50FC7A92",/*必选，应用的标识*/
 	"name": "禅道",/*必选，应用名称*/
 	"version": {
-		"name": "0.0.1",/*必选，版本名称*/
+		"name": "0.1.0",/*必选，版本名称*/
 		"code": ""
 	},
 	"description": "",/*可选，应用描述信息*/
@@ -107,13 +107,13 @@
 	},
 	"plus": {
 		"splashscreen": {
-			"autoclose": true,/*如果为true，程序启动的图片可以自动关闭，如果为false，开发者需要手动关闭*/
+			"autoclose": false,/*如果为true，程序启动的图片可以自动关闭，如果为false，开发者需要手动关闭*/
 			"waiting": true/*autoclose设置为false时生效，在此事件后，启动图片自动关闭，单位为毫秒*/
 		},
 		"runmode": "liberate",/*两个值，liberate或normal，前者在应用安装时释放资源，后者不需要释放资源*/
 		"signature": "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",/*可选，保留给应用签名，暂不使用*/
 		"distribute": {
-			"debug": true,/*可选，是否为debug模式，可取值：true表示debug模式运行，false表示release模式运行，默认值为false*/
+			"debug": false,/*可选，是否为debug模式，可取值：true表示debug模式运行，false表示release模式运行，默认值为false*/
 			"apple": {
 				"appid": "",/*iOS必选，苹果开发网站申请的appid，如com.dheaven.hbuilder*/
 				"mobileprovision": "",/*iOS必选，打包配置文件*/
@@ -129,7 +129,7 @@
 				"aliasname": "",/*Android必选，打包证书别名*/
 				"permissions": [] /*使用 Native.js 调用原生安卓 API 需要申请的系统权限，用户可以添加多个权限的字符串*/
 			},
-			"orientation": ["portrait-primary", "landscape-primary", "portrait-secondary", "landscape-secondary"],/*必选*/
+			"orientation": ["portrait-primary","portrait-secondary","landscape-secondary","landscape-primary"],/*必选*/
 			"icons": {
 				"ios": {
 					"prerendered": "", /*必选，是否高亮显示*/
@@ -158,11 +158,11 @@
 					}
 				},
 				"android": {
-					"mdpi": "", /*必选，48x48，普通屏程序图标*/
-					"ldpi": "", /*必选，48x48，大屏程序图标*/
-					"hdpi": "", /*必选，72x72，高分屏程序图标*/
-					"xhdpi": "",/*必选，96x96，720P高分屏程序图标*/
-					"xxhdpi": "" /*1080P 高分屏程序图标*/
+					"mdpi": "D:\\Dropbox\\Desktop\\design\\zentao\\andriod\\zentao-logo.ldpi.png", /*必选，48x48，普通屏程序图标*/
+					"ldpi": "D:\\Dropbox\\Desktop\\design\\zentao\\andriod\\zentao-logo.mdpi.png", /*必选，48x48，大屏程序图标*/
+					"hdpi": "D:\\Dropbox\\Desktop\\design\\zentao\\andriod\\zentao-logo.hdpi.png", /*必选，72x72，高分屏程序图标*/
+					"xhdpi": "D:\\Dropbox\\Desktop\\design\\zentao\\andriod\\zentao-logo.xhdpi.png",/*必选，96x96，720P高分屏程序图标*/
+					"xxhdpi": "D:\\Dropbox\\Desktop\\design\\zentao\\andriod\\zentao-logo.xxhdpi.png" /*1080P 高分屏程序图标*/
 				}
 			},
 			"splashscreen": {
@@ -184,11 +184,11 @@
 					}
 				},
 				"android": {
-					"mdpi": "D:\\Dropbox\\Desktop\\禅道\\f_f41ed5a0d62520ccab1e9717e31edcd8.png", /*必选，240x282，普通屏启动图片*/
-					"ldpi": "", /*必选，320x442，大屏启动图片*/
-					"hdpi": "", /*必选，480x762，高分屏启动图片*/
-					"xhdpi": "", /*必选，720x1242，720P高分屏启动图片*/
-					"xxhdpi": "" /*1080p 高分屏启动图片*/
+					"mdpi": "D:\\Dropbox\\Desktop\\design\\zentao\\andriod\\splash.240x282.png", /*必选，240x282，普通屏启动图片*/
+					"ldpi": "D:\\Dropbox\\Desktop\\design\\zentao\\andriod\\splash.320x442.png", /*必选，320x442，大屏启动图片*/
+					"hdpi": "D:\\Dropbox\\Desktop\\design\\zentao\\andriod\\splash.480x762.png", /*必选，480x762，高分屏启动图片*/
+					"xhdpi": "D:\\Dropbox\\Desktop\\design\\zentao\\andriod\\splash.720x1242.png", /*必选，720x1242，720P高分屏启动图片*/
+					"xxhdpi": "D:\\Dropbox\\Desktop\\design\\zentao\\andriod\\splash.1080x1882.png" /*1080p 高分屏启动图片*/
 				}
 			}
 		}
