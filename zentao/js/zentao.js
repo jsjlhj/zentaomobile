@@ -7,7 +7,7 @@
     var md5 = window.md5;
     var dataTabs =
     {
-        todo: {name: '待办', syncId: 0, subsSet: ['today', 'yestoday', 'thisweek', 'lastweek']},
+        todo: {name: '待办', syncId: 0, subsSet: ['today', 'yestoday', 'thisweek', 'undone']},
         task: {name: '任务', syncId: 0, subsSet: ['assignedTo', 'openedBy', 'finishedBy']},
         bug: {name: 'Bug', syncId: 0, subsSet: ['assignedTo', 'openedBy', 'resolvedBy']},
         story: {name: '需求', syncId: 0, subsSet: ['assignedTo', 'openedBy', 'reviewedBy']}
@@ -1116,13 +1116,11 @@
                     }
                 });
             }
-            else if (filter === 'lastweek')
+            else if (filter === 'undone')
             {
-                var thisweek = Date.parseName('thisweek');
-                var lastweek = thisweek.clone().addDays(-7);
                 data.data.forEach(function(val)
                 {
-                    if (val.date >= lastweek && val.date < thisweek)
+                    if (val.status != 'done')
                     {
                         result.push(val);
                     }
