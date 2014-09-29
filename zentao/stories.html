@@ -76,35 +76,25 @@ function show(tab, data)
         $storys.removeChild(child);
     }
 
-    var groupedData = data.groupBy('product'),
-        item;
-    for(var group in groupedData)
+    var item;
+    data.forEach(function(val)
     {
-        data = groupedData[group];
-        item = item = document.createElement('li');
-        item.classList.add('mui-table-view-divider');
-        item.innerHTML = '<span class="mui-badge">' + data[0]['productTitle'] + ' (<strong>' + data.length + '</strong>)</span>';
-        $storys.appendChild(item);
-
-        data.forEach(function(val)
+        item = document.createElement('li');
+        item.classList.add('mui-table-view-cell');
+        item.classList.add('pri');
+        item.classList.add('pri-' + val.pri);
+        item.classList.add('item-id-' + val.id);
+        if(val.unread)
         {
-            item = document.createElement('li');
-            item.classList.add('mui-table-view-cell');
-            item.classList.add('pri');
-            item.classList.add('pri-' + val.pri);
-            item.classList.add('item-id-' + val.id);
-            if(val.unread)
-            {
-                item.classList.add('unread');
-                unreadCount++;
-            }
-            item.setAttribute('id', 'item-' + val.id);
-            item.setAttribute('data-id', val.id);
-            item.setAttribute('data-tab', tab);
-            item.innerHTML = '<span class="list-title"><span class="list-item-id">' + val.id + '</span>' + val.title + '</span>' + '<span class="mui-badge mui-badge-' + val.statusColor + '">' + val.statusName + '</span>';
-            $storys.appendChild(item);
-        });
-    }
+            item.classList.add('unread');
+            unreadCount++;
+        }
+        item.setAttribute('id', 'item-' + val.id);
+        item.setAttribute('data-id', val.id);
+        item.setAttribute('data-tab', tab);
+        item.innerHTML = '<span class="list-title"><span class="list-item-id">' + val.id + '</span>' + val.title + '</span>' + '<span class="mui-badge mui-badge-' + val.statusColor + '">' + val.statusName + '</span>';
+        $storys.appendChild(item);
+    });
 
     updateTabBadge(tab, unreadCount);
 };
