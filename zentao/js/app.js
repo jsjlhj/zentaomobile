@@ -41,7 +41,7 @@
         document.getElementById('subpageNav').addDelegateListener('tap', '.open-subpage', function()
         {
             var tab = this.getAttribute('data-id');
-            $('#appTitle').innerHTML = zentao.dataTabs[tab].name;
+            // $('#appTitle').innerHTML = zentao.dataTabs[tab].name;
             openSubWin(tab);
             this.classList.remove('unread');
             zentao.data[tab].getUnreadCount(true);
@@ -319,9 +319,11 @@
             return;
         }
 
+        var aniType = 'none';
         if(currentWin)
         {
-            currentWin.hide(subTabs[options.tab] < subTabs[currentTab] ? 'slide-out-right' : 'slide-out-left', animateSpeed);
+            // aniType = subTabs[options.tab] < subTabs[currentTab] ? 'slide-out-right' : 'slide-out-left';
+            currentWin.hide(aniType, animateSpeed);
             var openeds = currentWin.opened();
             openeds.forEach(function(opendedDialog)
             {
@@ -345,7 +347,8 @@
         }
         else
         {
-            windows[options.tab].show(subTabs[options.tab] > subTabs[currentTab] ? 'slide-in-right' : 'slide-in-left', animateSpeed);
+            // aniType = subTabs[options.tab] > subTabs[currentTab] ? 'slide-in-right' : 'slide-in-left';
+            windows[options.tab].show(aniType, animateSpeed);
         }
 
         $('.open-subpage').forEach(function(el)
