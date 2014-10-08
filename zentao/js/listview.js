@@ -154,7 +154,7 @@ function showItem(id, $item)
 {
     plus.webview.create(type + ".html", type + "-" + id, 
     {
-        top             : "44px",
+        top             : "0",
         bottom          : "60px",
         bounce          : "vertical",
         scrollIndicator : "none"

@@ -1,4 +1,5 @@
-.dialog {position: relative; display: block; max-height: inherit;}
+.headbar + .dialog {margin-top: 44px;}
+
 .dialog > header {position: relative; background: #f1f1f1; padding: 0; border-bottom: 1px solid #e5e5e5;}
 
 .dialog > header.pri {border-left: none; border-top: 6px solid #bbb;}

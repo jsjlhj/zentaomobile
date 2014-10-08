@@ -82,8 +82,17 @@ button {outline:none}
 .pri-2 {border-left-color: #ed9922}
 .pri-3 {border-left-color: #8A6DE9}
 
-.mui-title {height: 40px;}
+.mui-title {height: 40px; text-align: left;}
 .mui-title > .mui-segmented-control {width: 50%; min-width: 200px}
+.mui-title .fa {font-size: 20px}
+.mui-bar .mui-title {left: 10px;}
+
+.headbar {display: table; width: 100%; box-shadow: rgba(0,0,0,.20) 0px 1px 5px 0px !important; background-color: #EFEFF4}
+.headbar .bar-heading, .headbar .bar-actions {display: table-cell;}
+.headbar .bar-heading {font-size: 17px; font-weight: normal; margin: 0; padding: 0;}
+.headbar .bar-actions {text-align: right;}
+.headbar .bar-actions > a, .headbar .bar-actions > .btn {display: inline-block; padding: 10px}
+.headbar .mui-btn-link {padding: 0 10px}
 
 .mui-content-padded {margin: 10px}
 
@@ -101,7 +110,6 @@ button {outline:none}
 .mui-slider-header {position: fixed; top: 0; left: 0; right: 0; z-index: 5; background: #EFEFF4; border-bottom: 1px solid #ddd}
 .mui-slider-header + .mui-slider-group {margin-top: 40px;}
 
-.dialog {position: fixed; left: 0; right: 0; background-color: #fff; display: none; transition: opacity .15s, height .15s, top .1s; padding: 0; z-index: 10; max-height: 100%}
 .dialog-header {display: table; background-color: rgba(255,255,255, .35); padding-bottom: 35px; width: 100%}
 .dialog-header > .list-title {font-weight: bold; font-size: 18px}
 .dialog-header > .mui-icon, .dialog-header > .list-title {display: table-cell;}

@@ -20,11 +20,20 @@
     }
 
     #userStatusName {color: #333; transition: opacity 0.5s;}
-    #userStatus.hide-name #userStatusName {opacity: 0}
-    #userStatusIcon {display: inline-block; width: 14px; height: 14px; border-radius: 7px; border: 1px solid #808080; background-color: #e5e5e5; transition: all 0.5s; margin-left: 5px;}
+    #userStatusName:empty {display: none}
+    #userStatusName:before {content: '('}
+    #userStatusName:after {content: ')'}
+    #userStatusName.hide-name {opacity: 0}
+    #userStatusIcon {display: inline-block; width: 16px; height: 16px; border-radius: 8px; border: 1px solid #808080; background-color: #e5e5e5; transition: all 0.5s; margin-left: 5px; position: relative; top: 2px; z-index: 5}
+    #loginText {display: none}
+    #lastUpdateTime {transition: all 0.3s; position: absolute; border: 1px solid #ddd; line-height: 28px; height: 30px; top: 7px; background-color: #fff; padding: 0 25px 0 8px; border-radius: 15px; color: green; z-index: 2; opacity: 0; display: none; right: 0}
+    #userStatus.show-time #lastUpdateTime {display: block;}
+    #userStatus.show-time.in #lastUpdateTime {opacity: 1; right: 4px}
+    #userStatus {position: relative;}
+    #userStatus[data-status="offline"] #loginText {display: inline;}
     #userStatus[data-status="disconnect"] #userStatusName {color: #DD524D}
     #userStatus[data-status="disconnect"] #userStatusIcon {border-color: #DD524D;}
-    #userStatus[data-status="online"] {transition: all 0.5s 5s; opacity: 0}
+    #userStatus[data-status="online"] {transition: all 0.5s 1s; opacity: 0.6}
     #userStatus.syncing[data-status="online"] {transition: all 0.5s; opacity: 1;}
     #userStatus[data-status="online"] #userStatusIcon {background: #4CD964; border-color: #27b43f; border-style: solid}
     #userStatus[data-status="logging"] #userStatusIcon {background: #F0AD4E; border-color: #dfa655; -webkit-animation: loggingFlash 1s ease 0 infinite normal; animation: loggingFlash 1s ease 0 infinite normal;}
@@ -36,10 +45,9 @@
     </style>
 </head>
 <body>
-  <header class="mui-bar mui-bar-nav">
-    <button data-status="logging" id="userStatus" class="syncing mui-btn mui-btn-link mui-btn-nav mui-pull-left"><span id="userStatusIcon"></span> <span id="userStatusName">连接中…</span></button>
-    <a id="settingBtn" class="mui-icon mui-icon-cog mui-pull-right"></a>
-    <h1 class="mui-title" id="appTitle">禅道</h1>
+  <header class="mui-bar mui-bar-nav headbar">
+    <div class="bar-heading">禅道 <span id="userStatusName">连接中…</span></div>
+    <div class="bar-actions"><button data-status="logging" id="userStatus" class="syncing mui-btn mui-btn-link mui-btn-nav"><span id="userStatusIcon"></span> <span id="loginText">登录</span><span id="lastUpdateTime"><span class="text-muted">:( 还没有执行后台更新</span></span></button> <a id="settingBtn" class="mui-icon mui-icon-cog"></a></div>
   </header>
 
   <div id="content">

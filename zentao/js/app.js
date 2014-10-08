@@ -11,6 +11,7 @@
         loginWindow,
         isLoging        = false,
         network         = 'wifi',
+        lastSyncTime    = null,
         lastPush        = null,
         settingWindow;
 
@@ -110,7 +111,6 @@
                 $('#tab-' + e.tab).classList.add('unread');
             }
 
-
             if(window.storage.get('receiveNotify', true) && zentao.runningInBackground)
             {
                 var unreadCount = e.unreadCount;
@@ -132,6 +132,8 @@
                     console.color('消息已推送：' + message, 'h3|info');
                 }
             }
+
+            lastSyncTime = new Date().getTime();
         }
         stopSync();
     }).on('ready', function()
@@ -149,6 +151,30 @@
         if(!user || user.status != 'online')
         {
             openLoginWindow();
+        }
+        else if(user.status === 'online')
+        {
+            if(lastSyncTime)
+            {
+                var delta = Math.floor((new Date().getTime() - lastSyncTime)/1000);
+                var $time = $('#lastUpdateTime');
+
+                if(delta < 10)
+                {
+                    $time.innerHTML = '刚刚';
+                }
+                else if(delta < 60)
+                {
+                    $time.innerHTML = delta + '秒前';
+                }
+                else
+                {
+                    $time.innerHTML = Math.floor(delta/60) + '分钟前';
+                }
+            }
+            $status.classList.add('show-time');
+            setTimeout(function(){$status.classList.add('in');}, 100);
+            setTimeout(function(){$status.classList.remove('in'); setTimeout(function(){$status.classList.remove('in');}, 1000);}, 2000);
         }
     });
 
@@ -230,7 +256,7 @@
         var md     = mild === 'mild';
         var user   = window.storage.getUser();
 
-        $status.classList.remove('hide-name');
+        $statusName.classList.remove('hide-name');
         if(!user || user.status === 'logout')
         {
             $statusName.innerHTML = '请登录';
@@ -252,7 +278,7 @@
             $status.setAttribute('data-status', 'online');
             setTimeout(function()
             {
-                if(user.status === 'online') $status.classList.add('hide-name');
+                if(user.status === 'online') $statusName.classList.add('hide-name');
             }, 2000);
             openSubWin({checkStatus: true});
             $settingBtn.classList.remove('mui-hidden');

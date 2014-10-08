@@ -11,7 +11,10 @@
   <link href="css/dialog.css" rel="stylesheet"/>
 </head>
 <body>
-<div class="dialog with-footer" id="dialog">
+<header class="mui-bar headbar mui-bar-nav">
+  <h1 class="mui-title mui-action-back"><i class="fa fa-angle-left"></i> Bug</h1>
+</header>
+<div class="dialog" id="dialog">
   <header class="pri">
     <h4><span class="obj-id item-id pri" id="objID">&nbsp;</span> <span class="obj-title">&nbsp;</span></h4>
     <div class="info">
@@ -35,13 +38,6 @@
     <h5><i class="fa fa-th-list"></i> 重现步骤</h5>
     <div class="mui-content-padded obj-steps article-content-plain" data-default="<span class='small text-muted'>--- 没有描述 ---</span>"></div>
   </section>
-  <footer>
-    <div class="mui-row">
-      <div class="mui-col-xs-12 mui-col"><button class="mui-btn mui-btn-block mui-btn-outlined btn-back mui-action-back">返回</button></div>
-<!--       <div class="mui-col-xs-4 mui-col mui-col-extra"><button class="mui-btn mui-btn-primary mui-btn-block">确认</button></div>
-      <div class="mui-col-xs-4 mui-col mui-col-extra"><button class="mui-btn mui-btn-success mui-btn-block">解决</button></div> -->
-    </div>
-  </footer>
 </div>
 <!-- <script src="js/angular/angular.min.js"></script> -->
 <script src="js/core.js"></script>
