@@ -33,3 +33,4 @@
 .dialog > footer {position: fixed; bottom: 0; left: 0; right: 0; background-color: #fff}
 .dialog.with-footer {padding-bottom: 87px;}
 
+.dialog > footer .mui-btn-block {padding: 10px 0;}

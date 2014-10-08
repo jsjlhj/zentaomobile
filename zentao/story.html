@@ -90,7 +90,7 @@ function render(obj)
             fmt = doms.getAttribute('data-format');
             dft = doms.getAttribute('data-default');
             dVal = dft && (!val) ? dft : val;
-            doms.innerHTML = fmt ? dVal.format(fmt) : dVal;
+            doms.innerHTML = dVal && fmt ? dVal.format(fmt) : dVal;
         }
     }
 
