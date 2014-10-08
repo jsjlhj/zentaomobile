@@ -1,38 +1,33 @@
 <!DOCTYPE html>
-<html ng-app>
+<html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
   <title>禅道</title>
   <link href="css/mui.min.css" rel="stylesheet"/>
+  <link href="css/font-awesome.min.css" rel="stylesheet"/>
   <link href="css/style.css" rel="stylesheet"/>
   <link href="css/subpage.css" rel="stylesheet"/>
   <link href="css/dialog.css" rel="stylesheet"/>
-  <style>
-    .dialog > header > div {padding-left: 30px; position: relative;}
-    .dialog > header > .info {padding-right: 60px;}
-    #objStatus {position: absolute; right: 0; top: 4px; margin: 0}
-  </style>
 </head>
-<body ng-controller="DialogController">
+<body>
 <div class="dialog with-footer" id="dialog">
   <header class="pri">
-    <div class="pri-icon" id="priIcon" class="pri"><span class="obj-pri"></span></div>
-    <h3><span class="obj-id item-id pri" id="objID"></span> <span class="obj-title"></span></h3>
+    <h4><span class="obj-id item-id pri" id="objID"></span> <span class="obj-title"></span></h4>
     <div class="info">
+      <div class="mui-pull-right small"><i class="fa fa-chevron-down text-muted info-more-icon"></i></div>
       <div class="block-lines">
-        <div class="small"><span class="text-muted">所处阶段: </span><strong class="obj-stageName"></strong></div>
-        <div class="small"><span class="text-muted">预计工时: </span><strong class="obj-estimate"></strong></div>
+        <div><span class="mui-badge" id="objStatus">&nbsp;</span></div>
+        <div class="small"><span class="text-muted"><i class="fa fa-hand-o-right"></i> </span><span class="obj-assignedTo"></span></div>
       </div>
-      <div class="block-lines">
-        <div class="small"><span class="text-muted">所属产品: </span><strong class="obj-productTitle"></strong></div>
-        <div class="small"><span class="text-muted">所属版本: </span><strong class="obj-planTitle"></strong></div>
-      </div>
-      <div class="block-lines">
-        <div class="small"><span id="assignedTo" class="text-muted">指派给 <strong class="obj-assignedTo"></strong> 于 <strong class="obj-assignedDate" data-format="MM月dd日hh:mm"></strong></span><span id="noAssignedTo" class="text-muted">没有指派</span></div>
-        <div class="small text-muted">由 <strong class="obj-openedBy">openedBy</strong> 创建于 <strong class="obj-openedDate" data-format="MM月dd日hh:mm"></strong></div>
-      </div>
-      <div class="mui-badge" id="objStatus"></div>
+    </div>
+    <div class="info info-more">
+      <div class="small"><span class="text-muted">所处阶段: </span><span class="obj-stageName"></span></div>
+      <div class="small"><span class="text-muted">预计工时: </span><span class="obj-estimate"></span></div>
+      <div class="small"><span class="text-muted">所属产品: </span><span class="obj-productTitle"></span></div>
+      <div class="small"><span class="text-muted">所属版本: </span><span class="obj-planTitle"></span></div>
+      <div class="small"><span id="assignedTo" class="text-muted">指派给 <strong class="obj-assignedTo"></strong> 于 <strong class="obj-assignedDate" data-format="MM月dd日hh:mm"></strong></span></div>
+      <div class="small text-muted">由 <strong class="obj-openedBy">openedBy</strong> 创建于 <strong class="obj-openedDate" data-format="MM月dd日hh:mm"></strong></div>
     </div>
   </header>
   <section>
@@ -100,17 +95,13 @@ function render(obj)
     }
 
     $("#dialog > header").classList.add('pri-' + obj.pri);
-    $("#priIcon").classList.add('pri-' + obj.pri);
     $("#objID").classList.add('pri-' + obj.pri);
     var $status = $('#objStatus');
     $status.innerHTML = obj.statusName;
     $status.classList.add('mui-badge-' + obj.statusColor);
     $("#assignedTo").classList[obj.assignedTo ? 'remove' : 'add']('mui-hidden');
-    $('#noAssignedTo').classList[obj.assignedTo ? 'add' : 'remove']('mui-hidden');
     $('#objConfirm').innerHTML = obj.confirm === '1' ? '已确认' : '未确认';
 }
-
-var assignedDate = new Date(Date.parse("Fri Aug 01 2014 11:16:40 GMT+0800 (CST)"));
 </script>
 </body>
 </html>

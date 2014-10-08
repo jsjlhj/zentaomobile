@@ -1,35 +1,34 @@
 <!DOCTYPE html>
-<html ng-app>
+<html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
   <title>禅道</title>
   <link href="css/mui.min.css" rel="stylesheet"/>
+  <link href="css/font-awesome.min.css" rel="stylesheet"/>
   <link href="css/style.css" rel="stylesheet"/>
   <link href="css/subpage.css" rel="stylesheet"/>
   <link href="css/dialog.css" rel="stylesheet"/>
-  <style>
-    .dialog > header > div {padding-left: 30px; position: relative;}
-    #objStatus {position: absolute; right: 0; top: 4px; margin: 0}
-  </style>
 </head>
-<body ng-controller="DialogController">
+<body>
 <div class="dialog with-footer" id="dialog">
   <header class="pri">
-    <div class="pri-icon" id="priIcon" class="pri"><span class="obj-pri"></span></div>
-    <h3><span class="obj-id item-id pri" id="objID"></span> <span class="obj-name"></span></h3>
+    <h4><span class="obj-id item-id pri" id="objID">&nbsp;</span> <span class="obj-name"></span></h4>
     <div class="info">
+      <div class="mui-pull-right small"><i class="fa fa-chevron-down text-muted info-more-icon"></i></div>
       <div class="block-lines">
-        <div class="small"><span class="mui-badge" id="when"><span class="obj-when"></span> <span class="obj-begin"></span>~<span class="obj-end"></span></span></div>
-        <div class="small"><span class="text-muted">类型: </span> <span class="obj-typeName"></span></div>
-        <div class="small"><span class="text-muted">所有者: </span> <span class="obj-account"></span></div>
+        <div><span class="mui-badge" id="objStatus">&nbsp;</span></div>
+        <div class="small"><span class="mui-badge mui-badge-inverted" id="when"><span class="obj-when"></span> <span class="obj-begin"></span>~<span class="obj-end"></span></span></div>
       </div>
-      <div class="mui-badge" id="objStatus"></div>
+    </div>
+    <div class="info info-more">
+      <div class="small"><span class="text-muted">类型: </span> <span class="obj-typeName"></span></div>
+      <div class="small"><span class="text-muted">所有者: </span> <span class="obj-account"></span></div>
     </div>
   </header>
   <section>
     <h5>描述</h5>
-    <div class="mui-content-padded obj-desc" data-default="<span class='small text-muted'>--- 没有描述 ---</span>"></div>
+    <div class="mui-content-padded obj-desc article-content-plain" data-default="<span class='small text-muted'>--- 没有描述 ---</span>"></div>
   </section>
   <footer>
     <div class="mui-row">
@@ -89,12 +88,11 @@ function render(obj)
     }
 
     $("#dialog > header").classList.add('pri-' + obj.pri);
-    $("#priIcon").classList.add('pri-' + obj.pri);
     $("#objID").classList.add('pri-' + obj.pri);
     var $status = $('#objStatus');
     $status.innerHTML = obj.statusName;
     $status.classList.add('mui-badge-' + obj.statusColor);
-    $("#when").classList[obj.date < today ? 'add' : 'remove']('mui-badge-warning');
+    $("#when").classList[obj.date < today ? 'add' : 'remove']('mui-badge-danger');
 }
 </script>
 </body>

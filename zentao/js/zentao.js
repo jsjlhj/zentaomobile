@@ -23,7 +23,7 @@
             {
                 status:
                 {
-                    'wait'      : {name: '未完成', color: 'warning'},
+                    'wait'      : {name: '未完成', color: 'primary'},
                     'done'      : {name: '已完成', color: 'success'},
                     'doing'     : {name: '进行中', color: 'danger'},
                 },
@@ -1251,6 +1251,7 @@
     Zentao.prototype.sync = function(tab, successCallback, errorCallback)
     {
         if(this.network === 'disconnect') return;
+        if(!window.user || window.user.status !== 'online') return;
 
         var subTab = 'all';
         var that = this;

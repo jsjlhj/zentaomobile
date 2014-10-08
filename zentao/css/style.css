@@ -45,6 +45,38 @@ button {outline:none}
 .small {font-size: 14px}
 .block-lines > div {display: inline-block; margin-right: 15px;}
 
+.article-content-plain
+{
+  font-size: 15px !important;
+  line-height: 1.2 !important;
+  color: #333 !important;
+}
+.article-content-plain ol, .article-content-plain ul
+{
+  padding-left: 20px!important;
+  margin: 5px 0 !important;
+}
+.article-content-plain p
+{
+  margin: 0 !important;
+}
+.article-content-plain h1,
+.article-content-plain h2,
+.article-content-plain h3,
+.article-content-plain h4,
+.article-content-plain h5,
+.article-content-plain h6
+{
+  font-size: 17px !important;
+  font-weight: bold;
+}
+.article-content-plain h4,
+.article-content-plain h5,
+.article-content-plain h6
+{
+  font-size: 15px !important;
+}
+
 .pri {border-left: 5px solid #bbb}
 .pri-1 {border-left-color: #DD524D}
 .pri-2 {border-left-color: #ed9922}
@@ -64,6 +96,7 @@ button {outline:none}
 .mui-table-view-cell.unread {background: #FCF8E3}
 .list-item-id {border: 1px solid #bbb; display: inline-block; margin-right: 5px; padding: 0 2px; font-size: 12px; line-height: 18px; color: #666; border-radius: 2px; min-width: 20px; text-align: center;}
 
+.mui-slider-progress-bar {height: 3px}
 .mui-slider-progress-bar + .mui-slider-group, .mui-slider-header + .mui-slider-group{border-top: 1px solid #ddd}
 .mui-slider-header {position: fixed; top: 0; left: 0; right: 0; z-index: 5; background: #EFEFF4; border-bottom: 1px solid #ddd}
 .mui-slider-header + .mui-slider-group {margin-top: 40px;}

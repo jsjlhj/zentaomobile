@@ -93,7 +93,7 @@ function show(tab, data)
         {
             item = document.createElement('li');
             item.classList.add('mui-table-view-divider');
-            item.innerHTML = '<span class="mui-badge mui-badge-' + data[0]['statusColor'] + '">' + data[0]['statusName'] + ' (<strong>' + data.length + '</strong>)</span>';
+            item.innerHTML = '<span class="mui-badge mui-badge-inverted mui-badge-' + data[0]['statusColor'] + '">' + data[0]['statusName'] + ' (<strong>' + data.length + '</strong>)</span>';
             $todos.appendChild(item);
         }
 

@@ -11,6 +11,14 @@
 
     document.addEventListener('tap', function()
     {
-        $dialog.classList.toggle('show-more-info')
+        $dialog.classList.remove('show-more-info');
+    }, false);
+
+    $('.dialog > header').on('tap', function(e)
+    {
+        $dialog.classList.toggle('show-more-info');
+
+        if(e && e.stopPropagation) e.stopPropagation();
+        else window.event.cancelBubble = true;
     }, false);
 })(mui, $);
