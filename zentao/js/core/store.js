@@ -147,15 +147,13 @@
         this.slience = true;
         this.enable = (lsName in window) && window[lsName] && window[lsName]['setItem'];
         this.storage = storage;
-        this.withPlus = false;
     };
 
-    Store.prototype.setPlusStorage = function(plus) {
-        if (plus && plus.storage && plus.storage.getLength) {
+    Store.prototype.setStorage = function(st) {
+        if (st && st.getLength) {
             this.enable = true;
-            storage = plus.storage;
-            this.storage = storage;
-            this.withPlus = true;
+            storage = st;
+            this.storage = st;
         }
     };
 

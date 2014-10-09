@@ -64,6 +64,11 @@ String.prototype.startWith = function(str)
     return this.indexOf(str) === 0;
 };
 
+String.prototype.endWith = function (s) {
+    var d = this.length - s.length;
+    return (d >= 0 && this.lastIndexOf(s) == d);
+};
+
 /**
  * Convert first letter of the string to upper case
  * 
@@ -73,4 +78,26 @@ String.prototype.upperCaseFirstLetter = function()
 {
     if (this.length > 1) return this.substring(0, 1).toUpperCase() + this.substring(1);
     else return this.toUpperCase();
+};
+
+String.prototype.replaceAll = function(s1, s2) {
+    return this.replace(new RegExp(s1, "gm"), s2);
+};
+
+String.prototype.trim = function() {
+    var reExtraSpace = /^\s*(.*?)\s+$/;
+    return this.replace(reExtraSpace, "$1");
+};
+
+String.prototype.encodeHtml = function() {
+    return this.replace(/&/g, '&').replace(/\"/g, '"').replace(/</g, '<').replace(/>/g, '>');
+};
+
+String.prototype.isURL = function() {
+    var regular = /^\b(((https?|ftp):\/\/)?[-a-z0-9]+(\.[-a-z0-9]+)*\.(?:com|edu|gov|int|mil|net|org|biz|info|name|museum|asia|coop|aero|[a-z][a-z]|((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]\d)|\d))\b(\/[-a-z0-9_:\@&?=+,.!\/~%\$]*)?)$/i
+    if (regular.test(this)) {
+        return true;
+    }else {
+        return false;
+    }
 };
