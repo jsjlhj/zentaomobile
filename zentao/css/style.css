@@ -110,6 +110,7 @@ button {outline:none}
 .mui-slider-header {position: fixed; top: 0; left: 0; right: 0; z-index: 5; background: #EFEFF4; border-bottom: 1px solid #ddd}
 .mui-slider-header + .mui-slider-group {margin-top: 40px;}
 
+.dialog.fixed {position: fixed; left: 0; right: 0; background-color: #fff; display: none; transition: opacity .15s, height .15s, top .1s; padding: 0; z-index: 10; max-height: 100%}
 .dialog-header {display: table; background-color: rgba(255,255,255, .35); padding-bottom: 35px; width: 100%}
 .dialog-header > .list-title {font-weight: bold; font-size: 18px}
 .dialog-header > .mui-icon, .dialog-header > .list-title {display: table-cell;}

@@ -1255,7 +1255,7 @@
 
         var subTab = 'all';
         var that = this;
-        if(tab === 'AUTO' || typeof tab === 'undefined')
+        if(typeof tab === 'undefined' || tab === 'AUTO')
         {
             tab = dataTabsSet[(this.syncId++)%dataTabsSet.length];
         }

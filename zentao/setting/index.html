@@ -38,28 +38,27 @@
       </li>
     </ul>
   </div>
-  <div class="dialog" id="syncIntervalDialog">
+  <div class="dialog fixed" id="syncIntervalDialog">
     <header class="mui-bar mui-bar-nav">
-      <button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left close-dialog"><span class="mui-icon mui-icon-left-nav"></span> 设置</button>
-      <h1 class="mui-title">自动更新间隔</h1>
+      <h1 class="mui-title close-dialog"><i class="fa fa-angle-left"></i> 自动更新间隔</h1>
     </header>
     <ul class="mui-table-view" id="syncIntervalList">
-      <li class="mui-table-view-cell mui-radio mui-left syncInterval" data-val='20000' data-name="20秒">
-        <input id="syncInterval-6000" name="syncInterval" type="radio" value='20000'> 20秒
+      <li class="mui-table-view-cell mui-radio mui-left syncInterval syncInterval-20000" data-val='20000' data-name="20秒">
+        <input id="syncInterval-20000" name="syncInterval" type="radio" value='20000'> 20秒
       </li>
-      <li class="mui-table-view-cell mui-radio mui-left syncInterval" data-val='60000' data-name="1分钟">
+      <li class="mui-table-view-cell mui-radio mui-left syncInterval syncInterval-60000" data-val='60000' data-name="1分钟">
         <input id="syncInterval-60000" name="syncInterval" type="radio" value='60000'> 1分钟
       </li>
-      <li class="mui-table-view-cell mui-radio mui-left syncInterval" data-val='300000' data-name="5分钟">
+      <li class="mui-table-view-cell mui-radio mui-left syncInterval syncInterval-300000" data-val='300000' data-name="5分钟">
         <input id="syncInterval-300000" name="syncInterval" type="radio" value='300000'> 5分钟
       </li>
-      <li class="mui-table-view-cell mui-radio mui-left syncInterval" data-val='600000' data-name="10分钟">
+      <li class="mui-table-view-cell mui-radio mui-left syncInterval syncInterval-600000" data-val='600000' data-name="10分钟">
         <input id="syncInterval-600000" name="syncInterval" type="radio" value='600000'> 10分钟
       </li>
-      <li class="mui-table-view-cell mui-radio mui-left syncInterval" data-val='1800000' data-name="30分钟">
+      <li class="mui-table-view-cell mui-radio mui-left syncInterval syncInterval-1800000" data-val='1800000' data-name="30分钟">
         <input id="syncInterval-1800000" name="syncInterval" type="radio" value='1800000'> 30分钟
       </li>
-      <li class="mui-table-view-cell mui-radio mui-left syncInterval" data-val='3600000' data-name="60分钟">
+      <li class="mui-table-view-cell mui-radio mui-left syncInterval syncInterval-3600000" data-val='3600000' data-name="60分钟">
         <input id="syncInterval-3600000" name="syncInterval" type="radio" value='3600000'> 60分钟
       </li>
     </ul>
@@ -116,7 +115,9 @@ zentao.on('ready', function()
 
     $('#notifySwitch .mui-switch-handle').classList[window.storage.get('receiveNotify', true) ? 'add' : 'remove']('mui-acitve');
 
-    $('#syncInterval-' + window.storage.get('syncInterval', 60000)).checked = true;
+    var syncInterval = window.storage.get('syncInterval', 60000);
+    $('#syncInterval-' + syncInterval).checked = true;
+    $('#syncIntervalOption').innerHTML = $('.syncInterval-' + syncInterval).getAttribute('data-name');
 
     document.querySelector("#syncIntervalList").addDelegateListener("tap", ".syncInterval", function(e)
     {
