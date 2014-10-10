@@ -1,4 +1,4 @@
-+ function()
+(function()
 {
     'use strict';
 
@@ -144,6 +144,7 @@
      */
     String.prototype.version2Number = function()
     {
+        var ver = this;
         ver = ver.split('.', 3);
         var num = '';
         for(var i = 0; i < ver.length; i++)
@@ -161,4 +162,4 @@
         }
         return parseInt(num);
     };
-}();
+}());

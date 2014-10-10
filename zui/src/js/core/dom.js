@@ -1,4 +1,4 @@
-+function()
+(function()
 {
     'use strict';
 
@@ -115,16 +115,14 @@
     {
         if (document.compatMode == "BackCompat")
         {　　　　　　
-            return
-            {　　　　　　　　
+            return {　　　　　　　　
                 width  : document.body.clientWidth,
                 height : document.body.clientHeight　　　　　　
             };
         }
         else
         {　　　　　　
-            return
-            {　　　　　　　　
+            return {　　　　　　　　
                 width  : document.documentElement.clientWidth,
                 height : document.documentElement.clientHeight　　　　　　
             };　　　　
@@ -202,7 +200,7 @@
      */
     Element.prototype.getPageOffset = function()
     {
-        var offset = {top: this.offsetTop; left: this.offsetLeft};　　　　
+        var offset = {top: this.offsetTop, left: this.offsetLeft};　　　　
         var current = this.offsetParent;　　　　
         while (current !== null)
         {　　　　　　
@@ -242,4 +240,4 @@
         offset.left -= window.getScrollLeft();
         return offset;
     };
-}();
+}());

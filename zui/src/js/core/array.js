@@ -2,7 +2,7 @@
  * Array extensions.
  * @return {undefined}
  */
-+function()
+(function()
 {
     'use strict';
 
@@ -267,4 +267,4 @@
 
         return result;
     };
-}();
+}());

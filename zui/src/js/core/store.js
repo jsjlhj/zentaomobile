@@ -133,13 +133,13 @@
 })();
 
 
-+function()
+(function()
 {
     JSON.useDateParser();
 
     var lsName = 'localStorage';
     var storage = window[lsName],
-        old = window['store'];
+        old = window.store;
 
     /* The Store object */
     var Store = function() {
@@ -198,7 +198,7 @@
 
     /* Get item key by index and deserialize it */
     Store.prototype.key = function(index) {
-        return storage.key(key);
+        return storage.key(index);
     };
 
     /* Set item value with browser localstorage native method, and without serialize filter */
@@ -228,13 +228,13 @@
     Store.prototype.forEach = function(callback) {
         for (var i = storage.length - 1; i >= 0; i--) {
             var key = storage.key(i);
-            callback(key, store.get(key));
+            callback(key, this.get(key));
         }
         return this;
     };
 
     /* Get all items and set value in an object. */
-    Store.prototype.getAll = function(callback) {
+    Store.prototype.getAll = function() {
         var all = {};
         this.forEach(function(key, val) {
             all[key] = val;
@@ -266,6 +266,6 @@
 
     window.store.noConflict = function() {
         window.store = old;
-        return store;
+        return window.store;
     };
-}();
+}());

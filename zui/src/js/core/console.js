@@ -1,4 +1,4 @@
-+function()
+(function()
 {
     'use strict';
     
@@ -9,7 +9,7 @@
         h3: 'font-size: 20px; font-weight: bold;',
         h4: 'font-size: 16px; font-weight: bold;',
         h5: 'font-size: 14px; font-weight: bold;',
-        h5: 'font-size: 12px; font-weight: bold;',
+        h6: 'font-size: 12px; font-weight: bold;',
         success: 'color: green; border-left: 10px solid green; padding-left: 5px;',
         danger: 'color: red; border-left: 10px solid red; padding-left: 5px;',
         warning: 'color: orange; border-left: 10px solid orange; padding-left: 5px;',
@@ -40,7 +40,7 @@
             for (var i = 0; i < (styles.length); ++i)
             {
                 style += cstyle[styles[i]];
-            };
+            }
         }
         else
         {
@@ -51,4 +51,4 @@
 
     console.prototype.color = window.consolelog;
     console.prototype.cstyle = cstyle;
-}();
+}());
