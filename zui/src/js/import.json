@@ -1,0 +1,10 @@
+[
+    "core/console.js",
+    "core/md5.js",
+    "core/object.js",
+    "core/string.js",
+    "core/array.js",
+    "core/date.js",
+    "core/store.js",
+    "core/dom.js"
+]
