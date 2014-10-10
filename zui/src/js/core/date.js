@@ -1,4 +1,4 @@
-+function()
+(function()
 {
     'use strict';
 
@@ -42,7 +42,6 @@
      */
     Date.prototype.friendlyStr = function()
     {
-        function timeFormat(time){
         var date = this,
             curDate = new Date(),
             year = date.getFullYear(),
@@ -265,4 +264,4 @@
     {
         return this.getFullYear() === date.getFullYear();
     };
-}();
+}());
