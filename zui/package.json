@@ -1,0 +1,37 @@
+{
+  "name": "zuimobole",
+  "title": "ZUI for mobile",
+  "version": "0.1.0-beta",
+  "description": "为移动应用开发而生。",
+  "main": "index.html",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/easysoft/zui.git"
+  },
+  "author": "cnezsoft.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/easysoft/zui/issues"
+  },
+  "homepage": "http://zui.sexy",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "~0.4.0",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-less": "~0.9.0",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-contrib-cssmin": "~0.7.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-csscomb": "~2.0.1",
+    "grunt-banner": "~0.2.0",
+    "load-grunt-tasks": "~0.2.1"
+  }
+}
