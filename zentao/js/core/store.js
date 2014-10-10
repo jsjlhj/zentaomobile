@@ -133,7 +133,8 @@
 })();
 
 /* Store */
-+ function() {
++function()
+{
     "use strict";
 
     JSON.useDateParser();
