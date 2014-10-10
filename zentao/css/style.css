@@ -1,5 +1,5 @@
 /* global style */
-select,
+/*select,
 textarea,
 input[type="text"],
 input[type="search"],
@@ -39,7 +39,7 @@ input[type="color"]:focus
   background-color: #fff
 }
 
-button {outline:none}
+button {outline:none}*/
 
 .text-muted {color: #929292}
 .small {font-size: 14px}
@@ -169,14 +169,14 @@ body,#content
 }
 
 /* animations */
-.zoom-out
+/*.zoom-out
 {
   transition: all .5s ease-out;
   opacity: 0;
   -webkit-transform: scale(3);
       -ms-transform: scale(3);
           transform: scale(3);
-}
+}*/
 
 /* tab bar */
 .mui-bar .mui-tab-item {height: 60px}
