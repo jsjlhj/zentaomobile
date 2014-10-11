@@ -1,18 +1,135 @@
-/* Zentao API */
-+ function($)
+/**
+ * User storage
+ */
+(function()
 {
-    "use strict";
-
-    var store = window.store;
-    var md5 = window.md5;
-    var dataTabs =
+    var UserStore = function()
     {
-        todo: {name: '待办', syncId: 0, subsSet: ['today', 'yestoday', 'thisweek', 'undone']},
-        task: {name: '任务', syncId: 0, subsSet: ['assignedTo', 'openedBy', 'finishedBy']},
-        bug: {name: 'Bug', syncId: 0, subsSet: ['assignedTo', 'openedBy', 'resolvedBy']},
-        story: {name: '需求', syncId: 0, subsSet: ['assignedTo', 'openedBy', 'reviewedBy']}
+        this.store = window.store;
+        this.user;
+        this.account;
     };
-    var dataTabsSet = ['todo', 'task', 'bug', 'story'];
+
+    UserStore.prototype.setStorage = function(storage)
+    {
+        window.store.setStorage(storage);
+    };
+
+    UserStore.prototype.setAccount = function(account)
+    {
+        this.account = account;
+        this.store.set('account', this.account);
+    }
+
+    UserStore.prototype.set = function(key, value)
+    {
+        if (this.account)
+        {
+            this.store.set(this.account + '::' + key, value);
+        }
+        else
+        {
+            console.error('存储失败！无法获取用户数据。');
+        }
+    };
+
+    UserStore.prototype.get = function(key, defaultValue)
+    {
+        if (this.account)
+        {
+            return this.store.get(this.account + '::' + key, defaultValue);
+        }
+        else
+        {
+            console.error('获取存储数据失败！无法获取用户数据。');
+            return defaultValue;
+        }
+    };
+
+    UserStore.prototype.getUser = function(account)
+    {
+        if(!account)
+        {
+            account = this.store.get('account', this.account);
+        }
+        this.account = account;
+
+        if(account)
+        {
+            this.userlist = this.store.get('userlist', {});
+            this.user = this.userlist[account];
+
+            if(this.user && this.user.status === 'online')
+            {
+                if(new Date().getTime() - this.user.lastLoginTime > 1000 * 3600 * 24)
+                {
+                    this.user.status = 'offline';
+                }
+            }
+        }
+        else
+        {
+            this.user = {status: 'logout'};
+        }
+
+        window.user = this.user;
+
+        console.groupCollapsed('%cUSER: ' + this.user.account + '@' + this.user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
+        console.log(user, this.user);
+        console.groupEnd();
+
+        return this.user;
+    };
+
+    UserStore.prototype.saveUser = function(data)
+    {
+        data = data || window.user;
+
+        if(data.account && data.account != this.account)
+        {
+            this.setAccount(data.account);
+            this.getUser();
+        }
+
+        this.user = Object.extend(this.user, data);
+
+        if(this.user)
+        {
+            this.userList[this.account] = this.user;
+            this.store.set('userlist', userlist);
+        }
+        else
+        {
+            console.error('存储失败！无法获取用户数据。');
+        }
+    };
+
+    UserStore.prototype.clearUser = function(account)
+    {
+        account = account || this.account;
+        if(account === this.account)
+        {
+            this.store.remove('account');
+        }
+        account += '::';
+        var store = this.store;
+        this.store.forEach(function(key)
+        {
+            if(key.startWith(account))
+            {
+                store.remove(key);
+            }
+        });
+    };
+
+    window.userStore = new UserStore();
+}());
+
+/**
+ * Data list
+ */
+(function()
+{
     var cleanMaps =
     {
         number: ['id', 'pri', 'storyID', 'projectID', 'storyVersion', 'consumed', 'left', 'estimate', 'severity'],
@@ -145,122 +262,6 @@
         }
     };
 
-    var getEventName = function(et)
-    {
-        var dotIndex = et.indexOf('.');
-        if(dotIndex > 0)
-        {
-            return et.substr(0, dotIndex);
-        }
-        return et;
-    };
-
-    var Storage = function()
-    {
-        window.store = window.store;
-    };
-
-    Storage.prototype.setPlus = function()
-    {
-        window.store.setPlusStorage(window.plus);
-    };
-
-    Storage.prototype.set = function(key, value, ignoreAccount)
-    {
-        if (ignoreAccount)
-        {
-            window.store.set(key, value);
-        }
-        else if (window.user && window.user.account)
-        {
-            window.store.set(window.user.account + '::' + key, value);
-        }
-        else
-        {
-            console.error('存储失败！无法获取用户数据。');
-        }
-    };
-
-    Storage.prototype.get = function(key, defaultValue, ignoreAccount)
-    {
-        if (ignoreAccount)
-        {
-            return window.store.get(key, defaultValue);
-        }
-        else if (window.user && window.user.account)
-        {
-            return window.store.get(window.user.account + '::' + key, defaultValue);
-        }
-        else
-        {
-            console.error('获取存储数据失败！无法获取用户数据。');
-            return defaultValue;
-        }
-    };
-
-    Storage.prototype.getUser = function()
-    {
-        var account = window.store.get('account', '');
-        if (account !== '')
-        {
-            window.user = window.store.get('userlist', {status: 'logout'})[account];
-            if(window.user.status === 'online')
-            {
-                if(new Date().getTime() - window.user.lastLoginTime > 1000 * 3600 * 24)
-                {
-                    window.user.status = 'offline';
-                }
-            }
-        }
-        else
-        {
-            window.user = {status: 'logout'};
-        }
-
-        this.config = window.storage.get('zentaoConfig', this.config);
-        this.session = window.storage.get('session', this.session);
-
-        console.groupCollapsed('%cUSER: ' + window.user.account + '@' + window.user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
-        console.log(window.user);
-        console.groupEnd();
-        return window.user;
-    };
-
-    Storage.prototype.saveUser = function()
-    {
-        if (window.user && window.user.account)
-        {
-            window.store.set('account', window.user.account);
-            var userlist = window.store.get('userlist',
-            {});
-            userlist[window.user.account] = window.user;
-            window.store.set('userlist', userlist);
-        }
-        else
-        {
-            console.error('存储失败！无法获取用户数据。');
-        }
-    };
-
-    Storage.prototype.clearUser = function(account)
-    {
-        account = account || window.user.account;
-        if(account === window.user.account)
-        {
-            window.store.remove('account');
-        }
-        account = '::' + account;
-        window.store.forEach(function(key)
-        {
-            if(key.startWith(account))
-            {
-                window.store.remove(key);
-            }
-        });
-    };
-
-    window.storage = new Storage();
-
     var DataList = function(name, data)
     {
         this.name = name;
@@ -275,7 +276,7 @@
 
     DataList.prototype.loadFromStore = function()
     {
-        var storeData = window.storage.get('datalist::' + this.name,
+        var storeData = window.userStore.get('datalist::' + this.name,
         {
             data: [],
             updateTime: new Date(0)
@@ -369,7 +370,7 @@
 
     DataList.prototype.save = function()
     {
-        window.storage.set('datalist::' + this.name,
+        window.userStore.set('datalist::' + this.name,
         {
             data: this.data,
             updateTime: this.updateTime
@@ -397,7 +398,7 @@
         }
         else
         {
-            console.error('Id必须是数字。');
+            console.error('The "Id" must be a number.');
         }
         return result;
     };
@@ -484,21 +485,36 @@
     DataList.prototype.getUnreadCount = function(muted)
     {
         var count = this.unreadCount;
-        if(muted) this.unreadCount = 0;
+        if(muted && count)
+        {
+            this.markRead();
+        }
         return count;
     };
 
     DataList.prototype.getUnreadItems = function(muted)
     {
         var unreadItems = [];
+        var needSave = false;
+        this.unreadCount = 0;
         this.data.forEach(function(item)
         {
             if(item.unread)
             {
-                if(muted) item.unread = false;
+                if(muted)
+                {
+                    item.unread = false;
+                    needSave = true;
+                }
+                else
+                {
+                    this.unreadCount++;
+                }
                 unreadItems.push(item);
             }
         });
+
+        if(needSave) this.save();
         return unreadItems;
     };
 
@@ -510,20 +526,37 @@
         });
     };
 
+    window.DataList = DataList;
+)());
+
+/* Zentao API */
+(function()
+{
+    "use strict";
+
+    var dataTabs =
+    {
+        todo: {name: '待办', syncId: 0, subsSet: ['today', 'yestoday', 'thisweek', 'undone']},
+        task: {name: '任务', syncId: 0, subsSet: ['assignedTo', 'openedBy', 'finishedBy']},
+        bug: {name: 'Bug', syncId: 0, subsSet: ['assignedTo', 'openedBy', 'resolvedBy']},
+        story: {name: '需求', syncId: 0, subsSet: ['assignedTo', 'openedBy', 'reviewedBy']}
+    };
+    var dataTabsSet = ['todo', 'task', 'bug', 'story'];
+
+
     var Zentao = function()
     {
         var that = this;
         this.isReady = false;
         this.syncId = 0;
-        this.eventDrawer = {};
-        that.readyFns = [];
+        this.eventDrawer = new EventDrawer();
         this.dataTabs = dataTabs;
         this.dataTabsSet = dataTabsSet;
 
-        $.plusReady(function()
+        window.plusReady(function()
         {
-            window.storage.setPlus();
-            window.storage.getUser();
+            window.userStore.setPlus();
+            window.userStore.getUser();
 
             that.data = {};
             dataTabsSet.forEach(function(val)
@@ -565,55 +598,20 @@
     Zentao.prototype.on = function(e, fn)
     {
         console.color("ZENTAO ON: " + e, 'h5|bgwarning');
-        var name = getEventName(e);
-        if(!this.eventDrawer[name])
-        {
-            this.eventDrawer[name] = [];
-        }
-        this.eventDrawer[name].push({name: e, fn: fn});
-        // console.log('drawer:', this.eventDrawer);
-        return this;
+        
+        return this.eventDrawer.on(e, fn);
     };
 
     Zentao.prototype.off = function(e)
     {
-        var name = getEventName(e);
-        var drawer = this.eventDrawer[name];
-        if(drawer)
-        {
-            var et;
-            for (var i = drawer.length - 1; i >= 0; i--)
-            {
-                et = drawer[i];
-                if(e === et.name || et.name.startWith(e + '.'))
-                {
-                    drawer.splice(i, 1);
-                }
-            };
-        }
-        return this;
+        return this.eventDrawer.off(e);
     };
 
     Zentao.prototype.trigger = function(e, pramas)
     {
         console.color("ZENTAO TRIGGER: " + e, 'h5|bgwarning');
-        // console.log('drawer:', this.eventDrawer);
-        var name = getEventName(e);
-        var drawer = this.eventDrawer[name];
-        var result;
-        if(drawer)
-        {
-            var et;
-            for (var i = 0; i < drawer.length; ++i)
-            {
-                et = drawer[i];
-                if(e === et.name || et.name.startWith(e + '.'))
-                {
-                    result = et.fn(pramas);
-                }
-            };
-        }
-        return result;
+        
+        return this.eventDrawer.trigger(e, pramas, this);
     };
 
     Zentao.prototype.ready = function(fn)
@@ -628,19 +626,17 @@
         {
             if(clean)
             {
-                window.storage.clearUser();
+                window.userStore.clearUser();
             }
             else
             {
-                window.user.status = 'logout';
-                window.user.pwdMd5 = null;
-                window.storage.saveUser();
+                window.userStore.saveUser({status: 'logout', pwdMd5: null});
             }
 
             callback && callback(clean);
         }
 
-        $.get(this.concatUrl({module: 'user', method: 'logout'}), afterLogout, afterLogout);
+        http.get(this.concatUrl({module: 'user', method: 'logout'}), afterLogout, afterLogout);
     };
 
     /* Get zentao config and login in zentao */
@@ -655,17 +651,19 @@
         var that = this;
         if (loginkey)
         {
-            window.user.url = loginkey.url;
-            window.user.account = loginkey.account;
-            window.user.pwdMd5 = loginkey.pwdMd5;
+            if(!loginkey.url.startWith('http://') || !loginkey.url.startWith('https://'))
+            {
+                loginkey.url = 'http://' + loginkey.url;
+            }
+
+            Object.extend(window.user, loginkey);
         }
         var callError = function(message)
         {
             if(window.user.status === 'online')
             {
-                window.user.status = 'offline';
+                window.userStore.saveUser({status: offline});
             }
-            window.storage.saveUser();
             that.trigger('logged', false);
             errorCallback && errorCallback(message);
         };
@@ -705,7 +703,7 @@
                 method: 'login'
             }),
             that = this;
-        $.get(url, function(response)
+        http.get(url, function(response)
         {
             var status = JSON.parse(response);
             if (status['status'] === 'failed')
@@ -733,11 +731,11 @@
     {
         var url = window.user.url,
             user = window.user,
-            session = window.storage.session,
+            session = window.user.session,
             viewType = params.viewType || 'json',
             moduleName = params.module,
             methodName = params.method,
-            requestType = (window.storage.config.requestType || 'get').toLowerCase();
+            requestType = (window.userStore.user.config.requestType || 'get').toLowerCase();
 
         if (requestType === 'get')
         {
@@ -866,7 +864,7 @@
                 method: 'getSessionID'
             }),
             that = this;
-        $.get(url, function(response)
+        http.get(url, function(response)
         {
             var session = JSON.parse(response);
             if (session['status'] === 'success')
@@ -875,8 +873,7 @@
 
                 if (session.sessionID && session.sessionID != 'undefined')
                 {
-                    window.storage.session = session;
-                    window.storage.set('session', session);
+                    window.userStore.saveUser({session: session});
                     successCallback && successCallback(session);
                 }
                 else
@@ -902,16 +899,18 @@
                 account: window.user.account
             }),
             that = this;
-        $.get(url, function(response)
+        http.get(url, function(response)
         {
             var roleData = JSON.parse(response);
             if (roleData['status'] !== 'failed')
             {
                 roleData = JSON.parse(roleData.data);
-                window.user.role = roleData.role;
-                window.user.status = 'online';
-                window.user.lastLoginTime = new Date().getTime();
-                window.storage.saveUser();
+                window.userStore.saveUser(
+                {
+                    role: roleData.role,
+                    status: 'online',
+                    lastLoginTime: new Date().getTime()
+                });
                 window.user.data = roleData;
                 successCallback && successCallback(roleData);
             }
@@ -926,13 +925,12 @@
     {
         var that = this;
         var url = window.user.url + '/index.php?mode=getconfig';
-        $.get(url, function(response)
+        http.get(url, function(response)
         {
             var config = JSON.parse(response);
             if (config.version)
             {
-                window.storage.config = config;
-                window.storage.set('zentaoConfig', config);
+                window.userStore.saveUser({config: config});
                 successCallback && successCallback(config);
             }
             else
@@ -973,7 +971,7 @@
     Zentao.prototype.checkVersion = function()
     {
         
-        var version = window.storage.config.version.toLowerCase();
+        var version = window.userStore.config.version.toLowerCase();
         var isPro = version.indexOf('pro');
 
         if (isPro)
@@ -981,18 +979,18 @@
             version = version.replace('pro', '');
         }
 
-        var verNum = versionToNumber(version);
+        var verNum = version.version2Number();
         var result = {
             result: false
         };
 
-        this.isNewVersion = (isPro && verNum > versionToNumber('4.1')) || (!isPro && verNum >= versionToNumber('6.2'));
+        this.isNewVersion = (isPro && verNum > '4.1'.version2Number()) || (!isPro && verNum >= '6.2'.version2Number());
 
-        if (isPro && verNum < versionToNumber('1.3'))
+        if (isPro && verNum < '1.3'.version2Number())
         {
             result.message = '你的当前版本是' + version + '，请升级至pro1.3以上';
         }
-        else if (!isPro && verNum < versionToNumber('4'))
+        else if (!isPro && verNum < '4'.version2Number())
         {
             result.message = '你的当前版本是' + version + '，请升级至4.0以上';
         }
@@ -1078,7 +1076,7 @@
             data = this.data[dataType];
         if (!data) return false;
 
-        data.loadFromStore();
+        // data.loadFromStore();
 
         if (dataType === 'todo')
         {
@@ -1161,7 +1159,7 @@
             return false;
         }
 
-        var currentUser = window.storage.getUser();
+        var currentUser = window.userStore.user;
         if(!currentUser || currentUser.status !== 'online')
         {
             this.callWidthMessage(errorCallback, '请先登录。');
@@ -1192,7 +1190,7 @@
                 recPerPage: count
             });
 
-        $.get(url, function(response)
+        http.get(url, function(response)
         {
             var dt = JSON.parse(response);
             if (dt['status'] === 'success')
@@ -1230,7 +1228,7 @@
 
     Zentao.prototype.startAutoSync = function(interval, successCallback, errorCallback)
     {
-        if(!interval) interval = window.storage.get('syncInterval', 20000) / dataTabsSet.length;
+        if(!interval) interval = window.userStore.get('syncInterval', 20000) / dataTabsSet.length;
         console.color('startAutoSync:' + interval, 'h3|bgdanger');
         var that = this;
         this.autoSyncId = setInterval(function(){that.sync('AUTO', successCallback, errorCallback)}, interval);
@@ -1283,4 +1281,4 @@
     };
 
     window.zentao = new Zentao();
-}(mui);
+}());
