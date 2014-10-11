@@ -1411,7 +1411,7 @@ window.mui = mui;
         console.groupCollapsed('%cAJAX ' + method + ': ' + url, 'color: blue; border-left: 10px solid blue; padding-left: 5px; font-size: 16px; font-weight: bold; background-color: lightblue;');
         // var xhr = new XMLHttpRequest();
         var xhr = new window.plus.net.XMLHttpRequest();
-        var protocol = /^([\w-]+:)\/\//.test(url) ? RegExp.$1 : window.location.protocol;
+        var protocol = /^([\w-]+:)\/\//.test(url) ? RgegExp.$1 : window.location.protocol;
         console.log('XMLHttpRequest:', xhr);
         xhr.onreadystatechange = function() {
             console.log('readyState:', xhr.readyState, ', status:', xhr.status);
