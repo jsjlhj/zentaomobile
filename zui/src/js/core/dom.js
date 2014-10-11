@@ -38,20 +38,62 @@
     };
 
     /**
+     * Custom event object
+     * @type {object}
+     */
+    if (typeof window.CustomEvent === 'undefined')
+    {
+        var CustomEvent = function(event, params)
+        {
+            params = params ||
+            {
+                bubbles: false,
+                cancelable: false,
+                detail: undefined
+            };
+            var evt = document.createEvent('Events');
+            var bubbles = true;
+            if (params)
+            {
+                for (var name in params)
+                {
+                    (name === 'bubbles') ? (bubbles = !!params[name]) : (evt[name] = params[name]);
+                }
+            }
+            evt.initEvent(event, bubbles, true);
+            return evt;
+        };
+        CustomEvent.prototype = window.Event.prototype;
+        window.CustomEvent = CustomEvent;
+    }
+
+    /**
+     * Trigger event on element
+     * @param  {object} element
+     * @param  {string} eventType
+     * @param  {object} eventData
+     * @return {object}
+     */
+    window.trigger = function(element, eventType, eventData)
+    {
+        element.dispatchEvent(new CustomEvent(eventType,
+        {
+            detail: eventData,
+            bubbles: true,
+            cancelable: true
+        }));
+        return window;
+    };
+
+    /**
      * Trigger event, data optional
      * @param  {string}  type
      * @param  {anytype} data optional
      * @return {node}    or window
      */
-    window.trigger = Node.prototype.trigger = function(type, data)
+    Node.prototype.trigger = function(type, data)
     {
-        var event = document.createEvent('HTMLEvents');
-        event.initEvent(type, true, true);
-        event.data = data || {};
-        event.eventName = type;
-        event.target = this;
-        this.dispatchEvent(event);
-        return this;
+        window.trigger(this, type, data);
     };
 
     /**
@@ -160,6 +202,33 @@
         return (document.compatMode == "BackCompat") ?
             {x: document.body.scrollLeft, y: document.body.scrollTop} : 
             {x: document.documentElement.scrollLeft, y: document.documentElement.scrollTop};
+    };
+
+    /**
+     * Scroll to top position smoothly.
+     * @param  {number}   scrollTop
+     * @param  {number}   duration
+     * @param  {Function} callback
+     * @return {void}        
+     */
+    window.scrollToSmooth = function(scrollTop, duration, callback)
+    {
+        duration = duration || 1000;
+        var scroll = function(duration)
+        {
+            if (duration <= 0)
+            {
+                callback && callback();
+                return;
+            }
+            var distaince = scrollTop - window.scrollY;
+            setTimeout(function()
+            {
+                window.scrollTo(0, window.scrollY + distaince / duration * 10);
+                scroll(duration - 10);
+            }, 16.7);
+        };
+        scroll(duration);
     }
 
     /**
@@ -240,4 +309,39 @@
         offset.left -= window.getScrollLeft();
         return offset;
     };
+
+    /**
+     * Get styles of the element
+     * @param  {string} property
+     * @return {string}
+     */
+    Element.prototype.getStyles = function(property)
+    {
+        var styles = this.ownerDocument.defaultView.getComputedStyle(this, null);
+        if (property)
+        {
+            return styles.getPropertyValue(property) || styles[property];
+        }
+        return styles;
+    };
+
+    /**
+     * Put callback to document ready
+     * @param {Function} callback
+     */
+    var readyRE = /complete|loaded|interactive/;
+    document.ready = function(callback)
+    {
+        if (readyRE.test(document.readyState))
+        {
+            callback();
+        }
+        else
+        {
+            document.addEventListener('DOMContentLoaded', function()
+            {
+                callback();
+            }, false);
+        }
+    }
 }());
