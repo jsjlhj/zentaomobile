@@ -2,8 +2,6 @@
 {
     'use strict';
 
-    var UDF = 'undifined';
-
     if(!window.plusReady)
     {
         window.plusReady = function(callback)
@@ -23,7 +21,7 @@
         };
     }
 
-    if(typeof window.fire === UDF)
+    if(!window.fire)
     {
         window.fire = function(webview, eventType, data)
         {
@@ -39,7 +37,7 @@
             if (eventType)
             {
                 data = JSON.parse(data);
-                window.trigger(document, eventType, data);
+                window.trigger(window, eventType, data);
             }
         };
     }

@@ -72,17 +72,16 @@
      * @param  {object} element
      * @param  {string} eventType
      * @param  {object} eventData
-     * @return {object}
+     * @return {void}
      */
     window.trigger = function(element, eventType, eventData)
     {
         element.dispatchEvent(new CustomEvent(eventType,
         {
-            detail: eventData,
+            data: eventData,
             bubbles: true,
             cancelable: true
         }));
-        return window;
     };
 
     /**
@@ -122,11 +121,13 @@
      * @param {string}   or {function}   selector or function
      * @param {Function} fn  optional
      */
-    Element.prototype.on = Element.prototype.addDelegateListener = function(type, selector, fn)
+    document.on = 
+    Element.prototype.on = 
+    Element.prototype.addDelegateListener = function(type, selector, fn)
     {
         if(typeof selector === 'function')
         {
-            this.addEventListener(event, selector, false);
+            this.addEventListener(type, selector, false);
         }
         else if(typeof fn === 'function')
         {
