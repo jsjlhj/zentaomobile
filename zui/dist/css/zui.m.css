@@ -268,6 +268,12 @@ a:active {
 .clearfix:after {
   clear: both;
 }
+.hidden {
+  display: none;
+}
+.show {
+  display: block;
+}
 h1,
 h2,
 h3,
@@ -325,7 +331,7 @@ p {
   cursor: pointer;
   background-color: #fff;
   border: 1px solid #ccc;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 .btn:active,
 .btn.active {
@@ -619,6 +625,94 @@ input[type="button"] {
 }
 .badge-negative.badge-inverted {
   color: #d9534f;
+}
+input,
+textarea,
+button,
+select {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 17px;
+}
+select,
+textarea,
+input[type="text"],
+input[type="search"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="tel"],
+input[type="color"] {
+  width: 100%;
+  height: 35px;
+  -webkit-appearance: none;
+  padding: 0 15px;
+  margin-bottom: 15px;
+  line-height: 21px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  outline: none;
+}
+input[type="search"] {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 0 10px;
+  font-size: 16px;
+  border-radius: 20px;
+}
+input[type="search"]:focus {
+  text-align: left;
+}
+textarea {
+  height: auto;
+}
+select {
+  height: auto;
+  font-size: 14px;
+  background-color: #f8f8f8;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .1);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .1);
+}
+.input-group {
+  background-color: #fff;
+}
+.input-group input,
+.input-group textarea {
+  margin-bottom: 0;
+  background-color: transparent;
+  border-top: 0;
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.input-row {
+  height: 35px;
+  overflow: hidden;
+  border-bottom: 1px solid #ddd;
+}
+.input-row label {
+  float: left;
+  width: 35%;
+  padding: 8px 15px;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  line-height: 1.1;
+}
+.input-row input {
+  float: right;
+  width: 65%;
+  padding-left: 0;
+  margin-bottom: 0;
+  border: 0;
 }
 @font-face {
   font-family: 'zeniconm';

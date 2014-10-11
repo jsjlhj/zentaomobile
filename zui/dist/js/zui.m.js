@@ -1178,17 +1178,16 @@
      * @param  {object} element
      * @param  {string} eventType
      * @param  {object} eventData
-     * @return {object}
+     * @return {void}
      */
     window.trigger = function(element, eventType, eventData)
     {
         element.dispatchEvent(new CustomEvent(eventType,
         {
-            detail: eventData,
+            data: eventData,
             bubbles: true,
             cancelable: true
         }));
-        return window;
     };
 
     /**
@@ -1228,11 +1227,13 @@
      * @param {string}   or {function}   selector or function
      * @param {Function} fn  optional
      */
-    Element.prototype.on = Element.prototype.addDelegateListener = function(type, selector, fn)
+    document.on = 
+    Element.prototype.on = 
+    Element.prototype.addDelegateListener = function(type, selector, fn)
     {
         if(typeof selector === 'function')
         {
-            this.addEventListener(event, selector, false);
+            this.addEventListener(type, selector, false);
         }
         else if(typeof fn === 'function')
         {
@@ -1456,8 +1457,6 @@
 {
     'use strict';
 
-    var UDF = 'undifined';
-
     if(!window.plusReady)
     {
         window.plusReady = function(callback)
@@ -1477,7 +1476,7 @@
         };
     }
 
-    if(typeof window.fire === UDF)
+    if(!window.fire)
     {
         window.fire = function(webview, eventType, data)
         {
@@ -1493,7 +1492,7 @@
             if (eventType)
             {
                 data = JSON.parse(data);
-                window.trigger(document, eventType, data);
+                window.trigger(window, eventType, data);
             }
         };
     }
