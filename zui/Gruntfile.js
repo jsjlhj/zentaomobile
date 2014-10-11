@@ -38,6 +38,7 @@ module.exports = function(grunt)
                 files: 
                 [
                     {expand: true, cwd: 'dist/js', src: 'zui.m.min.js', dest: '../zentao/js/lib/', filter: 'isFile'},
+                    {expand: true, cwd: 'dist/js', src: 'zui.m.js', dest: '../zentao/js/lib/', filter: 'isFile'},
                     {expand: true, cwd: 'dist/css', src: 'zui.m.min.css', dest: '../zentao/css/', filter: 'isFile'},
                     {expand: true, cwd: 'dist/fonts', src: '*', dest: '../zentao/fonts/', filter: 'isFile'}
                 ]
