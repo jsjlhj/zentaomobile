@@ -4,6 +4,7 @@
     "core/string.js",
     "core/array.js",
     "core/date.js",
+    "core/eventdrawer.js",
     "core/store.js",
     "core/dom.js",
     "core/plus.js"
