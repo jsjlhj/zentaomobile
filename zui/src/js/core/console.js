@@ -49,6 +49,6 @@
         console.log('%c' + text, style);
     };
 
-    console.prototype.color = window.consolelog;
-    console.prototype.cstyle = cstyle;
+    console.color = window.consolelog;
+    console.cstyle = cstyle;
 }());
