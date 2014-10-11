@@ -106,11 +106,14 @@
      * Remove space from start and end
      * @return {string}
      */
-    String.prototype.trim = function()
+    if (!String.prototype.trim)
     {
-        var reExtraSpace = /^\s*(.*?)\s+$/;
-        return this.replace(reExtraSpace, "$1");
-    };
+        String.prototype.trim = function()
+        {
+            var reExtraSpace = /^\s*(.*?)\s+$/;
+            return this.replace(reExtraSpace, "$1");
+        };
+    }
 
     /**
      * Encode to html
