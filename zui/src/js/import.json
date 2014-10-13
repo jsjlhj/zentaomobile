@@ -7,5 +7,6 @@
     "core/eventdrawer.js",
     "core/store.js",
     "core/dom.js",
+    "core/http.js",
     "core/plus.js"
 ]
