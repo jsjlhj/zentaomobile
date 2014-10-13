@@ -92,4 +92,6 @@
         this.eventDrawer[name].push({name: e, fn: fn});
         return this;
     };
+
+    window.EventDrawer = EventDrawer;
 }());
