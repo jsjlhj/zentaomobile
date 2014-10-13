@@ -95,8 +95,8 @@
 
         if(this.user)
         {
-            this.userList[this.account] = this.user;
-            this.store.set('userlist', userlist);
+            this.userlist[this.account] = this.user;
+            this.store.set('userlist', this.userlist);
         }
         else
         {
@@ -527,7 +527,7 @@
     };
 
     window.DataList = DataList;
-)());
+}());
 
 /* Zentao API */
 (function()
@@ -555,7 +555,7 @@
 
         window.plusReady(function()
         {
-            window.userStore.setPlus();
+            window.userStore.setStorage(window.plus.storage);
             window.userStore.getUser();
 
             that.data = {};
@@ -971,7 +971,7 @@
     Zentao.prototype.checkVersion = function()
     {
         
-        var version = window.userStore.config.version.toLowerCase();
+        var version = window.user.config.version.toLowerCase();
         var isPro = version.indexOf('pro');
 
         if (isPro)
