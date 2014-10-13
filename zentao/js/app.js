@@ -1,224 +1,205 @@
-(function(mui, $)
+(function()
 {
-    var $content        = $('#content'),
-        animateSpeed    = 200,
-        windows         = {todo: "todos.html", task: "tasks.html", bug: "bugs.html", story: "stories.html"},
-        mainView,
-        currentTab,
-        subTabs         = {todo: 1, task: 2, bug: 3, story: 4},
-        defaultTab,
-        firstBackbutton = null,
-        loginWindow,
-        isLoging        = false,
+    var isLoging        = false,
         network         = 'wifi',
-        lastSyncTime    = null,
-        lastPush        = null,
-        settingWindow;
+        $status         = document.getElementById('userStatus'),
+        $statusName     = document.getElementById('userStatusName'),
+        $settingBtn     = document.getElementById('settingBtn'),
+        animateSpeed    = 200,
+        listViewsOrder  = {todo: 1, task: 2, bug: 3, story: 4},
+        listViews       = {todo: "todos.html", task: "tasks.html", bug: "bugs.html", story: "stories.html"},
+        loginWindow,
+        settingWindow,
+        mainView,
+        currentListView,
+        defaultListView;
 
-    mui.init(
+    var openLoginWindow = function()
     {
-        swipeBack: false,
-        back: function()
-        {
-            if(!firstBackbutton)
-            {
-                window.plus.nativeUI.toast('再按一次退出应用');
-                firstBackbutton = new Date().getTime();
-                setTimeout(function(){firstBackbutton = null}, 1000);
-                return false;
-            }
-            else
-            {
-                return (new Date().getTime() - firstBackbutton) < 1000;
-            }
-        }
-    });
-
-    mui.plusReady(function()
-    {
-        setTimeout(plus.navigator.closeSplashscreen, 200);
-
-        mainView = plus.webview.currentWebview();
-        document.getElementById('subpageNav').addDelegateListener('tap', '.open-subpage', function()
-        {
-            var tab = this.getAttribute('data-id');
-            // $('#appTitle').innerHTML = zentao.dataTabs[tab].name;
-            openSubWin(tab);
-            this.classList.remove('unread');
-            zentao.data[tab].getUnreadCount(true);
-        });
-
-        // Bind custom events
-        window.addEventListener('startSync', startSync, false);
-        window.addEventListener('stopSync', stopSync, false);
-        window.addEventListener('restartSync', function()
-        {
-            zentao.restartAutoSync();
-        }, false);
-
-        // Bind html5+ events
-        document.addEventListener('netchange', onNetChange, false);
-        document.addEventListener('pause', onPause, false);
-        document.addEventListener('resume', onResume, false);
-
-        window.plus.navigator.setStatusBarBackground( "#FAFAFA" );
-
-        plus.push.addEventListener('click', function(msg)
-        {
-            if(lastPush)
-            {
-                openSubWin({tab: lastPush.tab, offline: true});
-                $('#tab-' + lastPush.tab).classList.remove('unread');
-                if(lastPush.unreadCount === 1 && lastPush.latestItem)
-                {
-                    mui.fire(windows[currentTab], 'showItem', lastPush.latestItem.id);
-                }
-            }
-        }, false);
-
-        console.color('app plus ready', 'bgsuccess');
-    });
-
-    var $status     = $('#userStatus'),
-        $statusName = $('#userStatusName'),
-        $settingBtn = $('#settingBtn');
-    zentao.on('logging', function()
-    {
-        isLoging = true;
-        $statusName.innerHTML = '登录中...';
-        $status.setAttribute('data-status', 'logging');
-    }).on('logged', function(result)
-    {
-        isLoging = false;
-        console.color('logged: ' + result, 'h4|bg' + (result ? 'success' : 'danger'));
-        checkUserStatus();
-    }).on('syncing', function()
-    {
-        startSync();
-    }).on('sync', function(e)
-    {
-        if(e.result)
-        {
-            console.color('SYNC>>> ' + e.tab, 'h5|bginfo');
-            var currentWin = windows[e.tab];
-            if(typeof currentWin === 'object')
-            {
-                mui.fire(currentWin, 'reloadData', {offline: true});
-            }
-
-            if(e.tab != currentTab && e.unreadCount)
-            {
-                $('#tab-' + e.tab).classList.add('unread');
-            }
-
-            if(window.storage.get('receiveNotify', true) && zentao.runningInBackground)
-            {
-                var unreadCount = e.unreadCount;
-                plus.runtime.setBadgeNumber(unreadCount);
-
-                if(unreadCount)
-                {
-                    var message;
-                    lastPush = e;
-                    if(unreadCount > 1)
-                    {
-                        message = '收到' + unreadCount + '个新的' + zentao.dataTabs[e.tab].name;
-                    }
-                    else
-                    {
-                        message = '新的' + zentao.dataTabs[e.tab].name + ": " + (e.latestItem.name || e.latestItem.title);
-                    }
-                    plus.push.createMessage(message, "LocalMSG", {cover: true, test: 'testtest4343'});
-                    console.color('消息已推送：' + message, 'h3|info');
-                }
-            }
-
-            lastSyncTime = new Date().getTime();
-        }
-        stopSync();
-    }).on('ready', function()
-    {
-        openSubWin({offline: true});
-        if(window.storage.get('autoSync', true))
-        {
-            zentao.startAutoSync();
-        }
-    });
-
-    $status.on('tap', function()
-    {
-        var user = window.user;
-        if(!user || user.status != 'online')
-        {
-            openLoginWindow();
-        }
-        else if(user.status === 'online')
-        {
-            if(lastSyncTime)
-            {
-                var delta = Math.floor((new Date().getTime() - lastSyncTime)/1000);
-                var $time = $('#lastUpdateTime');
-
-                if(delta < 10)
-                {
-                    $time.innerHTML = '刚刚';
-                }
-                else if(delta < 60)
-                {
-                    $time.innerHTML = delta + '秒前';
-                }
-                else
-                {
-                    $time.innerHTML = Math.floor(delta/60) + '分钟前';
-                }
-            }
-            $status.classList.add('show-time');
-            setTimeout(function(){$status.classList.add('in');}, 100);
-            setTimeout(function(){$status.classList.remove('in'); setTimeout(function(){$status.classList.remove('in');}, 1000);}, 2000);
-        }
-    });
-
-    $('#settingBtn').on('tap', function()
-    {
-        settingWindow = plus.webview.create('setting/index.html', 'setting', 
+        loginWindow = plus.webview.create('login.html', 'login', 
         {
             top             : "0px",
             bottom          : "0px",
             bounce          : "vertical",
             scrollIndicator : "none"
         });
-        settingWindow.addEventListener('close', checkUserStatus);
-        settingWindow.show('slide-in-right', 200);
-    });
-
-    zentao.ready(function()
-    {
-        checkUserStatus('mild', true);
-    });
-
-    function tryLogin()
-    {
-        if(!isLoging && zentao.isReady)
+        loginWindow.addEventListener('close', function()
         {
-            zentao.login();
-        }
-    }
+            loginWindow = null;
+        });
+        loginWindow.show('zoom-in', 200);
+    };
 
-    function onResume()
+    var openListView = function(options)
+    {
+        if(typeof options === 'string'){options = {name: options};}
+        else if(!options) options = {};
+
+        if(!defaultListView) defaultListView = window.userStore.get('lastListView', 'todo');
+        options.name = options.name || currentListView || defaultListView;
+
+        var lastListView = listViews[currentListView];
+        if(lastListView && currentListView === options.name)
+        {
+            window.fire(lastListView, 'reloadData', options);
+            return;
+        }
+
+        var aniType = 'none';
+        if(lastListView)
+        {
+            // aniType = listViewsOrders.name] < listViewsOrdertListView] ? 'slide-out-right' : 'slide-out-left';
+            lastListView.hide(aniType, animateSpeed);
+            var openeds = lastListView.opened();
+            openeds.forEach(function(opendedDialog)
+            {
+                if(opendedDialog.dialogOptions)
+                {
+                    opendedDialog.hide('zoom-out', 100);
+                }
+            });
+        }
+
+        if(typeof listViews[options.name] === 'string')
+        {
+            listViews[options.name] = plus.webview.create(listViews[options.name], options.name, 
+            {
+                top             : "44px",
+                bottom          : "51px",
+                bounce          : "vertical",
+                scrollIndicator : "none"
+            });
+
+            mainView.append(listViews[options.name]);
+        }
+        else
+        {
+            // aniType = listViewsOrders.name] > listViewsOrdertListView] ? 'slide-in-right' : 'slide-in-left';
+            listViews[options.name].show(aniType, animateSpeed);
+        }
+
+        document.getElementsByClassName('open-listview').forEach(function(el)
+        {
+            el.classList[el.getAttribute('data-id') === options.name ? 'add' : 'remove']('active');
+        });
+
+        currentListView = options.name;
+        window.userStore.set('lastTab', currentListView);
+
+        document.getElementById('tab-' + options.name).classList.remove('unread');
+        // zentao.data[currentListView].getUnreadCount(true);
+    };
+
+    var tryLogin = function(key)
+    {
+        var withUi = key && key.ui && loginWindow;
+
+        if(isLoging && zentao.isReady)
+        {
+            if(withUi)
+            {
+                window.fire(loginWindow, 'logged', {result: false, message: '系统正忙，稍后再试。'});
+            }
+            return false;
+        }
+
+        if(withUi)
+        {
+            key.pwdMd5 = window.md5(key.pwdMd5);
+        }
+        zentao.login(key, function()
+        {
+
+            if(withUi)
+            {
+                window.fire(loginWindow, 'logged', {result: true});
+            }
+            checkStatus();
+        }, function(e)
+        {
+            if(withUi)
+            {
+                window.fire(loginWindow, 'logged', {result: false, message: e.message || '登录失败'});
+            }
+            checkStatus();
+        });
+    };
+
+    var checkStatus = function()
+    {
+        var status = window.user ? window.user.status : 'logout';
+
+        $settingBtn.classList.remove('hidden');
+        if(status === 'logout')
+        {
+            $statusName.innerHTML = '请登录';
+            $status.setAttribute('data-status', 'offline');
+
+            $settingBtn.classList.add('hidden');
+            openLoginWindow();
+        }
+        else if(status === 'online')
+        {
+            $statusName.innerHTML = '在线';
+            $status.setAttribute('data-status', 'online');
+
+            setTimeout(function()
+            {
+                if(user.status === 'online') $statusName.classList.add('hide-name');
+            }, 2000);
+            openListView({checkStatus: true});
+        }
+        else if(status === 'disconnect')
+        {
+            $statusName.innerHTML = '没有网络';
+            $status.setAttribute('data-status', 'disconnect');
+
+            setTimeout(function()
+            {
+                if(status === 'disconnect')
+                {
+                    $statusName.innerHTML = '离线';
+                    $status.setAttribute('data-status', 'offline');
+                }
+            }, 10000);
+        }
+        else
+        {
+            $statusName.innerHTML = '离线';
+            $status.setAttribute('data-status', 'offline');
+        }
+    };
+
+    var startSync = function()
+    {
+        $status.classList.add('syncing');
+    };
+
+    var stopSync = function()
+    {
+        $status.classList.remove('syncing');
+    };
+
+    var restartSync = function()
+    {
+        zentao.restartAutoSync();
+    };
+
+    var onResume = function()
     {
         zentao.runningInBackground = false;
         plus.runtime.setBadgeNumber(0);
         plus.push.clear();
         console.color('RUNNING IN FRONT', 'bgsuccess');
-    }
+    };
 
-    function onPause()
+    var onPause = function()
     {
         zentao.runningInBackground = true;
         console.color('RUNNING IN BACKGROUND', 'bgdanger');
-    }
+    };
 
-    function onNetChange()
+    var onNetChange = function()
     {
         var nt = plus.networkinfo.getCurrentType();
         switch ( nt ) 
@@ -249,150 +230,135 @@
         {
             tryLogin();
         }
-    }
+    };
 
-    function checkUserStatus(mild, first)
+    $status.on('tap', function()
     {
-        var md     = mild === 'mild';
-        var user   = window.storage.getUser();
-
-        $statusName.classList.remove('hide-name');
-        if(!user || user.status === 'logout')
+        var user = window.user;
+        if(!user || user.status != 'online')
         {
-            $statusName.innerHTML = '请登录';
-            $status.setAttribute('data-status', 'offline');
-            $settingBtn.classList.add('mui-hidden');
             openLoginWindow();
         }
-        else if(first)
-        {
-            user.status           = 'offline';
-            $statusName.innerHTML = '离线';
-            $status.setAttribute('data-status', 'offline');
-            if(md) tryLogin();
-            $settingBtn.classList.remove('mui-hidden');
-        }
-        else if(user.status === 'online')
-        {
-            $statusName.innerHTML = '在线';
-            $status.setAttribute('data-status', 'online');
-            setTimeout(function()
-            {
-                if(user.status === 'online') $statusName.classList.add('hide-name');
-            }, 2000);
-            openSubWin({checkStatus: true});
-            $settingBtn.classList.remove('mui-hidden');
-        }
-        else if(user.status === 'disconnect')
-        {
-            $statusName.innerHTML = '没有网络';
-            $status.setAttribute('data-status', 'disconnect');
-            setTimeout(function()
-            {
-                if(user.status === 'disconnect')
-                {
-                    $statusName.innerHTML = '离线';
-                    $status.setAttribute('data-status', 'offline');
-                }
-            }, 10000);
-            $settingBtn.classList.remove('mui-hidden');
-        }
-        else
-        {
-            $statusName.innerHTML = '离线';
-            $status.setAttribute('data-status', 'offline');
-            if(md) tryLogin();
-            $settingBtn.classList.remove('mui-hidden');
-        }
+    });
 
-        console.color('CHECK STATUS:' + user.status + ' ' + $statusName.innerHTML, 'h5|info');
-    }
-
-    function openLoginWindow()
+    $settingBtn.on('tap', function()
     {
-        loginWindow = plus.webview.create('login.html', 'login', 
+        settingWindow = plus.webview.create('setting/index.html', 'setting', 
         {
             top             : "0px",
             bottom          : "0px",
             bounce          : "vertical",
             scrollIndicator : "none"
         });
-        loginWindow.addEventListener('close', checkUserStatus);
-        loginWindow.show('zoom-in', 200);
-    }
+        settingWindow.addEventListener('close', checkUserStatus);
+        settingWindow.show('slide-in-right', 200);
+    });
 
-    function openSubWin(options)
+    window.on('login', function(e){tryLogin(e.detail);})
+          .on('openLogin', openLoginWindow)
+          .on('checkStatus', checkStatus)
+          .on('openListView', function(e){openListView(e.detail);})
+          .on('startSync', startSync)
+          .on('stopSync', stopSync)
+          .on('restartSync', restartSync);
+
+    zentao.on('logging', function()
     {
-        if(typeof options === 'string')
+        isLoging = true;
+        $statusName.innerHTML = '登录中...';
+        $status.setAttribute('data-status', 'logging');
+    }).on('logged', function(result)
+    {
+        console.color('logged: ' + result, 'h4|bg' + (result ? 'success' : 'danger'));
+
+        isLoging = false;
+        checkStatus();
+    }).on('syncing', function()
+    {
+        startSync();
+    }).on('sync', function(e)
+    {
+        if(e.result)
         {
-            options = {tab: options};
-        }
-
-        if(!options) options = {};
-
-        if(!defaultTab)
-        {
-            defaultTab = window.storage.get('lastTab', 'todo');
-        }
-
-        options.tab = options.tab || currentTab || defaultTab;
-
-        var currentWin = windows[currentTab];
-
-        if(currentWin && currentTab === options.tab)
-        {
-            mui.fire(currentWin, 'reloadData', options);
-            return;
-        }
-
-        var aniType = 'none';
-        if(currentWin)
-        {
-            // aniType = subTabs[options.tab] < subTabs[currentTab] ? 'slide-out-right' : 'slide-out-left';
-            currentWin.hide(aniType, animateSpeed);
-            var openeds = currentWin.opened();
-            openeds.forEach(function(opendedDialog)
+            console.color('SYNC>>> ' + e.tab, 'h5|bginfo');
+            var currentWin = listViews[e.tab];
+            if(typeof currentWin === 'object')
             {
-                if(opendedDialog.dialogOptions)
+                window.fire(currentWin, 'reloadData', {offline: true});
+            }
+
+            if(e.tab != currentListView && e.unreadCount)
+            {
+                document.getElementById('tab-' + e.tab).classList.add('unread');
+            }
+
+            if(window.userStore.get('receiveNotify', true) && zentao.runningInBackground)
+            {
+                var unreadCount = e.unreadCount;
+                plus.runtime.setBadgeNumber(unreadCount);
+
+                if(unreadCount)
                 {
-                    opendedDialog.hide('zoom-out', 100);
+                    var message;
+                    lastPush = e;
+                    if(unreadCount > 1)
+                    {
+                        message = '收到' + unreadCount + '个新的' + zentao.dataTabs[e.tab].name;
+                    }
+                    else
+                    {
+                        message = '新的' + zentao.dataTabs[e.tab].name + ": " + (e.latestItem.name || e.latestItem.title);
+                    }
+                    plus.push.createMessage(message, "LocalMSG", {cover: true, test: 'testtest4343'});
+                    console.color('消息已推送：' + message, 'h3|info');
                 }
-            });
+            }
+
+            lastSyncTime = new Date().getTime();
         }
-        if(typeof windows[options.tab] === 'string')
+        stopSync();
+    }).on('ready', function()
+    {
+        openListView({offline: true});
+        if(window.userStore.get('autoSync', true))
         {
-            windows[options.tab] = plus.webview.create(windows[options.tab], options.tab, 
+            zentao.startAutoSync();
+        }
+    });
+
+    window.plusReady(function()
+    {
+        window.plus.navigator.setStatusBarBackground( "#FAFAFA" );
+
+        setTimeout(plus.navigator.closeSplashscreen, 200);
+        
+        mainView = plus.webview.currentWebview();
+        
+        checkStatus();
+        tryLogin(); // if(window.user == 'offline') tryLogin();
+
+        document.addEventListener('netchange', onNetChange, false);
+        document.addEventListener('pause', onPause, false);
+        document.addEventListener('resume', onResume, false);
+
+        plus.push.addEventListener('click', function(msg)
+        {
+            if(lastPush)
             {
-                top             : "44px",
-                bottom          : "60px",
-                bounce          : "vertical",
-                scrollIndicator : "none"
-            });
+                openListView({name: lastPush.tab, offline: true});
+                if(lastPush.unreadCount === 1 && lastPush.latestItem)
+                {
+                    window.fire(windows[currentListView], 'showItem', lastPush.latestItem.id);
+                }
+            }
+        }, false);
 
-            mainView.append(windows[options.tab]);
-        }
-        else
-        {
-            // aniType = subTabs[options.tab] > subTabs[currentTab] ? 'slide-in-right' : 'slide-in-left';
-            windows[options.tab].show(aniType, animateSpeed);
-        }
+        console.color('app plus ready', 'bgsuccess');
+    });
 
-        $('.open-subpage').forEach(function(el)
-        {
-            el.classList[el.getAttribute('data-id') === options.tab ? 'add' : 'remove']('mui-active');
-        });
-
-        currentTab = options.tab;
-        window.storage.set('lastTab', currentTab);
-    }
-
-    function startSync()
+    document.getElementById('subpageNav').on('tap', '.open-listview', function()
     {
-        $('#userStatus').classList.add('syncing');
-    }
-
-    function stopSync()
-    {
-        $('#userStatus').classList.remove('syncing');
-    }
-})(mui, $);
+        openListView(this.getAttribute('data-id'));
+        this.classList.remove('unread');
+    });
+}());

@@ -4,8 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
     <title>禅道</title>
-    <link href="css/mui.min.css" rel="stylesheet"/>
-    <link href="css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="css/zui.m.min.css" rel="stylesheet"/>
     <link href="css/style.css" rel="stylesheet"/>
     <style>
     @-webkit-keyframes loggingFlash
@@ -33,53 +32,44 @@
     #userStatus[data-status="offline"] #loginText {display: inline;}
     #userStatus[data-status="disconnect"] #userStatusName {color: #DD524D}
     #userStatus[data-status="disconnect"] #userStatusIcon {border-color: #DD524D;}
-    #userStatus[data-status="online"] {transition: all 0.5s 3.5s; opacity: 0}
+    #userStatus[data-status="online"] {transition: all 0.5s 2.5s; opacity: 0}
     #userStatus.syncing[data-status="online"] {transition: all 0.5s; opacity: 1;}
     #userStatus[data-status="online"] #userStatusIcon {background: #4CD964; border-color: #27b43f; border-style: solid}
     #userStatus[data-status="logging"] #userStatusIcon {background: #F0AD4E; border-color: #dfa655; -webkit-animation: loggingFlash 1s ease 0 infinite normal; animation: loggingFlash 1s ease 0 infinite normal;}
     #userStatus.syncing[data-status="online"] #userStatusIcon {background: #4CD964; border-color: #27b43f; -webkit-animation: syncingFlash 1s ease 0 infinite normal; animation: syncingFlash 1s ease 0 infinite normal;}
-
-    .open-subpage.unread {position: relative;}
-    .open-subpage.unread .mui-icon, .open-subpage.unread .mui-tab-label {z-index: 5}
-    .open-subpage.unread:after {border-radius: 4px; display: block; width: 8px; height: 8px; background-color: red; content: ' '; position: absolute; left: 51%; top: 10px; z-index: 10}
+    .open-listview.unread {position: relative;}
+    .open-listview.unread .icon, .open-listview.unread .tab-label {z-index: 5}
+    .open-listview.unread:after {border-radius: 4px; display: block; width: 8px; height: 8px; background-color: red; content: ' '; position: absolute; left: 51%; top: 10px; z-index: 10}
     </style>
 </head>
 <body>
-  <header class="mui-bar mui-bar-nav headbar">
-    <div class="bar-heading">禅道 <span id="userStatusName">连接中…</span></div>
-    <div class="bar-actions"><button data-status="logging" id="userStatus" class="syncing mui-btn mui-btn-link mui-btn-nav"><span id="userStatusIcon"></span> <span id="loginText">登录</span><span id="lastUpdateTime"><span class="text-muted">:( 还没有执行后台更新</span></span></button> <a id="settingBtn" class="mui-icon mui-icon-cog"></a></div>
+  <header class="bar bar-nav headbar">
+    <button type="button" class="btn btn-link btn-nav pull-right" id="settingBtn"><i class="icon icon-cog-outline"></i></button>
+    <button data-status="logging" id="userStatus" class="syncing btn btn-link btn-nav pull-right"><span id="userStatusIcon"></span> <span id="loginText">登录</span></button>
+    <h1 class="title">禅道 <span id="userStatusName">连接中…</span></h1>
   </header>
 
-  <div id="content">
-    <section id="list" class="content-view">
-    </section>
-  </div>
-
-  <nav class="mui-bar mui-bar-tab" id="subpageNav">
-    <a class="mui-tab-item open-subpage mui-active" href="#todo" data-id="todo" id="tab-todo">
-      <span class="mui-icon"><i class="fa fa-check-square-o"></i></span>
-      <span class="mui-tab-label">待办</span>
+  <nav class="bar bar-tab" id="subpageNav">
+    <a class="tab-item open-listview active" href="#todo" data-id="todo" id="tab-todo">
+      <span class="icon"><i class="icon icon-check-square-o"></i></span>
+      <span class="tab-label">待办</span>
     </a>
-    <a class="mui-tab-item open-subpage" href="#task" data-id="task" id="tab-task">
-      <span class="mui-icon"><i class="fa fa-tasks"></i></span>
-      <span class="mui-tab-label">任务</span>
+    <a class="tab-item open-listview" href="#task" data-id="task" id="tab-task">
+      <span class="icon"><i class="icon icon-tasks"></i></span>
+      <span class="tab-label">任务</span>
     </a>
-    <a class="mui-tab-item open-subpage" href="#bug" data-id="bug" id="tab-bug">
-      <span class="mui-icon"><i class="fa fa-bug"></i></span>
-      <span class="mui-tab-label">Bug</span>
+    <a class="tab-item open-listview" href="#bug" data-id="bug" id="tab-bug">
+      <span class="icon"><i class="icon icon-bug"></i></span>
+      <span class="tab-label">Bug</span>
     </a>
-    <a class="mui-tab-item open-subpage" href="#story" data-id="story" id="tab-story">
-      <span class="mui-icon"><i class="fa fa-lightbulb-o"></i></span>
-      <span class="mui-tab-label">需求</span>
+    <a class="tab-item open-listview" href="#story" data-id="story" id="tab-story">
+      <span class="icon"><i class="icon icon-lightbulb-o"></i></span>
+      <span class="tab-label">需求</span>
     </a>
   </nav>
 
-<script src="js/core.js"></script>
-<script src="js/$.js"></script>
-<script src="js/console.js"></script>
-<script src="js/store.js"></script>
-<script src="js/md5.min.js"></script>
-<script src="js/mui.js"></script>
+<script src="js/lib/zui.m.js"></script>
+<script src="js/lib/md5.min.js"></script>
 <script src="js/zentao.js"></script>
 <script src="js/webview.js"></script>
 <script src="js/app.js"></script>
