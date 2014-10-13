@@ -16,7 +16,7 @@
 
         xhr = window.plus ? new window.plus.net.XMLHttpRequest() : new XMLHttpRequest();
         var that = this;
-        var protocol = /^([\w-]+:)\/\//.test(url) ? RgegExp.$1 : window.location.protocol;
+        var protocol = /^([\w-]+:)\/\//.test(url) ? RegExp.$1 : window.location.protocol;
 
         if(this.debug) console.log('XMLHttpRequest:', xhr);
 
