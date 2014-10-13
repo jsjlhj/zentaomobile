@@ -12,7 +12,7 @@
 
     UserStore.prototype.setStorage = function(storage)
     {
-        window.store.setStorage(storage);
+        // window.store.setStorage(storage);
     };
 
     UserStore.prototype.setAccount = function(account)
@@ -52,24 +52,21 @@
         {
             account = this.store.get('account', this.account);
         }
-        this.account = account;
+        this.account  = account;
+        this.userlist = this.store.get('userlist', {});
+        this.user     = {status: 'logout'};
 
-        if(account)
+        if(this.account)
         {
-            this.userlist = this.store.get('userlist', {});
-            this.user = this.userlist[account];
+            this.user = this.userlist[this.account] || this.user;
 
-            if(this.user && this.user.status === 'online')
+            if(this.user.status === 'online')
             {
                 if(new Date().getTime() - this.user.lastLoginTime > 1000 * 3600 * 24)
                 {
                     this.user.status = 'offline';
                 }
             }
-        }
-        else
-        {
-            this.user = {status: 'logout'};
         }
 
         window.user = this.user;
@@ -657,6 +654,7 @@
             }
 
             Object.extend(window.user, loginkey);
+            window.userStore.saveUser(window.user);
         }
         var callError = function(message)
         {

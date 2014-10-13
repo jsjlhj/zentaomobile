@@ -99,12 +99,18 @@
 window.plusReady(function()
 {
     var view = plus.webview.currentWebview();
-    var parentView = view.parent();
+    var parentView = view.parent() || view.opener();
     var options = view.options || {};
     var username = document.getElementById('username');
     var password = document.getElementById('password');
     var address  = document.getElementById('address');
     var loginBtn = document.getElementById('loginBtn');
+
+    // test code
+    // username.value = 'admin';
+    // password.value = '123456';
+    // address.value = 'zentao.com';
+    // // test code end
 
     if(options.offline)
     {
@@ -134,7 +140,7 @@ window.plusReady(function()
         loginBtn.disabled = false;
         loginBtn.innerHTML = '登录';
 
-        var result = e.data;
+        var result = e.detail;
         if(result.result)
         {
             loginBtn.innerHTML = '已登录';
