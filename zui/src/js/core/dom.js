@@ -41,7 +41,7 @@
      * Custom event object
      * @type {object}
      */
-    if (typeof window.CustomEvent === 'undefined')
+    if (!window.CustomEvent)
     {
         var CustomEvent = function(event, params)
         {
@@ -76,12 +76,26 @@
      */
     window.trigger = function(element, eventType, eventData)
     {
-        element.dispatchEvent(new CustomEvent(eventType,
+        if(typeof element === 'string')
         {
-            data: eventData,
+            eventType = element;
+            eventData = eventType;
+            element = window;
+        }
+
+        console.groupCollapsed('%cTRIGGER: ' + eventType, 'color: #fff; background-color: orange;');
+        console.log('element', element);
+        console.log('eventData', eventData);
+        console.groupEnd();
+        var event = new window.CustomEvent(eventType,
+        {
+            detail: eventData,
             bubbles: true,
             cancelable: true
-        }));
+        });
+        element.dispatchEvent(event);
+
+        return element;
     };
 
     /**

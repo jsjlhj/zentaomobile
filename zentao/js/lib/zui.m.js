@@ -1245,7 +1245,7 @@
      * Custom event object
      * @type {object}
      */
-    if (typeof window.CustomEvent === 'undefined')
+    if (!window.CustomEvent)
     {
         var CustomEvent = function(event, params)
         {
@@ -1280,12 +1280,26 @@
      */
     window.trigger = function(element, eventType, eventData)
     {
-        element.dispatchEvent(new CustomEvent(eventType,
+        if(typeof element === 'string')
         {
-            data: eventData,
+            eventType = element;
+            eventData = eventType;
+            element = window;
+        }
+
+        console.groupCollapsed('%cTRIGGER: ' + eventType, 'color: #fff; background-color: orange;');
+        console.log('element', element);
+        console.log('eventData', eventData);
+        console.groupEnd();
+        var event = new window.CustomEvent(eventType,
+        {
+            detail: eventData,
             bubbles: true,
             cancelable: true
-        }));
+        });
+        element.dispatchEvent(event);
+
+        return element;
     };
 
     /**
@@ -1650,6 +1664,11 @@
     {
         window.fire = function(webview, eventType, data)
         {
+            console.groupCollapsed('%cFIRE: ' + eventType, 'color: #fff; background-color: orange;');
+            console.log('webview', webview);
+            console.log('data', data);
+            console.groupEnd();
+            
             if (webview)
             {
                 webview.evalJS("window.receive&&window.receive('" + eventType + "','" + JSON.stringify(data ||
@@ -1659,6 +1678,10 @@
 
         window.receive = function(eventType, data)
         {
+            console.groupCollapsed('%cRECEIVE: ' + eventType, 'color: #fff; background-color: orange;');
+            console.log('data', data);
+            console.groupEnd();
+
             if (eventType)
             {
                 data = JSON.parse(data);
