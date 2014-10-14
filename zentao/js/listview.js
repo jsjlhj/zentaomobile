@@ -1,163 +1,148 @@
-var subTabs,
-    type,
-    mainview,
-    isLoading;
-
-function listView(options)
+(function()
 {
-    subTabs = options.tabs,
-    type    = options.type;
-
-    mui.init(
+    var filters = 
     {
-        swipeBack: false,
+        todo: ['today', 'yestoday', 'thisweek', 'undone'],
+        task: ['assignedTo', 'openedBy', 'finishedBy'],
+        bug: ['assignedTo', 'openedBy', 'resolvedBy'],
+        story: ['assignedTo', 'openedBy', 'reviewedBy']
+    };
 
-        pullRefresh:
+    var ListView = function(name, showfn)
+    {
+        this.name = name;
+        this.filters = filters[name];
+        if(showfn) this.show = showfn;
+        var that = this;
+
+        document.getElementById('listview').on('tab', '.table-view-cell', function(e)
         {
-            container: '#' + type + 'List',
-            down:
+            if(this.classList.contains('unread'))
             {
-                contentdown    : "下拉可以刷新",
-                contentover    : "释放立即刷新",
-                contentrefresh : "正在刷新...",
-                callback       : function(callback)
+                document.getElementsByClassName('item-id-' + this.getAttribute('data-id')).forEach(function(el)
                 {
-                    reload({callback: callback, makeRead: true});
-                }
+                    el.classList.remove('unread');
+                });
+                this.classList.remove('unread');
+                that.updateTabBadge();
             }
-        }
-    });
-
-    document.querySelector("#slider .mui-slider-group").addDelegateListener("tap", ".mui-table-view-cell", function(e)
-    {
-        if(this.classList.contains('unread'))
-        {
-            $('.item-id-' + this.getAttribute('data-id')).forEach(function(el)
-            {
-                el.classList.remove('unread');
-            });
-            this.classList.remove('unread');
-            updateTabBadge();
-        }
-        showItem(this.getAttribute('data-id'), this);
-    });
-
-    mui.plusReady(function()
-    {
-        window.addEventListener('reloadData', function(e){reload(e.detail)});
-        window.addEventListener('showItem', function(e){showItem(e.detail)});
-    });
-
-    zentao.ready(function()
-    {
-        mainview = plus.webview.currentWebview().parent();
-        showAll(false);
-        // reload({offline: false, markRead: false});
-    });
-}
-
-function updateTabBadge(tab, count)
-{
-    if(tab)
-    {
-        if(typeof count === 'undefined')
-        {
-            count = 0;
-            $('#' + tab + ' .mui-table-view-cell').forEach(function(el)
-            {
-                if(el.classList.contains('unread')) count++;
-            });
-        }
-        var $tabBadge = $('.tab-badge-' + tab);
-        $tabBadge.classList[count > 0 ? 'remove' : 'add']('mui-hidden');
-        $tabBadge.innerHTML = count;
-    }
-    else
-    {
-        subTabs.forEach(function(val)
-        {
-            updateTabBadge(val);
+            that.showItem(this.getAttribute('data-id'), this);
         });
-    }
-}
 
-function reload(options)
-{
-    console.color('RELOAD', 'h5|bginfo');
-    console.log('options', options);
-
-    if(typeof options === 'function')
-    {
-        options = {callback: options};
-    }
-
-    if(!zentao.isReady || isLoading)
-    {
-        options.callback && options.callback();
-        return false;
-    }
-
-    if(options.checkStatus)
-    {
-        var currentUser = window.storage.getUser();
-        if(!currentUser || currentUser.status !== 'online')
+        window.plusReady(function()
         {
-            if(window.plus)
-            {
-                window.plus.nativeUI.toast('离线状态下，无法更新数据');
-            }
-            options.offline = true;
-        }
-    }
+            window.on('reloadData', function(e){that.reload(e.detail)});
+            window.on('showItem', function(e){that.showItem(e.detail)});
 
-    if(options.offline)
+            window.userStore.init();
+            that.datalist = new DataList(type);
+            that.mainview = plus.webview.currentWebview().parent();
+            that.showAll(false);
+        });
+
+    };
+
+    ListView.prototype.showItem = function(id, $item)
     {
-        showAll(options.makeRead);
-    }
-    else
+        var item = this.datalist.getById(id);
+
+        plus.webview.create(this.name + ".html", this.name + "-" + id, 
+        {
+            top             : "0",
+            bottom          : "60px",
+            bounce          : "vertical",
+            scrollIndicator : "none"
+        }, {options: {id: id, type: this.name, data: item}}).show('slide-in-right', 200);
+    };
+
+    ListView.prototype.showAll = function(makeRead)
     {
-        var callCallback = function()
+        var that = this;
+        this.filters.forEach(function(val)
+        {
+            that.show(val, that.datalist.filter(val));
+        });
+        if(makeRead)
+        {
+            datalist.markRead();
+            datalist.getUnreadCount(true);
+        }
+    };
+
+    ListView.prototype.reload = function(options)
+    {
+        console.color('RELOAD', 'h5|bginfo');
+        console.log('options', options);
+
+        if(typeof options === 'function')
+        {
+            options = {callback: options};
+        }
+
+        if(isLoading)
         {
             options.callback && options.callback();
-            mui.fire(mainview, 'stopSync');
-            isLoading = false;
+            return false;
         }
 
-        isLoading = true;
-        mui.fire(mainview, 'startSync');
-        zentao.loadData(
-        {
-            type: type,
-            tab: $('#sliderSegmentedControl .mui-control-item.mui-active').getAttribute('href').substr(1)
-        }, function(data)
-        {
-            showAll(options.makeRead);
-            callCallback();
-        }, callCallback);
-    }
-}
+        this.datalist.loadFromStore();
+        this.showAll(true);
+        options.callback && options.callback();
+        return true;
+    };
 
-function showAll(makeRead)
-{
-    subTabs.forEach(function(val)
+    ListView.prototype.updateTabBadge = function(tab, count)
     {
-        show(val);
-    });
-    if(makeRead)
-    {
-        zentao.data[type].markRead();
-        zentao.data[type].getUnreadCount(true);
-    }
-}
+        if(tab)
+        {
+            if(typeof count === 'undefined')
+            {
+                count = 0;
+                document.getElementById('listview').querySelectorAll('.table-view-cell').forEach(function(el)
+                {
+                    if(el.classList.contains('unread')) count++;
+                });
+            }
+            var $tabBadge = document.getElementsByClassName('.tab-badge-' + tab);
+            $tabBadge.classList[count > 0 ? 'remove' : 'add']('mui-hidden');
+            $tabBadge.innerHTML = count;
+        }
+        else
+        {
+            var that = this;
+            this.filters.forEach(function(val)
+            {
+                that.updateTabBadge(val);
+            });
+        }
+    };
 
-function showItem(id, $item)
-{
-    plus.webview.create(type + ".html", type + "-" + id, 
-    {
-        top             : "0",
-        bottom          : "60px",
-        bounce          : "vertical",
-        scrollIndicator : "none"
-    }, {dialogOptions: {id: id, type: type}}).show('slide-in-right', 200);
-};
+    window.ListView = ListView;
+}());
+
+// function listView(options)
+// {
+//     subTabs = options.tabs,
+//     type    = options.type;
+
+//     // mui.init(
+//     // {
+//     //     swipeBack: false,
+
+//     //     pullRefresh:
+//     //     {
+//     //         container: '#' + type + 'List',
+//     //         down:
+//     //         {
+//     //             contentdown    : "下拉可以刷新",
+//     //             contentover    : "释放立即刷新",
+//     //             contentrefresh : "正在刷新...",
+//     //             callback       : function(callback)
+//     //             {
+//     //                 reload({callback: callback, makeRead: true});
+//     //             }
+//     //         }
+//     //     }
+//     // });
+// }
 
