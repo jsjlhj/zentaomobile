@@ -5,6 +5,26 @@
     var forEach = Array.prototype.forEach;
 
     /**
+     * Gesture preventDefault
+     * @param {type} e
+     * @returns {undefined}
+     */
+    window.preventDefault = function(e)
+    {
+        e.preventDefault();
+    };
+
+    /**
+     * Gesture stopPropagation
+     * @param {type} e
+     * @returns {undefined}
+     */
+    window.stopPropagation = function(e)
+    {
+        e.stopPropagation();
+    };
+
+    /**
      * forEach for NodeList
      * @type {[type]}
      */
@@ -16,7 +36,7 @@
      * @param  {Function} fn
      * @return {Node}     or window
      */
-    window.on = Node.prototype.on = function(event, fn)
+    window.on = function(event, fn)
     {
         this.addEventListener(event, fn, false);
         return this;
@@ -139,12 +159,19 @@
     Element.prototype.on = 
     Element.prototype.addDelegateListener = function(type, selector, fn)
     {
+        console.groupCollapsed('%cON: ' + type, 'color: #fff; background-color: orange;');
+        console.log('element', this);
+        console.log('selector', selector);
+        console.log('fn', fn);
+
         if(typeof selector === 'function')
         {
+            console.log('delegate', false);
             this.addEventListener(type, selector, false);
         }
         else if(typeof fn === 'function')
         {
+            console.log('delegate', true);
             this.addEventListener(type, function(e)
             {
                 var target = e.target;
@@ -161,6 +188,12 @@
 
             }, false);
         }
+
+        //click event preventDefault
+        this.removeEventListener('click.touchable', window.preventDefault);
+        this.addEventListener('click.touchable', window.preventDefault);
+
+        console.groupEnd();
         return this;
     };
 

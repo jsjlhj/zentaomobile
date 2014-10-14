@@ -15,7 +15,7 @@
      * @param  {string} et  event name
      * @return {string}
      */
-    EventDrawer.prototype.getEventName = function(et)
+    EventDrawer.getEventName = function(et)
     {
         var dotIndex = et.indexOf('.');
         if(dotIndex > 0)
@@ -34,7 +34,7 @@
      */
     EventDrawer.prototype.trigger = function(e, pramas, proxy)
     {
-        var name   = this.getEventName(e);
+        var name   = EventDrawer.getEventName(e);
         var drawer = this.eventDrawer[name];
         var result;
         if(drawer)
@@ -59,7 +59,7 @@
      */
     EventDrawer.prototype.off = function(e)
     {
-        var name   = this.getEventName(e);
+        var name   = EventDrawer.getEventName(e);
         var drawer = this.eventDrawer[name];
         if(drawer)
         {
@@ -84,7 +84,7 @@
      */
     EventDrawer.prototype.on = function(e, fn)
     {
-        var name = this.getEventName(e);
+        var name = EventDrawer.getEventName(e);
         if(!this.eventDrawer[name])
         {
             this.eventDrawer[name] = [];
