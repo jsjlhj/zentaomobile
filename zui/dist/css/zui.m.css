@@ -1,5 +1,5 @@
 /*!
- * ZUI for mobile - v0.1.0-beta - 2014-10-13
+ * ZUI for mobile - v0.1.0-beta - 2014-10-14
  * http://zui.sexy
  * GitHub: https://github.com/easysoft/zui.git 
  * Copyright (c) 2014 cnezsoft.com; Licensed MIT
@@ -269,7 +269,7 @@ a:active {
   clear: both;
 }
 .hidden {
-  display: none;
+  display: none !important;
 }
 .show {
   display: block;
@@ -626,6 +626,100 @@ input[type="button"] {
 .badge-negative.badge-inverted {
   color: #d9534f;
 }
+.table-view {
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 15px;
+  list-style: none;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+.table-view-cell {
+  position: relative;
+  padding: 11px 65px 11px 15px;
+  overflow: hidden;
+  border-bottom: 1px solid #ddd;
+}
+.table-view-cell:last-child {
+  border-bottom: 0;
+}
+.table-view-cell > a:not(.btn) {
+  position: relative;
+  display: block;
+  padding: inherit;
+  margin: -11px -65px -11px -15px;
+  overflow: hidden;
+  color: inherit;
+}
+.table-view-cell > a:not(.btn):active {
+  background-color: #eee;
+}
+.table-view-cell p {
+  margin-bottom: 0;
+}
+.table-view-divider {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 15px;
+  margin-top: -1px;
+  margin-left: 0;
+  font-weight: 500;
+  color: #999;
+  background-color: #fafafa;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+.table-view .media,
+.table-view .media-body {
+  overflow: hidden;
+}
+.table-view .media-object.pull-left {
+  margin-right: 10px;
+}
+.table-view .media-object.pull-right {
+  margin-left: 10px;
+}
+.table-view-cell > .btn,
+.table-view-cell > a > .btn,
+.table-view-cell > .badge,
+.table-view-cell > a > .badge,
+.table-view-cell > .toggle,
+.table-view-cell > a > .toggle {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+}
+@include transform(translateY(-50%));
+.table-view-cell .navigate-left > .btn,
+.table-view-cell > a .navigate-left > .btn,
+.table-view-cell .navigate-right > .btn,
+.table-view-cell > a .navigate-right > .btn,
+.table-view-cell .push-left > .btn,
+.table-view-cell > a .push-left > .btn,
+.table-view-cell .push-right > .btn,
+.table-view-cell > a .push-right > .btn,
+.table-view-cell .navigate-left > .badge,
+.table-view-cell > a .navigate-left > .badge,
+.table-view-cell .navigate-right > .badge,
+.table-view-cell > a .navigate-right > .badge,
+.table-view-cell .push-left > .badge,
+.table-view-cell > a .push-left > .badge,
+.table-view-cell .push-right > .badge,
+.table-view-cell > a .push-right > .badge,
+.table-view-cell .navigate-left > .toggle,
+.table-view-cell > a .navigate-left > .toggle,
+.table-view-cell .navigate-right > .toggle,
+.table-view-cell > a .navigate-right > .toggle,
+.table-view-cell .push-left > .toggle,
+.table-view-cell > a .push-left > .toggle,
+.table-view-cell .push-right > .toggle,
+.table-view-cell > a .push-right > .toggle {
+  right: 35px;
+}
+.content > .table-view:first-child {
+  margin-top: 15px;
+}
 input,
 textarea,
 button,
@@ -713,6 +807,123 @@ select {
   padding-left: 0;
   margin-bottom: 0;
   border: 0;
+}
+.segmented-control {
+  position: relative;
+  display: table;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 400;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+.segmented-control .control-item {
+  display: table-cell;
+  width: 1%;
+  padding-top: 6px;
+  padding-bottom: 7px;
+  overflow: hidden;
+  line-height: 1;
+  color: #333;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-left: 1px solid #ccc;
+}
+.segmented-control .control-item:first-child {
+  border-left-width: 0;
+}
+.segmented-control .control-item:active {
+  background-color: #eee;
+}
+.segmented-control .control-item.active {
+  background-color: #ccc;
+}
+.segmented-control.segmented-control-inverted {
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+}
+.segmented-control.segmented-control-inverted .control-item {
+  padding-top: 10px;
+  color: inherit;
+  border: 0;
+  border-bottom: 3px solid rgba(0, 0, 0, .075);
+}
+.segmented-control.segmented-control-inverted .control-item.active {
+  color: #428bca;
+  background: none;
+  border-color: #428bca;
+}
+.segmented-control-primary {
+  border-color: #428bca;
+}
+.segmented-control-primary .control-item {
+  color: #428bca;
+  border-color: inherit;
+}
+.segmented-control-primary .control-item:active {
+  background-color: #cde1f1;
+}
+.segmented-control-primary .control-item.active {
+  color: #fff;
+  background-color: #428bca;
+}
+.segmented-control-positive {
+  border-color: #5cb85c;
+}
+.segmented-control-positive .control-item {
+  color: #5cb85c;
+  border-color: inherit;
+}
+.segmented-control-positive .control-item:active {
+  background-color: #d8eed8;
+}
+.segmented-control-positive .control-item.active {
+  color: #fff;
+  background-color: #5cb85c;
+}
+.segmented-control-negative {
+  border-color: #d9534f;
+}
+.segmented-control-negative .control-item {
+  color: #d9534f;
+  border-color: inherit;
+}
+.segmented-control-negative .control-item:active {
+  background-color: #f9e2e2;
+}
+.segmented-control-negative .control-item.active {
+  color: #fff;
+  background-color: #d9534f;
+}
+.control-content {
+  display: none;
+}
+.control-content.active {
+  display: block;
+}
+.slider {
+  width: 100%;
+}
+.slider {
+  overflow: hidden;
+}
+.slider .slide-group {
+  position: relative;
+  font-size: 0;
+  white-space: nowrap;
+  -webkit-transition: all 0s linear;
+     -moz-transition: all 0s linear;
+          transition: all 0s linear;
+}
+.slider .slide-group .slide {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  vertical-align: top;
 }
 @font-face {
   font-family: 'zeniconm';

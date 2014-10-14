@@ -9,5 +9,8 @@
     "core/dom.js",
     "core/gestures.js",
     "core/http.js",
-    "core/plus.js"
+    "core/plus.js",
+
+    "components/sliders.js",
+    "components/segmented-controllers.js"
 ]
