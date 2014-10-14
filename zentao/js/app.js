@@ -16,13 +16,19 @@
 
     var openLoginWindow = function()
     {
+        if(loginWindow)
+        {
+            console.error('登录窗口已经打开。');
+            return;
+        }
+        var status = window.user.status;
         loginWindow = plus.webview.create('login.html', 'login', 
         {
             top             : "0px",
             bottom          : "0px",
             bounce          : "vertical",
             scrollIndicator : "none"
-        });
+        }, {options: {offline: status == 'offline' || status == 'disconnect'}});
         loginWindow.addEventListener('close', function()
         {
             loginWindow = null;
@@ -84,7 +90,7 @@
         });
 
         currentListView = options.name;
-        window.userStore.set('lastTab', currentListView);
+        window.userStore.set('lastListView', currentListView);
 
         document.getElementById('tab-' + options.name).classList.remove('unread');
         // zentao.data[currentListView].getUnreadCount(true);
@@ -109,25 +115,28 @@
         }
         zentao.login(key, function()
         {
-
             if(withUi)
             {
                 window.fire(loginWindow, 'logged', {result: true});
             }
-            checkStatus();
         }, function(e)
         {
             if(withUi)
             {
                 window.fire(loginWindow, 'logged', {result: false, message: e.message || '登录失败'});
             }
-            checkStatus();
+            else
+            {
+                window.plus.nativeUI.toast('无法连接到服务器，您可以离线使用。');
+            }
         });
     };
 
     var checkStatus = function()
     {
         var status = window.user ? window.user.status : 'logout';
+
+        console.color('CHECKSTATUS:' + status, 'h5|bgwarning');
 
         $settingBtn.classList.remove('hidden');
         if(status === 'logout')
@@ -224,7 +233,7 @@
         if(user.status === 'online' && network === 'disconnect')
         {
             user.status = 'disconnect';
-            checkUserStatus('mild');
+            checkStatus();
         }
         else if(user.status !== 'online' && network != 'disconnect')
         {
@@ -250,8 +259,14 @@
             bounce          : "vertical",
             scrollIndicator : "none"
         });
-        settingWindow.addEventListener('close', checkUserStatus);
+        settingWindow.addEventListener('close', checkStatus);
         settingWindow.show('slide-in-right', 200);
+    });
+
+    document.getElementById('listviewNav').on('tap', '.open-listview', function()
+    {
+        openListView(this.getAttribute('data-id'));
+        this.classList.remove('unread');
     });
 
     window.on('login', function(e){tryLogin(e.detail);})
@@ -270,7 +285,6 @@
     }).on('logged', function(result)
     {
         console.color('logged: ' + result, 'h4|bg' + (result ? 'success' : 'danger'));
-
         isLoging = false;
         checkStatus();
     }).on('syncing', function()
@@ -334,8 +348,9 @@
         
         mainView = plus.webview.currentWebview();
         
+        if(window.user.status === 'online') window.user.status = 'offline';
         checkStatus();
-        tryLogin(); // if(window.user == 'offline') tryLogin();
+        if(window.user.status != 'logout') tryLogin();
 
         document.addEventListener('netchange', onNetChange, false);
         document.addEventListener('pause', onPause, false);
@@ -354,11 +369,5 @@
         }, false);
 
         console.color('app plus ready', 'bgsuccess');
-    });
-
-    document.getElementById('subpageNav').on('tap', '.open-listview', function()
-    {
-        openListView(this.getAttribute('data-id'));
-        this.classList.remove('unread');
     });
 }());

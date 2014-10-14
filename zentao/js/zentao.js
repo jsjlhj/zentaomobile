@@ -639,9 +639,19 @@
     /* Get zentao config and login in zentao */
     Zentao.prototype.login = function(loginkey, successCallback, errorCallback)
     {
+        var callError = function(message)
+        {
+            if(window.user.status === 'online')
+            {
+                window.userStore.saveUser({status: 'offline'});
+            }
+            that.trigger('logged', false);
+            errorCallback && errorCallback(message);
+        };
+
         if(this.trigger('logging') === false)
         {
-            that.callWidthMessage(errorCallback, '登录被取消。');
+            callError('登录被取消。');
             return;
         }
 
@@ -656,15 +666,12 @@
             Object.extend(window.user, loginkey);
             window.userStore.saveUser(window.user);
         }
-        var callError = function(message)
+
+        if(!window.user.url || !window.user.account || !window.user.pwdMd5)
         {
-            if(window.user.status === 'online')
-            {
-                window.userStore.saveUser({status: offline});
-            }
-            that.trigger('logged', false);
-            errorCallback && errorCallback(message);
-        };
+            callError('用户登录信息不完整。');
+            return;
+        }
 
         this.getConfig(function()
         {
