@@ -32,8 +32,8 @@
 
         window.plusReady(function()
         {
-            window.on('reloadData', function(e){that.reload(e.detail)});
-            window.on('showItem', function(e){that.showItem(e.detail)});
+            window.on('reloadData', function(e){that.reload(e.detail);});
+            window.on('showItem', function(e){that.showItem(e.detail);});
 
             window.userStore.init();
             that.datalist = new DataList(that.name);

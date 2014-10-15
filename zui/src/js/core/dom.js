@@ -428,4 +428,11 @@
     {
         return document.$(selector, this);
     };
+
+    // Empty funtion
+    var shield = function() {return false;}
+
+    // Make active style effective on touch screen
+    document.addEventListener('touchstart', shield, false);
+    document.oncontextmenu = shield; // disabled context menu
 }());

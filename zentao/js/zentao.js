@@ -48,7 +48,7 @@
             
         });
         return false;
-    }
+    };
 
     Zentao.prototype.unreadCount = function(tab)
     {
@@ -101,7 +101,7 @@
             }
 
             callback && callback(clean);
-        }
+        };
 
         http.get(this.concatUrl({module: 'user', method: 'logout'}), afterLogout, afterLogout);
     };
@@ -181,7 +181,7 @@
         http.get(url, function(response)
         {
             var status = JSON.parse(response);
-            if (status['status'] === 'failed')
+            if (status.status === 'failed')
             {
                 that.callWidthMessage(errorCallback, '所提供的用户名和密码不正确。');
             }
@@ -206,6 +206,10 @@
     {
         var url = window.user.url,
             user = window.user,
+            password,
+            item,
+            i,
+            stringSet,
             session = window.user.session,
             viewType = params.viewType || 'json',
             moduleName = params.module,
@@ -217,7 +221,7 @@
             url += '/index.php?';
             if (moduleName === 'user' && methodName === 'login')
             {
-                var password = md5(window.user.pwdMd5 + session.rand);
+                password = md5(window.user.pwdMd5 + session.rand);
                 url += 'm=user&f=login&account=' + user.account +
                     '&password=' + password + '&' + session.sessionName +
                     '=' + session.sessionID + '&t=json';
@@ -229,9 +233,8 @@
             if (moduleName === 'api' && methodName.toLowerCase() === 'getmodel')
             {
                 url += '&moduleName=' + params.moduleName + '&methodName=' + params.methodName + '&params=';
-                var item;
-                var stringSet = ',viewType,module,method,moduleName,methodName,pageID,type,recTotal,recPerPage,id,';
-                for (var i in params)
+                stringSet = ',viewType,module,method,moduleName,methodName,pageID,type,recTotal,recPerPage,id,';
+                for (i in params)
                 {
                     item = params[i];
                     if (stringSet.indexOf(',' + i + ',') > 0) continue;
@@ -272,7 +275,7 @@
             url += '/';
             if (moduleName === 'user' && methodName === 'login')
             {
-                var password = md5(window.user.pwdMd5 + session.rand);
+                password = md5(window.user.pwdMd5 + session.rand);
                 url += 'user-login.json?account=' + user.account + '&password=' + password + '&' + (session.sessionName || 'sid') + '=' + session.sessionID;
                 return url;
             }
@@ -288,9 +291,8 @@
                 url += params.type + '-';
             }
 
-            var item;
-            var stringSet = ',viewType,module,method,moduleName,methodName,pageID,type,recTotal,recPerPage,';
-            for (var i in params)
+            stringSet = ',viewType,module,method,moduleName,methodName,pageID,type,recTotal,recPerPage,';
+            for (i in params)
             {
                 item = params[i];
                 if (stringSet.indexOf(',' + i + ',') > 0) continue;
@@ -342,7 +344,7 @@
         http.get(url, function(response)
         {
             var session = JSON.parse(response);
-            if (session['status'] === 'success')
+            if (session.status === 'success')
             {
                 session = JSON.parse(session.data);
 
@@ -377,7 +379,7 @@
         http.get(url, function(response)
         {
             var roleData = JSON.parse(response);
-            if (roleData['status'] !== 'failed')
+            if (roleData.status !== 'failed')
             {
                 roleData = JSON.parse(roleData.data);
                 window.userStore.saveUser(
@@ -429,11 +431,11 @@
     Zentao.prototype.fnToCallWidthMessage = function(callback, message)
     {
         var that = this;
-        return function(params)
+        var fn = function(params)
         {
             if(typeof params === 'string')
             {
-                message += params
+                message += params;
             }
             else if(params && params.message)
             {
@@ -441,7 +443,8 @@
             }
             that.callWidthMessage(callback, message, params);
         };
-    }
+        return fn;
+    };
 
     Zentao.prototype.checkVersion = function()
     {
@@ -607,7 +610,7 @@
         http.get(url, function(response)
         {
             var dt = JSON.parse(response);
-            if (dt['status'] === 'success')
+            if (dt.status === 'success')
             {
                 dt = JSON.parse(dt.data);
                 that.data[options.type].load(dt);
@@ -616,7 +619,7 @@
             else
             {
                 that.isNewVersion = false;
-                that.callWidthMessage(errorCallback, '无法获取用户数据，请确保所登录的账户拥有超级model权限。禅道权限管理请参考：http://www.zentao.net/book/zentaopmshelp/71.html。')
+                that.callWidthMessage(errorCallback, '无法获取用户数据，请确保所登录的账户拥有超级model权限。禅道权限管理请参考：http://www.zentao.net/book/zentaopmshelp/71.html。');
             }
 
         }, that.fnToCallWidthMessage(errorCallback, '无法获取数据，请检查网络。'));
@@ -646,7 +649,7 @@
         if(!interval) interval = window.userStore.get('syncInterval', 200000) / dataTabsSet.length;
         console.color('startAutoSync:' + interval, 'h3|bgdanger');
         var that = this;
-        this.autoSyncId = setInterval(function(){that.sync('AUTO', successCallback, errorCallback)}, interval);
+        this.autoSyncId = setInterval(function(){that.sync('AUTO', successCallback, errorCallback);}, interval);
     };
 
     Zentao.prototype.stopAutoSync = function()

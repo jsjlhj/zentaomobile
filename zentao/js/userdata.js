@@ -25,7 +25,7 @@
     {
         this.account = account;
         this.store.set('account', this.account);
-    }
+    };
 
     UserStore.prototype.set = function(key, value)
     {
@@ -269,7 +269,7 @@
     {
         this.name = name;
         this.loadFromStore();
-        this.account = window.user['account'];
+        this.account = window.user.account;
         this.clean();
         if (data)
         {
@@ -331,8 +331,8 @@
             });
 
             // added expand attribute
-            var expands = cleanMaps.expand[this.name];
-            for(var key in expands)
+            var expands = cleanMaps.expand[this.name], key;
+            for(key in expands)
             {
                 if(objOrArray[key]) // e.g. key = 'status'
                 {
@@ -355,7 +355,7 @@
             var filters = cleanMaps.filter[this.name],
                 filter,
                 result;
-            for(var key in filters)
+            for(key in filters)
             {
                 filter = filters[key];
                 if(typeof filter === 'function')
@@ -545,11 +545,12 @@
         else
         {
             result = [];
+            var today;
             if (this.name === 'todo')
             {
                 if (filter === 'today')
                 {
-                    var today = Date.parseName('today');
+                    today = Date.parseName('today');
                     data.forEach(function(val)
                     {
                         if (val.date >= today)
@@ -560,7 +561,7 @@
                 }
                 else if (filter === 'yestoday')
                 {
-                    var today = Date.parseName('today');
+                    today = Date.parseName('today');
                     var yestoday = today.clone().addDays(-1);
                     data.forEach(function(val)
                     {
