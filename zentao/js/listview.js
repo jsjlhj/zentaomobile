@@ -2,16 +2,17 @@
 {
     var filters = 
     {
-        todo: ['today', 'yestoday', 'thisweek', 'undone'],
-        task: ['assignedTo', 'openedBy', 'finishedBy'],
-        bug: ['assignedTo', 'openedBy', 'resolvedBy'],
-        story: ['assignedTo', 'openedBy', 'reviewedBy']
+        todo  : ['today', 'yestoday', 'thisweek', 'undone'],
+        task  : ['assignedTo', 'openedBy', 'finishedBy'],
+        bug   : ['assignedTo', 'openedBy', 'resolvedBy'],
+        story : ['assignedTo', 'openedBy', 'reviewedBy']
     };
 
     var ListView = function(name, showfn)
     {
-        this.name = name;
-        this.filters = filters[name];
+        this.name            = name;
+        this.filters         = filters[name];
+        this.isLoading       = false;
         if(showfn) this.show = showfn;
         var that = this;
 
@@ -35,7 +36,8 @@
             window.on('showItem', function(e){that.showItem(e.detail)});
 
             window.userStore.init();
-            that.datalist = new DataList(type);
+            that.datalist = new DataList(that.name);
+            console.log('datalist', that.datalist);
             that.mainview = plus.webview.currentWebview().parent();
             that.showAll(false);
         });
@@ -64,8 +66,8 @@
         });
         if(makeRead)
         {
-            datalist.markRead();
-            datalist.getUnreadCount(true);
+            this.datalist.markRead();
+            this.datalist.getUnreadCount(true);
         }
     };
 
@@ -79,7 +81,7 @@
             options = {callback: options};
         }
 
-        if(isLoading)
+        if(this.isLoading)
         {
             options.callback && options.callback();
             return false;
@@ -103,7 +105,7 @@
                     if(el.classList.contains('unread')) count++;
                 });
             }
-            var $tabBadge = document.getElementsByClassName('.tab-badge-' + tab);
+            var $tabBadge = document.$id('tab-badge-' + tab);
             $tabBadge.classList[count > 0 ? 'remove' : 'add']('mui-hidden');
             $tabBadge.innerHTML = count;
         }
