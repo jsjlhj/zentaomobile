@@ -12,7 +12,7 @@ module.exports = function(grunt)
         srcPath     = 'src/',
         distPath    = 'dist/',
         buildPath   = 'build/',
-        concatSrcPath = function(a) {return 'src/js/' + a};
+        concatSrcPath = function(a) {return 'src/js/' + a;};
 
     // project config
     grunt.initConfig(
@@ -143,17 +143,24 @@ module.exports = function(grunt)
             }
         },
 
+        jshint: 
+        {
+            options: {expr: true},
+            src: ['Gruntfile.js', 'src/js/**/*.js'],
+            zentao: ['../zentao/js/*.js']
+        },
+
         watch:
         {
             src:
             {
-                files: srcPath + '**',
-                tasks: ['dist']
+                files: [srcPath + '**', 'Gruntfile.js'],
+                tasks: ['jshint:src', 'dist', 'copy:zentao']
             },
-            zentao:
+            zentaojshint:
             {
-                files: srcPath + '**',
-                tasks: ['dist', 'copy:zentao']
+                files: '../zentao/js/*.js',
+                tasks: ['jshint:zentao']
             }
         }
     });
@@ -173,5 +180,5 @@ module.exports = function(grunt)
 
     // Watch task
     grunt.registerTask('watch-src', ['watch:src']);
-    grunt.registerTask('watch-zentao', ['watch:zentao']);
-}
+    grunt.registerTask('watch-zentao', ['watch:zentaojshint']);
+};
