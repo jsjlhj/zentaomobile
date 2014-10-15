@@ -689,8 +689,10 @@ input[type="button"] {
   position: absolute;
   top: 50%;
   right: 15px;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
 }
-@include transform(translateY(-50%));
 .table-view-cell .navigate-left > .btn,
 .table-view-cell > a .navigate-left > .btn,
 .table-view-cell .navigate-right > .btn,

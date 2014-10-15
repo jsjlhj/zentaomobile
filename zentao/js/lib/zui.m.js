@@ -1595,6 +1595,42 @@
                 callback();
             }, false);
         }
+    };
+
+    document.$id = function(id, context)
+    {
+        return (context || document).getElementById(id);
+    };
+
+    document.$class = function(className, context)
+    {
+        return (context || document).getElementsByClassName(className);
+    };
+
+    document.$tag = function(tag, context)
+    {
+        return (context || document).getElementsByTagName(tag);
+    };
+
+    var idSelectorRE = /^#([\w-]*)$/;
+    var classSelectorRE = /^\.([\w-]+)$/;
+    var tagSelectorRE = /^[\w-]+$/;
+    document.$ = function(selector, context)
+    {
+        if(idSelectorRE.test(selector))
+        {
+            return document.getElementById(RegExp.$1);
+        }
+
+        context = context || document;
+        var result = classSelectorRE.test(selector) ? context.getElementsByClassName(RegExp.$1) : tagSelectorRE.test(selector) ? context.getElementsByTagName(selector) : context.querySelectorAll(selector);
+
+        return (result && result.length == 1) ? result[0] : result;
+    };
+
+    Node.prototype.$ = function(selector)
+    {
+        return document.$(selector, this);
     }
 }());
 
