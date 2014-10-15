@@ -4,69 +4,52 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
   <title>禅道</title>
-  <link href="css/mui.min.css" rel="stylesheet"/>
+  <link href="css/zui.m.min.css" rel="stylesheet"/>
   <link href="css/style.css" rel="stylesheet"/>
   <link href="css/subpage.css" rel="stylesheet"/>
-  <style>
-  body {height: 100%; background: #EFEFF4;}
-  .mui-content {position: absolute; top: 0; right: 0; left: 0; bottom: 0;}
-  .mui-content > .mui-slider {min-height: 100%;}
-  .mui-table-view-cell .mui-icon {opacity: 0.5}
-  .mui-table-view-cell.mui-active .mui-icon {opacity: 0.95}
-  .mui-table-view.list-tasks-done .mui-table-view-cell {color: #999}
-  .dialog.task-done .dialog-footer .mui-col-extra {display: none}
-  .dialog.task-done .dialog-footer .mui-col {width: 100%}
-  </style>
+  <style>.table-view-cell > .list-title {padding-right: 90px;}</style>
 </head>
 <body>
-<div class="mui-content">
-  <div id="slider" class="mui-slider">
-      <div id="sliderHeader" class="mui-slider-header">
-        <div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
-          <a class="mui-control-item mui-active" href="#assignedTo">指派给我 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-assignedTo"></span></a>
-          <a class="mui-control-item" href="#openedBy">由我创建 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-openedBy"></span></a>
-          <a class="mui-control-item" href="#finishedBy">由我完成 <span class="mui-badge mui-badge-danger mui-hidden tab-badge-finishedBy"></span></a>
-        </div>
-        <div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-4"></div>
+<div class="content">
+  <div class="slider">
+      <div class="slider-header">
+        <nav class="slider-indicator segmented-control segmented-control-inverted" id="listviewNav">
+          <a class="control-item active" href="#assignedTo">指派给我 <span class="badge badge-danger hidden" id="tab-badge-assignedTo"></span></a>
+          <a class="control-item" href="#openedBy">由我创建 <span class="badge badge-danger hidden" id="tab-badge-openedBy"></span></a>
+          <a class="control-item" href="#finishedBy">由我完成 <span class="badge badge-danger hidden" id="tab-badge-finishedBy"></span></a>
+        </nav>
+        <div class="slider-progress-bar col-xs-4"></div>
       </div>
-      <div class="mui-slider-group" id="taskList">
-        <div id="assignedTo" class="mui-slider-item mui-control-content mui-active">
-          <ul class="mui-table-view list-tasks">
+      <div class="slider-group" id="listview">
+        <div id="assignedTo" class="slider-item control-content active">
+          <ul class="table-view listview-list">
           </ul>
         </div>
-        <div id="openedBy" class="mui-slider-item mui-control-content">
-          <ul class="mui-table-view list-tasks">
+        <div id="openedBy" class="slider-item control-content">
+          <ul class="table-view listview-list">
           </ul>
         </div>
-        <div id="finishedBy" class="mui-slider-item mui-control-content">
-          <ul class="mui-table-view list-tasks">
+        <div id="finishedBy" class="slider-item control-content">
+          <ul class="table-view listview-list">
           </ul>
         </div>
-        <div id="closedBy" class="mui-slider-item mui-control-content">
-          <ul class="mui-table-view list-tasks">
+        <div id="closedBy" class="slider-item control-content">
+          <ul class="table-view listview-list">
           </ul>
         </div>
       </div>
   </div>
 </div>
 
-<script src="js/core.js"></script>
-<script src="js/$.js"></script>
-<script src="js/console.js"></script>
-<script src="js/store.js"></script>
-<script src="js/md5.min.js"></script>
-<script src="js/mui.js"></script>
-<script src="js/zentao.js"></script>
+<script src="js/lib/zui.m.js"></script>
 <script src="js/webview.js"></script>
+<script src="js/userdata.js"></script>
 <script src="js/listview.js"></script>
 <script>
-listView({type: 'task', tabs: ['assignedTo', 'openedBy', 'finishedBy']});
-
-function show(tab, data)
+var listview = new ListView('task', function(tab, data)
 {
-    data = data || zentao.filterData(type, tab);
-    var $tab = $('#' + tab),
-        $tasks = $('#' + tab + ' .list-tasks'),
+    var $tab        = document.$id(tab);
+        $tasks      = $tab.$('.listview-list'),
         unreadCount = 0,
         today = Date.parseName('today');
 
@@ -80,7 +63,7 @@ function show(tab, data)
     data.forEach(function(val)
     {
         item = document.createElement('li');
-        item.classList.add('mui-table-view-cell');
+        item.classList.add('table-view-cell');
         item.classList.add('pri');
         item.classList.add('pri-' + val.pri);
         if(val.unread)
@@ -91,12 +74,12 @@ function show(tab, data)
         item.setAttribute('data-id', val.id);
         item.setAttribute('data-tab', tab);
         item.classList.add('item-id-' + val.id);
-        item.innerHTML = '<span class="list-title"><span class="list-item-id">' + val.id + '</span>' + val.name + '</span>' + '<span class="mui-badge mui-badge-' + val.statusColor + '">' + val.statusName + '</span>';
+        item.innerHTML = '<a><span class="list-title"><span class="list-item-id">' + val.id + '</span>' + val.name + '</span>' + '<span class="badge badge-' + val.statusColor + '">' + val.statusName + '</span></a>';
         $tasks.appendChild(item);
     });
 
-    updateTabBadge(tab, unreadCount);
-};
+    this.updateTabBadge(tab, unreadCount);
+});
 </script>
 </body>
 </html>
