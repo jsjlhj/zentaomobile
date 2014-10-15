@@ -47,7 +47,7 @@
                 {
                     result = proxy ? et.fn.call(proxy, pramas) : et.fn(pramas);
                 }
-            };
+            }
         }
         return result;
     };
@@ -71,7 +71,7 @@
                 {
                     drawer.splice(i, 1);
                 }
-            };
+            }
         }
         return this;
     };

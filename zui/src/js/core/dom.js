@@ -77,7 +77,7 @@
             {
                 for (var name in params)
                 {
-                    (name === 'bubbles') ? (bubbles = !!params[name]) : (evt[name] = params[name]);
+                    (name === 'bubbles') ? (bubbles = !params[name]) : (evt[name] = params[name]);
                 }
             }
             evt.initEvent(event, bubbles, true);
@@ -277,7 +277,7 @@
             }, 16.7);
         };
         scroll(duration);
-    }
+    };
 
     /**
      * Get left offset from page
@@ -427,5 +427,5 @@
     Node.prototype.$ = function(selector)
     {
         return document.$(selector, this);
-    }
+    };
 }());

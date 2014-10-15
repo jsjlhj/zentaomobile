@@ -6,7 +6,7 @@
  * Licensed under MIT (https://github.com/twbs/ratchet/blob/master/LICENSE)
  * ======================================================================== */
 
-!(function () {
+(function () {
   'use strict';
 
   var getTarget = function (target) {

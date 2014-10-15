@@ -26,7 +26,7 @@
             /// <param name="reset" type="bool">when set restores the original JSON.parse() function</param>
 
             // if any parameter is passed reset
-            if (reset != undefined) {
+            if (reset !== undefined) {
                 if (JSON._parseSaved) {
                     JSON.parse = JSON._parseSaved;
                     JSON._parseSaved = null;
@@ -44,7 +44,7 @@
         /// </summary>    
         /// <param name="chainFilter" type="Function">property name that is parsed</param>
         /// <returns type="Function">returns a new chainning filter for dates</returns>
-        function createDateParser(chainFilter) {
+        var createDateParser = function (chainFilter) {
             return function(key, value) {
                 var parsedValue = value;
                 if (typeof value === 'string') {
@@ -64,7 +64,7 @@
                 else
                     return parsedValue;
             };
-        }
+        };
 
         /// <summary>
         /// A filter that can be used with JSON.parse to convert dates.
@@ -144,7 +144,7 @@
     /* The Store object */
     var Store = function() {
         this.slience = true;
-        this.enable = (lsName in window) && window[lsName] && window[lsName]['setItem'];
+        this.enable = (lsName in window) && window[lsName] && window[lsName].setItem;
         this.storage = storage;
     };
 

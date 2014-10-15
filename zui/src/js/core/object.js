@@ -9,7 +9,7 @@
     {
         Object.getPrototypeOf = function(obj)
         {
-            return obj.__proto__ || obj.prototype || (obj.constructor && obj.constructor.prototype) || Object.prototype;
+            return obj.prototype || (obj.constructor && obj.constructor.prototype) || Object.prototype;
         };
     }
 
@@ -22,7 +22,7 @@
     {
         Object.isPlainObject = function(obj)
         {
-            return obj != null && typeof(obj) == "object" && Object.getPrototypeOf(obj) == Object.prototype;
+            return obj !== null && typeof(obj) == "object" && Object.getPrototypeOf(obj) == Object.prototype;
         };
     }
 

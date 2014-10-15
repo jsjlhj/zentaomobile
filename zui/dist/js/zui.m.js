@@ -1,5 +1,5 @@
 /*!
- * ZUI for mobile - v0.1.0-beta - 2014-10-14
+ * ZUI for mobile - v0.1.0-beta - 2014-10-15
  * http://zui.sexy
  * GitHub: https://github.com/easysoft/zui.git 
  * Copyright (c) 2014 cnezsoft.com; Licensed MIT
@@ -73,7 +73,7 @@
     {
         Object.getPrototypeOf = function(obj)
         {
-            return obj.__proto__ || obj.prototype || (obj.constructor && obj.constructor.prototype) || Object.prototype;
+            return obj.prototype || (obj.constructor && obj.constructor.prototype) || Object.prototype;
         };
     }
 
@@ -86,7 +86,7 @@
     {
         Object.isPlainObject = function(obj)
         {
-            return obj != null && typeof(obj) == "object" && Object.getPrototypeOf(obj) == Object.prototype;
+            return obj !== null && typeof(obj) == "object" && Object.getPrototypeOf(obj) == Object.prototype;
         };
     }
 
@@ -144,7 +144,7 @@
             {
                 for (var key in args)
                 {
-                    if (args[key] != undefined)
+                    if (args[key] !== undefined)
                     {
                         reg = new RegExp("({" + key + "})", "g");
                         result = result.replace(reg, args[key]);
@@ -155,7 +155,7 @@
             {
                 for (var i = 0; i < arguments.length; i++)
                 {
-                    if (arguments[i] != undefined)
+                    if (arguments[i] !== undefined)
                     {
                         reg = new RegExp("({[" + i + "]})", "g");
                         result = result.replace(reg, arguments[i]);
@@ -173,7 +173,7 @@
      */
     String.prototype.isNum = function(s)
     {
-        if (s != null)
+        if (s !== null)
         {
             var r, re;
             re = /\d*/i;
@@ -256,7 +256,7 @@
      */
     String.prototype.isURL = function()
     {
-        var regular = /^\b(((https?|ftp):\/\/)?[-a-z0-9]+(\.[-a-z0-9]+)*\.(?:com|edu|gov|int|mil|net|org|biz|info|name|museum|asia|coop|aero|[a-z][a-z]|((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]\d)|\d))\b(\/[-a-z0-9_:\@&?=+,.!\/~%\$]*)?)$/i
+        var regular = /^\b(((https?|ftp):\/\/)?[-a-z0-9]+(\.[-a-z0-9]+)*\.(?:com|edu|gov|int|mil|net|org|biz|info|name|museum|asia|coop|aero|[a-z][a-z]|((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]\d)|\d))\b(\/[-a-z0-9_:\@&?=+,.!\/~%\$]*)?)$/i;
         if (regular.test(this))
         {
             return true;
@@ -336,8 +336,8 @@
         Array.isArray = function(obj)
         {
             return Object.toString.call(obj) === '[object Array]';
-        }
-    };
+        };
+    }
 
     /**
      * Returns the last (greatest) index of an element within the array equal to the specified value, or -1 if none is found.
@@ -406,7 +406,7 @@
             if (typeof fun != "function")
                 throw new TypeError();
 
-            var res = new Array();
+            var res = [];
             var thisp = arguments[1];
             for (var i = 0; i < len; i++)
             {
@@ -444,7 +444,7 @@
             }
             return -1;
         };
-    };
+    }
 
     /**
      * Creates a new array with the results of calling a provided function on every element in this array.
@@ -525,7 +525,7 @@
             result[keyName].push(val);
         });
         return result;
-    }
+    };
 
     /**
      * Returns true if at least one element in this array satisfies the provided testing conditions.
@@ -608,38 +608,49 @@
      */
     Date.prototype.friendlyStr = function()
     {
-        var date = this,
+        var date    = this,
             curDate = new Date(),
-            year = date.getFullYear(),
-            month = date.getMonth() + 10,
-            day = date.getDate(),
-            hour = date.getHours(),
-            minute = date.getMinutes(),
+            year    = date.getFullYear(),
+            month   = date.getMonth() + 10,
+            day     = date.getDate(),
+            hour    = date.getHours(),
+            minute  = date.getMinutes(),
             curYear = curDate.getFullYear(),
             curHour = curDate.getHours(),
             timeStr;
      
-        if(year < curYear){
+        if(year < curYear)
+        {
             timeStr = year +'年'+ month +'月'+ day +'日 '+ hour +':'+ minute;
-        }else{
+        }
+        else
+        {
             var pastTime = curDate - date,
                 pastH = pastTime/3600000;
      
-            if(pastH > curHour){
-                  timeStr = month +'月'+ day +'日 '+ hour +':'+ minute;
-            }else if(pastH >= 1){
-                  timeStr = '今天 ' + hour +':'+ minute +'分';
-            }else{
+            if(pastH > curHour)
+            {
+                timeStr = month +'月'+ day +'日 '+ hour +':'+ minute;
+            }
+            else if(pastH >= 1)
+            {
+                timeStr = '今天 ' + hour +':'+ minute +'分';
+            }
+            else
+            {
                   var pastM = curDate.getMinutes() - minute;
-                  if(pastM > 1){
-                    timeStr = pastM +'分钟前';
-                  }else{
-                    timeStr = '刚刚';
+                  if(pastM > 1)
+                  {
+                      timeStr = pastM +'分钟前';
+                  }
+                  else
+                  {
+                      timeStr = '刚刚';
                   }
             }
         }
         return timeStr;
-    }
+    };
 
     /**
      * Get week day name of the date
@@ -881,7 +892,7 @@
                 {
                     result = proxy ? et.fn.call(proxy, pramas) : et.fn(pramas);
                 }
-            };
+            }
         }
         return result;
     };
@@ -905,7 +916,7 @@
                 {
                     drawer.splice(i, 1);
                 }
-            };
+            }
         }
         return this;
     };
@@ -958,7 +969,7 @@
             /// <param name="reset" type="bool">when set restores the original JSON.parse() function</param>
 
             // if any parameter is passed reset
-            if (reset != undefined) {
+            if (reset !== undefined) {
                 if (JSON._parseSaved) {
                     JSON.parse = JSON._parseSaved;
                     JSON._parseSaved = null;
@@ -976,7 +987,7 @@
         /// </summary>    
         /// <param name="chainFilter" type="Function">property name that is parsed</param>
         /// <returns type="Function">returns a new chainning filter for dates</returns>
-        function createDateParser(chainFilter) {
+        var createDateParser = function (chainFilter) {
             return function(key, value) {
                 var parsedValue = value;
                 if (typeof value === 'string') {
@@ -996,7 +1007,7 @@
                 else
                     return parsedValue;
             };
-        }
+        };
 
         /// <summary>
         /// A filter that can be used with JSON.parse to convert dates.
@@ -1076,7 +1087,7 @@
     /* The Store object */
     var Store = function() {
         this.slience = true;
-        this.enable = (lsName in window) && window[lsName] && window[lsName]['setItem'];
+        this.enable = (lsName in window) && window[lsName] && window[lsName].setItem;
         this.storage = storage;
     };
 
@@ -1281,7 +1292,7 @@
             {
                 for (var name in params)
                 {
-                    (name === 'bubbles') ? (bubbles = !!params[name]) : (evt[name] = params[name]);
+                    (name === 'bubbles') ? (bubbles = !params[name]) : (evt[name] = params[name]);
                 }
             }
             evt.initEvent(event, bubbles, true);
@@ -1481,7 +1492,7 @@
             }, 16.7);
         };
         scroll(duration);
-    }
+    };
 
     /**
      * Get left offset from page
@@ -1631,7 +1642,7 @@
     Node.prototype.$ = function(selector)
     {
         return document.$(selector, this);
-    }
+    };
 }());
 
 /**
@@ -2179,7 +2190,7 @@
  * Licensed under MIT (https://github.com/twbs/ratchet/blob/master/LICENSE)
  * ======================================================================== */
 
-!(function () {
+(function () {
   'use strict';
 
   var pageX;
@@ -2327,7 +2338,7 @@
  * Licensed under MIT (https://github.com/twbs/ratchet/blob/master/LICENSE)
  * ======================================================================== */
 
-!(function () {
+(function () {
   'use strict';
 
   var getTarget = function (target) {

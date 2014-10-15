@@ -18,7 +18,7 @@
             {
                 for (var key in args)
                 {
-                    if (args[key] != undefined)
+                    if (args[key] !== undefined)
                     {
                         reg = new RegExp("({" + key + "})", "g");
                         result = result.replace(reg, args[key]);
@@ -29,7 +29,7 @@
             {
                 for (var i = 0; i < arguments.length; i++)
                 {
-                    if (arguments[i] != undefined)
+                    if (arguments[i] !== undefined)
                     {
                         reg = new RegExp("({[" + i + "]})", "g");
                         result = result.replace(reg, arguments[i]);
@@ -47,7 +47,7 @@
      */
     String.prototype.isNum = function(s)
     {
-        if (s != null)
+        if (s !== null)
         {
             var r, re;
             re = /\d*/i;
@@ -130,7 +130,7 @@
      */
     String.prototype.isURL = function()
     {
-        var regular = /^\b(((https?|ftp):\/\/)?[-a-z0-9]+(\.[-a-z0-9]+)*\.(?:com|edu|gov|int|mil|net|org|biz|info|name|museum|asia|coop|aero|[a-z][a-z]|((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]\d)|\d))\b(\/[-a-z0-9_:\@&?=+,.!\/~%\$]*)?)$/i
+        var regular = /^\b(((https?|ftp):\/\/)?[-a-z0-9]+(\.[-a-z0-9]+)*\.(?:com|edu|gov|int|mil|net|org|biz|info|name|museum|asia|coop|aero|[a-z][a-z]|((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]\d)|\d))\b(\/[-a-z0-9_:\@&?=+,.!\/~%\$]*)?)$/i;
         if (regular.test(this))
         {
             return true;

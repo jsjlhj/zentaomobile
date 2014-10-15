@@ -31,19 +31,22 @@
      * but it is a little more browser friendly.
      */
     window.addEventListener('load', function() {
-        for (var key in eventMap) {
-            document.body.addEventListener(key, function(e) {
-                // Supports:
-                //   - addEventListener
-                //   - setAttribute
-                var event = createTouchEvent(eventMap[e.type], e);
-                e.target.dispatchEvent(event);
+        var eventHandle = function(e)
+        {
+            // Supports:
+            //   - addEventListener
+            //   - setAttribute
+            var event = createTouchEvent(eventMap[e.type], e);
+            e.target.dispatchEvent(event);
 
-                // Supports:
-                //   - element.ontouchstart
-                var fn = e.target['on' + eventMap[e.type]];
-                if (typeof fn === 'function') fn(e);
-            }, false);
+            // Supports:
+            //   - element.ontouchstart
+            var fn = e.target['on' + eventMap[e.type]];
+            if (typeof fn === 'function') fn(e);
+        };
+
+        for (var key in eventMap) {
+            document.body.addEventListener(key, eventHandle, false);
         }
     }, false);
 

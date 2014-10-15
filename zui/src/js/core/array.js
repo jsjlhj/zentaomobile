@@ -41,8 +41,8 @@
         Array.isArray = function(obj)
         {
             return Object.toString.call(obj) === '[object Array]';
-        }
-    };
+        };
+    }
 
     /**
      * Returns the last (greatest) index of an element within the array equal to the specified value, or -1 if none is found.
@@ -111,7 +111,7 @@
             if (typeof fun != "function")
                 throw new TypeError();
 
-            var res = new Array();
+            var res = [];
             var thisp = arguments[1];
             for (var i = 0; i < len; i++)
             {
@@ -149,7 +149,7 @@
             }
             return -1;
         };
-    };
+    }
 
     /**
      * Creates a new array with the results of calling a provided function on every element in this array.
@@ -230,7 +230,7 @@
             result[keyName].push(val);
         });
         return result;
-    }
+    };
 
     /**
      * Returns true if at least one element in this array satisfies the provided testing conditions.
