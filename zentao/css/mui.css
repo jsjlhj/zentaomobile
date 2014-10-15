@@ -1533,7 +1533,7 @@ input[type="submit"]:active, input[type="submit"].mui-active,
 .mui-table-view.mui-grid-view .mui-table-view-cell .mui-media-object {
   width: 100%;
   max-width: 100%;
-  height: auto;
+  height: auto; 
 }
 .mui-table-view.mui-grid-view .mui-table-view-cell > a:not(.mui-btn) {
   margin: -10px 0 0 -14px;

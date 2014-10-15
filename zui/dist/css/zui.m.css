@@ -274,6 +274,12 @@ a:active {
 .show {
   display: block;
 }
+.text-muted {
+  color: #929292;
+}
+.small {
+  font-size: 14px;
+}
 h1,
 h2,
 h3,
@@ -315,6 +321,9 @@ p {
   margin-bottom: 10px;
   font-size: 14px;
   color: #777;
+}
+button {
+  outline: none;
 }
 .btn {
   position: relative;
