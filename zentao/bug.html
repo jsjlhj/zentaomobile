@@ -4,24 +4,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
   <title>禅道</title>
-  <link href="css/mui.min.css" rel="stylesheet"/>
-  <link href="css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="css/zui.m.min.css" rel="stylesheet"/>
   <link href="css/style.css" rel="stylesheet"/>
   <link href="css/subpage.css" rel="stylesheet"/>
   <link href="css/dialog.css" rel="stylesheet"/>
 </head>
-<body>
-<header class="mui-bar headbar mui-bar-nav">
-  <h1 class="mui-title mui-action-back"><i class="fa fa-angle-left"></i> Bug</h1>
+<body class="swipeback">
+<header class="bar headbar bar-nav">
+  <h1 class="title action-back"><i class="icon icon-angle-left"></i> Bug</h1>
 </header>
 <div class="dialog" id="dialog">
-  <header class="pri">
+  <header class="pri dialog-header">
     <h4><span class="obj-id item-id pri" id="objID">&nbsp;</span> <span class="obj-title">&nbsp;</span></h4>
     <div class="info">
-      <div class="mui-pull-right small"><i class="fa fa-chevron-down text-muted info-more-icon"></i></div>
+      <div class="pull-right small"><i class="icon icon-chevron-down text-muted info-more-icon"></i></div>
       <div class="block-lines">
-        <div><span class="mui-badge" id="objStatus">&nbsp;</span></div>
-        <div class="small"><span class="text-muted"><i class="fa fa-hand-o-right"></i> </span><span class="obj-assignedTo"></span></div>
+        <div><span class="badge" id="objStatus">&nbsp;</span></div>
+        <div class="small"><span class="text-muted"><i class="icon icon-hand-o-right"></i> </span><span class="obj-assignedTo"></span></div>
       </div>
     </div>
     <div class="info info-more">
@@ -35,67 +34,21 @@
     </div>
   </header>
   <section>
-    <h5><i class="fa fa-th-list"></i> 重现步骤</h5>
-    <div class="mui-content-padded obj-steps article-content-plain" data-default="<span class='small text-muted'>--- 没有描述 ---</span>"></div>
+    <h5><i class="icon icon-th-list"></i> 重现步骤</h5>
+    <div class="content-padded obj-steps article-content-plain" data-default="<span class='small text-muted'>--- 没有描述 ---</span>"></div>
   </section>
 </div>
-<!-- <script src="js/angular/angular.min.js"></script> -->
-<script src="js/core.js"></script>
-<script src="js/$.js"></script>
-<script src="js/console.js"></script>
-<script src="js/store.js"></script>
-<script src="js/mui.js"></script>
-<script src="js/zentao.js"></script>
+<script src="js/lib/zui.m.js"></script>
 <script src="js/webview.js"></script>
+<script src="js/itemview.js"></script>
 <script src="js/dialog.js"></script>
 <script>
-var options,
-    currentView;
-zentao.ready(function()
+new ItemView(null, function(obj)
 {
-    currentView = plus.webview.currentWebview();
-    options = currentView.dialogOptions;
-    $('#idid').innerHTML = options.id;
-
-    var obj = zentao.data[options.type].getById(options.id);
-    render(obj);
+    document.$id("assignedTo").classList[obj.assignedTo ? 'remove' : 'add']('hidden');
+    document.$id('noAssignedTo').classList[obj.assignedTo ? 'add' : 'remove']('hidden');
+    document.$id('objConfirm').innerHTML = obj.confirm === '0' ? '未确认' : '已确认';
 });
-
-function render(obj)
-{
-    var doms, val, fmt, dft, dVal;
-    for(var name in obj)
-    {
-        doms = $(".obj-" + name),
-        val = obj[name];
-        if(doms.forEach)
-        {
-            doms.forEach(function(el)
-            {
-                fmt = el.getAttribute('data-format');
-                dft = el.getAttribute('data-default');
-                dVal = dft && (!val) ? dft : val;
-                el.innerHTML = fmt ? dVal.format(fmt) : dVal;
-            });
-        }
-        else
-        {
-            fmt = doms.getAttribute('data-format');
-            dft = doms.getAttribute('data-default');
-            dVal = dft && (!val) ? dft : val;
-            doms.innerHTML = dVal && fmt ? dVal.format(fmt) : dVal;
-        }
-    }
-
-    $("#dialog > header").classList.add('pri-' + obj.pri);
-    $("#objID").classList.add('pri-' + obj.pri);
-    var $status = $('#objStatus');
-    $status.innerHTML = obj.statusName;
-    $status.classList.add('mui-badge-' + obj.statusColor);
-    $("#assignedTo").classList[obj.assignedTo ? 'remove' : 'add']('mui-hidden');
-    $('#noAssignedTo').classList[obj.assignedTo ? 'add' : 'remove']('mui-hidden');
-    $('#objConfirm').innerHTML = obj.confirm === '0' ? '未确认' : '已确认';
-}
 </script>
 </body>
 </html>

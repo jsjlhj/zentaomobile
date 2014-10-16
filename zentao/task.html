@@ -4,8 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
   <title>禅道任务</title>
-  <link href="css/mui.min.css" rel="stylesheet"/>
-  <link href="css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="css/zui.m.min.css" rel="stylesheet"/>
   <link href="css/style.css" rel="stylesheet"/>
   <link href="css/subpage.css" rel="stylesheet"/>
   <link href="css/dialog.css" rel="stylesheet"/>
@@ -19,17 +18,17 @@
   </style>
 </head>
 <body>
-<header class="mui-bar headbar mui-bar-nav">
-  <h1 class="mui-title mui-action-back"><i class="fa fa-angle-left"></i> 任务</h1>
+<header class="bar headbar bar-nav">
+  <h1 class="title action-back"><i class="icon icon-angle-left"></i> 任务</h1>
 </header>
 <div class="dialog" id="dialog">
-  <header class="pri">
+  <header class="pri dialog-header">
     <h4><span class="obj-id item-id pri" id="objID"></span> <span class="obj-name"></span></h4>
     <div class="info">
-      <div class="mui-pull-right small"><i class="fa fa-chevron-down text-muted info-more-icon"></i></div>
+      <div class="pull-right small"><i class="icon icon-chevron-down text-muted info-more-icon"></i></div>
       <div class="block-lines">
-        <div><span class="mui-badge" id="objStatus">&nbsp;</span></div>
-        <div class="small"><span class="text-muted"><i class="fa fa-hand-o-right"></i> </span><span class="obj-assignedTo" data-default="[未指派]"></span></div>
+        <div><span class="badge" id="objStatus">&nbsp;</span></div>
+        <div class="small"><span class="text-muted"><i class="icon icon-hand-o-right"></i> </span><span class="obj-assignedTo" data-default="[未指派]"></span></div>
       </div>
     </div>
     <div class="info info-more">
@@ -42,76 +41,29 @@
   <section id="timeBar">
     <div id="timeBarEstimate"></div>
     <div id="timeBarConsumed"></div>
-    <div id="timeBarLabel" class="small"><div class="mui-pull-right">最初预计 <strong class="obj-estimate"></strong></div> 已消耗 <strong class="obj-consumed"></strong> &nbsp; 剩余 <strong class="obj-left"></strong></div>
+    <div id="timeBarLabel" class="small"><div class="pull-right">最初预计 <strong class="obj-estimate"></strong></div> 已消耗 <strong class="obj-consumed"></strong> &nbsp; 剩余 <strong class="obj-left"></strong></div>
   </section>
   <section>
     <h5>描述</h5>
-    <div class="mui-content-padded obj-desc article-content-plain" data-default="<span class='small text-muted'>--- 没有描述 ---</span>"></div>
+    <div class="content-padded obj-desc article-content-plain" data-default="<span class='small text-muted'>--- 没有描述 ---</span>"></div>
   </section>
 </div>
-<script src="js/core.js"></script>
-<script src="js/$.js"></script>
-<script src="js/console.js"></script>
-<script src="js/store.js"></script>
-<script src="js/mui.js"></script>
-<script src="js/zentao.js"></script>
+<script src="js/lib/zui.m.js"></script>
 <script src="js/webview.js"></script>
+<script src="js/itemview.js"></script>
 <script src="js/dialog.js"></script>
 <script>
-var options,
-    currentView;
-var exampleData;
-zentao.ready(function()
+new ItemView(null, function(obj)
 {
-    currentView = plus.webview.currentWebview();
-    options = currentView.dialogOptions;
-    $('#idid').innerHTML = options.id;
-
-    var obj = zentao.data[options.type].getById(options.id);
-    console.log(obj);
-    render(obj);
-});
-
-function render(obj)
-{
-    var doms, val, fmt, dft, dVal;
-    for(var name in obj)
-    {
-        doms = $(".obj-" + name),
-        val = obj[name];
-        if(doms.forEach)
-        {
-            doms.forEach(function(el)
-            {
-                fmt = el.getAttribute('data-format');
-                dft = el.getAttribute('data-default');
-                dVal = dft && (!val) ? dft : val;
-                el.innerHTML = fmt ? dVal.format(fmt) : dVal;
-            });
-        }
-        else
-        {
-            fmt = doms.getAttribute('data-format');
-            dft = doms.getAttribute('data-default');
-            dVal = dft && (!val) ? dft : val;
-            doms.innerHTML = dVal && fmt ? dVal.format(fmt) : dVal;
-        }
-    }
-
-    $("#dialog > header").classList.add('pri-' + obj.pri);
-    $("#objID").classList.add('pri-' + obj.pri);
-    var $status = $('#objStatus');
-    $status.innerHTML = obj.statusName;
-    $status.classList.add('mui-badge-' + obj.statusColor);
-    $("#assignedTo").classList[obj.assignedTo ? 'remove' : 'add']('mui-hidden');
+    document.$id("assignedTo").classList[obj.assignedTo ? 'remove' : 'add']('hidden');
 
     // time bar
-    var $timebar = $('#timeBar'),
+    var $timebar = document.$id('timeBar'),
         maxTime = Math.max(obj.consumed + obj.left, obj.estimate);
     $timebar.classList[maxTime > obj.estimate ? 'add' : 'remove']('beyond');
-    $('#timeBarEstimate').style.width = (obj.estimate/maxTime)*100 + '%';
-    $('#timeBarConsumed').style.width = (obj.consumed/maxTime)*100 + '%';
-}
+    document.$id('timeBarEstimate').style.width = (obj.estimate/maxTime)*100 + '%';
+    document.$id('timeBarConsumed').style.width = (obj.consumed/maxTime)*100 + '%';
+});
 </script>
 </body>
 </html>

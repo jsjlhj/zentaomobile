@@ -14,7 +14,7 @@
   <h1 class="title action-back"><i class="icon icon-angle-left"></i> 待办</h1>
 </header>
 <div class="dialog" id="dialog">
-  <header class="pri dialog-header" id="dialogHeader">
+  <header class="pri dialog-header">
     <h4><span class="obj-id item-id pri" id="objID">&nbsp;</span> <span class="obj-name"></span></h4>
     <div class="info">
       <div class="pull-right small"><i class="icon icon-chevron-down text-muted info-more-icon"></i></div>
@@ -35,43 +35,14 @@
 </div>
 <script src="js/lib/zui.m.js"></script>
 <script src="js/webview.js"></script>
+<script src="js/itemview.js"></script>
 <script src="js/dialog.js"></script>
 <script>
-var options,
-    today = Date.parseName('today'),
-    currentView;
-
-window.plusReady(function()
+new ItemView(null, function(obj)
 {
-    currentView = window.currentWebview;
-    options = currentView.options;
-    render(options.data);
-});
-
-function render(obj)
-{
-    var doms, val, fmt, dft, dVal;
-    for(var name in obj)
-    {
-        doms = document.$class("obj-" + name),
-        val = obj[name];
-
-        doms.forEach(function(el)
-        {
-            fmt = el.getAttribute('data-format');
-            dft = el.getAttribute('data-default');
-            dVal = dft && (!val) ? dft : val;
-            el.innerHTML = fmt ? dVal.format(fmt) : dVal;
-        });
-    }
-
-    document.$id('dialogHeader').classList.add('pri-' + obj.pri);
-    document.$id("objID").classList.add('pri-' + obj.pri);
-    var $status = document.$id('objStatus');
-    $status.innerHTML = obj.statusName;
-    $status.classList.add('badge-' + obj.statusColor);
+    var today = Date.parseName('today');
     document.$id('when').classList[obj.date < today ? 'add' : 'remove']('badge-danger');
-}
+});
 </script>
 </body>
 </html>
