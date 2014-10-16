@@ -45,25 +45,20 @@
         options.name = options.name || currentListView || defaultListView;
 
         var lastListView = listViews[currentListView];
-        if(lastListView && currentListView === options.name)
-        {
-            window.fire(lastListView, 'reloadData', options);
-            return;
-        }
-
         var aniType = 'none';
+
         if(lastListView)
         {
             // aniType = listViewsOrders.name] < listViewsOrdertListView] ? 'slide-out-right' : 'slide-out-left';
-            lastListView.hide(aniType, animateSpeed);
-            var openeds = lastListView.opened();
-            openeds.forEach(function(opendedDialog)
+            window.fire(lastListView, 'closeDialog', {aniClose: 'fade-out'});
+
+            if(currentListView === options.name)
             {
-                if(opendedDialog.dialogOptions)
-                {
-                    opendedDialog.hide('zoom-out', 100);
-                }
-            });
+                window.fire(lastListView, 'reloadData', options);
+                return;
+            }
+
+            lastListView.hide(aniType, animateSpeed);
         }
 
         if(typeof listViews[options.name] === 'string')

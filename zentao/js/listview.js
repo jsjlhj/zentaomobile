@@ -34,6 +34,7 @@
         {
             window.on('reloadData', function(e){that.reload(e.detail);});
             window.on('showItem', function(e){that.showItem(e.detail);});
+            window.on('closeDialog', function(e){that.closeDialog(e.detail);});
 
             window.userStore.init();
             that.datalist = new DataList(that.name);
@@ -63,13 +64,23 @@
     {
         var item = this.datalist.getById(id);
 
-        plus.webview.create(this.name + ".html", this.name + "-" + id, 
+        this.dialog = plus.webview.create(this.name + ".html", this.name + "-" + id, 
         {
             top             : "0",
             bottom          : "51px",
             bounce          : "vertical",
             scrollIndicator : "none"
-        }, {options: {id: id, type: this.name, data: item}}).show('slide-in-right', 200);
+        }, {options: {id: id, type: this.name, data: item}});
+        this.dialog.show('slide-in-right', 200);
+    };
+
+    ListView.prototype.closeDialog = function(options)
+    {
+        if(this.dialog)
+        {
+            window.fire(this.dialog, 'close', options);
+            this.dialog = null;
+        }
     };
 
     ListView.prototype.showAll = function(makeRead)
