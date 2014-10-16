@@ -1,5 +1,5 @@
 /*!
- * ZUI for mobile - v0.1.0-beta - 2014-10-15
+ * ZUI for mobile - v0.1.0-beta - 2014-10-16
  * http://zui.sexy
  * GitHub: https://github.com/easysoft/zui.git 
  * Copyright (c) 2014 cnezsoft.com; Licensed MIT
@@ -1219,6 +1219,22 @@
 
     var forEach = Array.prototype.forEach;
 
+    window.data = {};
+
+    /**
+     * Get uuid
+     * @return {number}
+     */
+    window.uuid = function()
+    {
+        var d = (new Date()).getTime();
+        while(d < 10000000000000000)
+        {
+           d *= 10;
+        }
+        return  d + Math.floor(Math.random() * 9999);
+    };
+
     /**
      * Gesture preventDefault
      * @param {type} e
@@ -1282,17 +1298,16 @@
         {
             params = params ||
             {
-                bubbles: false,
                 cancelable: false,
                 detail: undefined
             };
-            var evt = document.createEvent('Events');
+            var evt = document.createEvent('HTMLEvents');
             var bubbles = true;
             if (params)
             {
                 for (var name in params)
                 {
-                    (name === 'bubbles') ? (bubbles = !params[name]) : (evt[name] = params[name]);
+                    (name === 'bubbles') ? (bubbles = (!!params[name])) : (evt[name] = params[name]);
                 }
             }
             evt.initEvent(event, bubbles, true);
@@ -1322,14 +1337,15 @@
         console.log('element', element);
         console.log('eventData', eventData);
         console.groupEnd();
-        var event = new window.CustomEvent(eventType,
+
+        var et = new window.CustomEvent(eventType,
         {
             detail: eventData,
             bubbles: true,
             cancelable: true
         });
-        element.dispatchEvent(event);
 
+        element.dispatchEvent(et);
         return element;
     };
 
@@ -1643,6 +1659,13 @@
     {
         return document.$(selector, this);
     };
+
+    // Empty funtion
+    var shield = function() {return false;};
+
+    // Make active style effective on touch screen
+    document.addEventListener('touchstart', shield, false);
+    document.oncontextmenu = shield; // disabled context menu
 }());
 
 /**
@@ -1661,7 +1684,8 @@
 
     if (!window.gestureConfig)
     {
-        window.gestureConfig = {
+        window.gestureConfig =
+        {
             tap: true,
             doubletap: false,
             longtap: false,
@@ -2179,7 +2203,163 @@
             }
         };
     }
+
+    if(!window.currentWebview)
+    {
+        window.plusReady(function()
+        {
+            window.currentWebview = window.plus.webview.currentWebview();
+        });
+    }
 }());
+
+/**
+ * pullRefresh 5+
+ * @param {type} $
+ * @returns {undefined}
+ */
+(function(document)
+{
+    'use strict';
+
+    var CLASS_PLUS_PULLREFRESH = 'plus-pullrefresh';
+    var CLASS_CONTENT = 'content';
+    var CLASS_IN = 'in';
+
+    var SELECTOR_CONTENT = '.' + CLASS_CONTENT;
+
+    var defaultOptions =
+    {
+        down:
+        {
+            height: 50,
+            contentdown: '下拉可以刷新',
+            contentover: '释放立即刷新',
+            contentrefresh: '正在刷新...'
+        },
+        up:
+        {
+            contentdown: '上拉显示更多',
+            contentrefresh: '正在加载...'
+        }
+    };
+
+    var PlusPullRefresh = function(options)
+    {
+        options = Object.extend(defaultOptions, options, true);
+
+        this.downOptions = options.down;
+        this.upOptions = options.up;
+        if (this.downOptions && this.downOptions.hasOwnProperty('callback'))
+        {
+            this.initPulldownRefresh();
+        }
+        if (this.upOptions && this.upOptions.hasOwnProperty('callback'))
+        {
+            this.initPullupRefresh();
+        }
+    };
+
+    PlusPullRefresh.prototype.initPulldownRefresh = function()
+    {
+        var self = this;
+        var sw = window.currentWebview;
+
+        sw.setPullToRefresh(
+        {
+            support: true,
+            height: self.downOptions.height + 'px',
+            range: "200px",
+            contentdown:
+            {
+                caption: self.downOptions.contentdown
+            },
+            contentover:
+            {
+                caption: self.downOptions.contentover
+            },
+            contentrefresh:
+            {
+                caption: self.downOptions.contentrefresh
+            }
+        }, function()
+        {
+            self.downOptions.callback && self.downOptions.callback.call(self);
+        });
+    };
+
+    PlusPullRefresh.prototype.initPullupRefresh = function()
+    {
+        var self = this;
+        var content = document.querySelector(SELECTOR_CONTENT);
+        if (content)
+        {
+            self.bottomPocket = document.createElement('div');
+            self.bottomPocket.className = 'pull-bottom-pocket';
+            self.bottomPocket.innerHTML = '<div class="pull"><div class="pull-loading preloader"></div><div class="pull-caption">' + self.upOptions.contentdown + '</div></div>';
+            content.appendChild(self.bottomPocket);
+
+            self.pullLoading = self.bottomPocket.querySelector('.pull-loading');
+            self.pullCaption = self.bottomPocket.querySelector('.pull-caption');
+
+            self.isLoading = false;
+            document.addEventListener('plusscrollbottom', self);
+        }
+    };
+    PlusPullRefresh.prototype.handleEvent = function(event)
+    {
+        if (event.type === 'plusscrollbottom')
+        {
+            var self = this;
+            if (self.isLoading) return;
+            self.isLoading = true;
+            setTimeout(function()
+            {
+                self.pullLoading.classList.add(CLASS_IN);
+                self.pullCaption.innerHTML = '';
+                self.pullCaption.innerHTML = self.upOptions.contentrefresh;
+                var callback = self.upOptions.callback;
+                callback && callback.call(self);
+            }, 300);
+        }
+    };
+
+    PlusPullRefresh.prototype.endPulldownToRefresh = function()
+    {
+        window.currentWebview.endPullToRefresh();
+    };
+
+    PlusPullRefresh.prototype.endPullupToRefresh = function(finished)
+    {
+        if (this.pullLoading)
+        {
+            this.pullLoading.classList.remove(CLASS_IN);
+            this.pullCaption.innerHTML = this.upOptions.contentdown;
+            this.isLoading = false;
+            if (finished)
+            {
+                this.bottomPocket.classList.add('hidden');
+                document.removeEventListener('plusscrollbottom', this);
+            }
+        }
+    };
+
+    window.pullRefresh = function(options)
+    {
+        window.plusReady(function()
+        {
+            var self = document.body;
+            var id = self.getAttribute('data-pullrefresh-plus');
+            if (!id)
+            {
+                self.classList.add(CLASS_PLUS_PULLREFRESH);
+                id = window.uuid();
+                window.data[id] = new PlusPullRefresh(options);
+                self.setAttribute('data-pullrefresh-plus', id);
+            }
+        });
+    };
+})(document);
 
 /* ========================================================================
  * Ratchet: sliders.js v2.0.2

@@ -14,7 +14,8 @@
 
     if (!window.gestureConfig)
     {
-        window.gestureConfig = {
+        window.gestureConfig =
+        {
             tap: true,
             doubletap: false,
             longtap: false,
