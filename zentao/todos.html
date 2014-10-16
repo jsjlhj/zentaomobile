@@ -70,9 +70,11 @@ var listview = new ListView('todo', function(tab, data)
 
     var groupedData = data.groupBy('status'),
         item;
-    for(var group in groupedData)
+    var showgrounp = function(group)
     {
         data = groupedData[group];
+
+        if(!data) return;
 
         if(tab != 'undone')
         {
@@ -110,7 +112,9 @@ var listview = new ListView('todo', function(tab, data)
             }
             $todos.appendChild(item);
         });
-    }
+    };
+
+    ['doing', 'wait', 'done'].forEach(showgrounp);
 
     this.updateTabBadge(tab, unreadCount);
 });
