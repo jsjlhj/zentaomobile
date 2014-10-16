@@ -96,6 +96,12 @@
                 }
             }
             evt.initEvent(event, bubbles, true);
+
+            if(!this.stopPropagation)
+            {
+                this.stopPropagation = function(){window.event.cancelBubble = true};
+            }
+
             return evt;
         };
         CustomEvent.prototype = window.Event.prototype;
