@@ -1311,6 +1311,12 @@
                 }
             }
             evt.initEvent(event, bubbles, true);
+
+            if(!this.stopPropagation)
+            {
+                this.stopPropagation = function(){window.event.cancelBubble = true;};
+            }
+
             return evt;
         };
         CustomEvent.prototype = window.Event.prototype;
@@ -2086,6 +2092,10 @@
     var xhr;
     var Http = function() {};
 
+    /**
+     * Get last xhr object.
+     * @return {object}
+     */
     Http.prototype.getXhr = function()
     {
         return xhr;
@@ -2140,6 +2150,22 @@
     Http.prototype.get = function(url, successCallback, errorCallback)
     {
         return this.send('GET', url, successCallback, errorCallback);
+    };
+
+    Http.prototype.getJSON = function(url, successCallback, errorCallback)
+    {
+        return this.send('GET', url, function(response, xhr)
+        {
+            try
+            {
+                successCallback(JSON.parse(response), response, xhr);
+            }
+            catch(e)
+            {
+                console.log('%cWrong json string.', 'color: red; font-weight: bold;');
+                errorCallback && errorCallback(response, xhr);
+            }
+        }, errorCallback);
     };
 
     Http.prototype.post = function(url, successCallback, errorCallback)
