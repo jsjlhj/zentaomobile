@@ -99,7 +99,7 @@
 
             if(!this.stopPropagation)
             {
-                this.stopPropagation = function(){window.event.cancelBubble = true};
+                this.stopPropagation = function(){window.event.cancelBubble = true;};
             }
 
             return evt;

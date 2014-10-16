@@ -95,6 +95,7 @@
   </div>
 
 <script src="js/lib/zui.m.js"></script>
+<script src="js/webview.js"></script>
 <script>
 window.plusReady(function()
 {
@@ -116,6 +117,7 @@ window.plusReady(function()
     {
         document.getElementById('tipButton').classList.add('hidden');
         document.getElementById('backBtn').classList.remove('hidden');
+        document.body.classList.add('swipeback');
     }
 
     if (options.account) username.value = options.account;
