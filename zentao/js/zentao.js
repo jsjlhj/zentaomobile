@@ -553,7 +553,7 @@
         return this.data[dataType].filter(filter);
     };
 
-    Zentao.prototype.tryLoadData = function(options, successCallback, errorCallback, count)
+    Zentao.prototype.loadData = function(options, successCallback, errorCallback, count)
     {
         if(typeof options === 'string')
         {
@@ -625,22 +625,22 @@
         }, that.fnToCallWidthMessage(errorCallback, '无法获取数据，请检查网络。'));
     };
 
-    Zentao.prototype.loadData = function(options, successCallback, errorCallback, count)
+    Zentao.prototype.tryLoadData = function(options, successCallback, errorCallback, count)
     {
-        // if(window.user && window.user.status === 'online')
-        // {
-        //     this.tryLoadData(dataType, successCallback, errorCallback, count);
-        // }
-        // else
-        // {
-        //     var that = this;
-        //     this.login(null, function()
-        //     {
-        //         that.tryLoadData(dataType, successCallback, errorCallback, count);
-        //     }, this.fnToCallWidthMessage(errorCallback, '登录失败，无法从服务器加载数据。'));
-        // }
-        // 
-        this.tryLoadData(options, successCallback, errorCallback, count);
+        if(window.user && window.user.status === 'online')
+        {
+            this.loadData(dataType, successCallback, errorCallback, count);
+        }
+        else
+        {
+            var that = this;
+            this.login(null, function()
+            {
+                that.loadData(dataType, successCallback, errorCallback, count);
+            }, this.fnToCallWidthMessage(errorCallback, '登录失败。'));
+        }
+        
+        // this.loadData(options, successCallback, errorCallback, count);
     };
 
     Zentao.prototype.startAutoSync = function(interval, successCallback, errorCallback)
@@ -649,13 +649,16 @@
         if(!interval) interval = window.userStore.get('syncInterval', 200000) / dataTabsSet.length;
         console.color('startAutoSync:' + interval, 'h3|bgdanger');
         var that = this;
-        this.autoSyncId = setInterval(function(){that.sync('AUTO', successCallback, errorCallback);}, interval);
+        this.syncing = interval;
+        setTimeout(function()
+        {
+            that.sync('AUTO', successCallback, errorCallback);
+        }, interval);
     };
 
     Zentao.prototype.stopAutoSync = function()
     {
-        if(this.autoSyncId) clearInterval(this.autoSyncId);
-        this.autoSyncId = null;
+        this.syncing = false;
     };
 
     Zentao.prototype.restartAutoSync = function(interval, successCallback, errorCallback)
@@ -666,6 +669,7 @@
 
     Zentao.prototype.sync = function(tab, successCallback, errorCallback)
     {
+        if(!this.syncing) return;
         if(this.network === 'disconnect') return;
         if(!window.user || window.user.status !== 'online') return;
 
@@ -682,6 +686,10 @@
         }
 
         var params = {tab: tab};
+        var syncFn = function()
+        {
+            that.sync('AUTO', successCallback, errorCallback);
+        };
         that.trigger('syncing', params);
         that.loadData({type: tab, tab: subTab}, function()
         {
@@ -690,11 +698,13 @@
             params.latestItem = that.data[tab].latestItem;
             successCallback && successCallback(params);
             that.trigger('sync', params);
+            setTimeout(syncFn, that.syncing);
         }, function(e){
             params.result = false;
             params.e = e;
             errorCallback && errorCallback(params);
             that.trigger('sync', params);
+            setTimeout(syncFn, that.syncing);
         });
     };
 

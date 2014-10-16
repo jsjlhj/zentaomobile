@@ -241,6 +241,27 @@
         }
     };
 
+    /**
+     * Load data from server manually
+     * @param  {object} options
+     * @return {undefined}
+     */
+    var loadListView = function(options)
+    {
+        options = options.detail || options;
+        zentao.loadData(options, function(datalist)
+        {
+            var view = listViews[datalist.name];
+            if(typeof view == 'object')
+            {
+                window.fire(view, 'reloadData');
+            }
+        }, function(e)
+        {
+            window.plus.nativeUI.toast('无法加载数据。' + e.message);
+        });
+    };
+
     $status.on('tap', function()
     {
         var user = window.user;
@@ -275,7 +296,8 @@
           .on('openListView', function(e){openListView(e.detail);})
           .on('startSync', startSync)
           .on('stopSync', stopSync)
-          .on('restartSync', restartSync);
+          .on('restartSync', restartSync)
+          .on('loadListView', loadListView);
 
     zentao.on('logging', function()
     {

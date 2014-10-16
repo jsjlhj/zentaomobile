@@ -16,7 +16,7 @@
         if(showfn) this.show = showfn;
         var that = this;
 
-        document.getElementById('listview').on('tab', '.table-view-cell', function(e)
+        document.$id('listview').on('tap', '.table-view-cell', function(e)
         {
             if(this.classList.contains('unread'))
             {
@@ -38,10 +38,25 @@
             window.userStore.init();
             that.datalist = new DataList(that.name);
             console.log('datalist', that.datalist);
-            that.mainview = plus.webview.currentWebview().parent();
+            that.mainview = window.currentWebview.parent();
             that.showAll(false);
         });
 
+        window.pullRefresh(
+        {
+            container: '#listview',//待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+            down :
+            {
+              contentdown    : "下拉可以刷新",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+              contentover    : "释放立即刷新",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+              contentrefresh : "正在刷新...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+              callback       : function(callback)
+              {
+                  console.log('pullRefresh callback', this);
+                  this.endPulldownToRefresh();
+              }
+            }
+        });
     };
 
     ListView.prototype.showItem = function(id, $item)
