@@ -35,6 +35,7 @@
             window.on('reloadData', function(e){that.reload(e.detail);});
             window.on('showItem', function(e){that.showItem(e.detail);});
             window.on('closeDialog', function(e){that.closeDialog(e.detail);});
+            window.on('endPullToRefresh', function(){window.currentWebview.endPullToRefresh();});
 
             window.userStore.init();
             that.datalist = new DataList(that.name);
@@ -53,11 +54,15 @@
               contentrefresh : "正在刷新...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
               callback       : function(callback)
               {
-                  console.log('pullRefresh callback', this);
-                  this.endPulldownToRefresh();
+                  window.fire(that.mainview, 'loadListView', {type: that.name, tab: that.currentFilter()});
               }
             }
         });
+    };
+
+    ListView.prototype.currentFilter = function()
+    {
+        return document.$id('listviewNav').$('.control-item.active').getAttribute('href').substr(0);
     };
 
     ListView.prototype.showItem = function(id, $item)

@@ -244,16 +244,24 @@
     var loadListView = function(options)
     {
         options = options.detail || options;
+        var view = listViews[options.type];
+        startSync();
         zentao.loadData(options, function(datalist)
         {
-            var view = listViews[datalist.name];
             if(typeof view == 'object')
             {
                 window.fire(view, 'reloadData');
+                window.fire(view, 'endPullToRefresh');
             }
+            stopSync();
         }, function(e)
         {
             window.plus.nativeUI.toast('无法加载数据。' + e.message);
+            if(typeof view == 'object')
+            {
+                window.fire(view, 'endPullToRefresh');
+            }
+            stopSync();
         });
     };
 
