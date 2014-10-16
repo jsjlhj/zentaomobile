@@ -27,7 +27,7 @@
 .dialog.show-more-info > header > .info .info-more-icon:before {content: '\f077'}
 
 .dialog > section {background: #fff; border-top: 1px solid #e5e5e5; padding: 10px 0; margin-top: -1px}
-.dialog > section > h5 {padding: 0 10px 10px; margin: 0}
+.dialog > section > h5 {padding: 0 10px 10px; margin: 0; color: #999}
 .dialog > section > h5 + .mui-content-padded {margin-top: 0;}
 .dialog > section > .mui-content-padded p {color: inherit; font-size: inherit;}
 

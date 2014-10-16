@@ -9,7 +9,7 @@
   <link href="css/subpage.css" rel="stylesheet"/>
   <link href="css/dialog.css" rel="stylesheet"/>
 </head>
-<body>
+<body class="swipeback">
 <header class="bar headbar bar-nav">  
   <h1 class="title action-back"><i class="icon icon-angle-left"></i> 待办</h1>
 </header>
@@ -45,7 +45,6 @@ window.plusReady(function()
 {
     currentView = window.currentWebview;
     options = currentView.options;
-    console.log(options);
     render(options.data);
 });
 

@@ -66,7 +66,7 @@
         plus.webview.create(this.name + ".html", this.name + "-" + id, 
         {
             top             : "0",
-            bottom          : "60px",
+            bottom          : "51px",
             bounce          : "vertical",
             scrollIndicator : "none"
         }, {options: {id: id, type: this.name, data: item}}).show('slide-in-right', 200);
