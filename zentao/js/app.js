@@ -22,13 +22,19 @@
             return;
         }
         var status = window.user.status;
+        var options = {offline: status == 'offline' || status == 'disconnect'};
+        if(window.user.account)
+        {
+            options.account = window.user.account;
+            options.url = window.user.url;
+        }
         loginWindow = plus.webview.create('login.html', 'login', 
         {
             top             : "0px",
             bottom          : "0px",
             bounce          : "vertical",
             scrollIndicator : "none"
-        }, {options: {offline: status == 'offline' || status == 'disconnect'}});
+        }, {options: options});
         loginWindow.addEventListener('close', function()
         {
             loginWindow = null;

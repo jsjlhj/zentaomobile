@@ -128,7 +128,9 @@
         var that = this;
         if (loginkey)
         {
-            if(!loginkey.url.startWith('http://') || !loginkey.url.startWith('https://'))
+            console.log(loginkey.url);
+            console.log(loginkey.url.startWith('http://'));
+            if(!loginkey.url.startWith('http://') && !loginkey.url.startWith('https://'))
             {
                 loginkey.url = 'http://' + loginkey.url;
             }
@@ -178,9 +180,8 @@
                 method: 'login'
             }),
             that = this;
-        http.get(url, function(response)
+        http.getJSON(url, function(status)
         {
-            var status = JSON.parse(response);
             if (status.status === 'failed')
             {
                 that.callWidthMessage(errorCallback, '所提供的用户名和密码不正确。');
@@ -341,9 +342,8 @@
                 method: 'getSessionID'
             }),
             that = this;
-        http.get(url, function(response)
+        http.getJSON(url, function(session)
         {
-            var session = JSON.parse(response);
             if (session.status === 'success')
             {
                 session = JSON.parse(session.data);
@@ -376,9 +376,8 @@
                 account: window.user.account
             }),
             that = this;
-        http.get(url, function(response)
+        http.getJSON(url, function(roleData)
         {
-            var roleData = JSON.parse(response);
             if (roleData.status !== 'failed')
             {
                 roleData = JSON.parse(roleData.data);
@@ -402,9 +401,8 @@
     {
         var that = this;
         var url = window.user.url + '/index.php?mode=getconfig';
-        http.get(url, function(response)
+        http.getJSON(url, function(config)
         {
-            var config = JSON.parse(response);
             if (config.version)
             {
                 window.userStore.saveUser({config: config});
@@ -607,9 +605,8 @@
                 recPerPage: count
             });
 
-        http.get(url, function(response)
+        http.getJSON(url, function(dt)
         {
-            var dt = JSON.parse(response);
             if (dt.status === 'success')
             {
                 dt = JSON.parse(dt.data);
