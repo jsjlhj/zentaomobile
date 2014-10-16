@@ -136,30 +136,3 @@
 
     window.ListView = ListView;
 }());
-
-// function listView(options)
-// {
-//     subTabs = options.tabs,
-//     type    = options.type;
-
-//     // mui.init(
-//     // {
-//     //     swipeBack: false,
-
-//     //     pullRefresh:
-//     //     {
-//     //         container: '#' + type + 'List',
-//     //         down:
-//     //         {
-//     //             contentdown    : "下拉可以刷新",
-//     //             contentover    : "释放立即刷新",
-//     //             contentrefresh : "正在刷新...",
-//     //             callback       : function(callback)
-//     //             {
-//     //                 reload({callback: callback, makeRead: true});
-//     //             }
-//     //         }
-//     //     }
-//     // });
-// }
-
