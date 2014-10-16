@@ -4,6 +4,22 @@
 
     var forEach = Array.prototype.forEach;
 
+    window.data = {};
+
+    /**
+     * Get uuid
+     * @return {number}
+     */
+    window.uuid = function()
+    {
+        var d = (new Date()).getTime();
+        while(d < 10000000000000000)
+        {
+           d *= 10;
+        }
+        return  d + Math.floor(Math.random() * 9999);
+    };
+
     /**
      * Gesture preventDefault
      * @param {type} e
@@ -67,17 +83,16 @@
         {
             params = params ||
             {
-                bubbles: false,
                 cancelable: false,
                 detail: undefined
             };
-            var evt = document.createEvent('Events');
+            var evt = document.createEvent('HTMLEvents');
             var bubbles = true;
             if (params)
             {
                 for (var name in params)
                 {
-                    (name === 'bubbles') ? (bubbles = !params[name]) : (evt[name] = params[name]);
+                    (name === 'bubbles') ? (bubbles = (!!params[name])) : (evt[name] = params[name]);
                 }
             }
             evt.initEvent(event, bubbles, true);
@@ -107,14 +122,15 @@
         console.log('element', element);
         console.log('eventData', eventData);
         console.groupEnd();
-        var event = new window.CustomEvent(eventType,
+
+        var et = new window.CustomEvent(eventType,
         {
             detail: eventData,
             bubbles: true,
             cancelable: true
         });
-        element.dispatchEvent(event);
 
+        element.dispatchEvent(et);
         return element;
     };
 
@@ -430,7 +446,7 @@
     };
 
     // Empty funtion
-    var shield = function() {return false;}
+    var shield = function() {return false;};
 
     // Make active style effective on touch screen
     document.addEventListener('touchstart', shield, false);
