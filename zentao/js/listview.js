@@ -67,15 +67,23 @@
     ListView.prototype.showItem = function(id, $item)
     {
         var item = this.datalist.getById(id);
-
-        this.dialog = plus.webview.create(this.name + ".html", this.name + "-" + id, 
+        this.dialog = window.openWebview(
         {
-            top             : "0",
-            bottom          : "51px",
-            bounce          : "vertical",
-            scrollIndicator : "none"
-        }, {options: {id: id, type: this.name, data: item}});
-        this.dialog.show('slide-in-right', 200);
+            url: this.name + ".html",
+            id: this.name + "-" + id,
+            styles:
+            {
+                top             : "0",
+                bottom          : "51px",
+                bounce          : "vertical",
+                scrollIndicator : "none"
+            },
+            aniType: 'slide-in-right',
+            extras:
+            {
+                options: {id: id, type: this.name, data: item}
+            }
+        });
     };
 
     ListView.prototype.closeDialog = function(options)

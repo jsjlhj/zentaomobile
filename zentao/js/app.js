@@ -31,18 +31,25 @@
             options.account = window.user.account;
             options.url = window.user.url;
         }
-        loginWindow = plus.webview.create('login.html', 'login', 
+
+        loginWindow = window.openWebview(
         {
-            top             : "0px",
-            bottom          : "0px",
-            bounce          : "vertical",
-            scrollIndicator : "none"
-        }, {options: options});
+            url: 'login.html',
+            id: 'login',
+            styles:
+            {
+                top             : "0px",
+                bottom          : "0px",
+                bounce          : "vertical",
+                scrollIndicator : "none"
+            },
+            aniType: 'zoom-in',
+            extras: {options: options}
+        });
         loginWindow.addEventListener('close', function()
         {
             loginWindow = null;
         });
-        loginWindow.show('zoom-in', 200);
     };
 
     var openListView = function(options)
@@ -338,15 +345,21 @@
             receiveNotify : receiveNotify,
             syncInterval  : syncInterval
         };
-        settingWindow = plus.webview.create('setting/index.html', 'setting', 
+        settingWindow = window.openWebview(
         {
-            top             : "0px",
-            bottom          : "0px",
-            bounce          : "vertical",
-            scrollIndicator : "none"
-        }, {options: options});
+            url: 'setting/index.html',
+            id: 'setting',
+            styles:
+            {
+                top             : "0px",
+                bottom          : "0px",
+                bounce          : "vertical",
+                scrollIndicator : "none"
+            },
+            aniType: 'slide-in-right',
+            extras: {options: options}
+        });
         settingWindow.addEventListener('close', function(){settingWindow = null;});
-        settingWindow.show('slide-in-right', 200);
     });
 
     document.getElementById('listviewNav').on('tap', '.open-listview', function()
