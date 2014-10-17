@@ -67,6 +67,7 @@
      * @param  {Function} fn
      * @return {NodeList}
      */
+    HTMLCollection.prototype.on =
     NodeList.prototype.on = function(event, fn)
     {
         forEach.call(this, function(el)

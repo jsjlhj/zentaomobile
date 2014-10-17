@@ -12,5 +12,6 @@
     "core/plus.js",
 
     "components/sliders.js",
-    "components/segmented-controllers.js"
+    "components/segmented-controllers.js",
+    "components/toggles.js"
 ]
