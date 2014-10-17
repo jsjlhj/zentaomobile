@@ -18,7 +18,6 @@
 
         var swipeback = function()
         {
-            console.log('swipeback');
             if(document.body.classList.contains('swipeback'))
             {
                 closeWindow();

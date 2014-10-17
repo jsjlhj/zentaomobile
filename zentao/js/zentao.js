@@ -24,19 +24,20 @@
 
         window.plusReady(function()
         {
+            console.color('zentao ready', 'h5|bgsuccess');
             window.userStore.init();
+
             that.data = {};
             dataTabsSet.forEach(function(val)
             {
                 that.data[val] = new DataList(val);
-                
             });
 
             setTimeout(function()
             {
                 that.isReady = true;
                 that.trigger('ready');
-            }, 100);
+            }, 150);
         });
     };
 
@@ -65,20 +66,26 @@
     Zentao.prototype.on = function(e, fn)
     {
         console.color("ZENTAO ON: " + e, 'h5|bgwarning');
-        
-        return this.eventDrawer.on(e, fn);
+        this.eventDrawer.on(e, fn);
+
+        if(e === 'ready' && this.isReady) this.trigger(e);
+        return this;
     };
 
     Zentao.prototype.off = function(e)
     {
-        return this.eventDrawer.off(e);
+        this.eventDrawer.off(e);
+
+        return this;
     };
 
     Zentao.prototype.trigger = function(e, pramas)
     {
         console.color("ZENTAO TRIGGER: " + e, 'h5|bgwarning');
         
-        return this.eventDrawer.trigger(e, pramas, this);
+        this.eventDrawer.trigger(e, pramas, this);
+
+        return this;
     };
 
     Zentao.prototype.ready = function(fn)
@@ -642,15 +649,18 @@
 
     Zentao.prototype.startAutoSync = function(interval, successCallback, errorCallback)
     {
-        if(!interval) interval = window.userStore.get('syncInterval', 20000) / dataTabsSet.length;
-        // if(!interval) interval = window.userStore.get('syncInterval', 200000) / dataTabsSet.length;
-        console.color('startAutoSync:' + interval, 'h3|bgdanger');
+        this.syncing = interval || window.userStore.get('syncInterval', 20000) / dataTabsSet.length;
+        console.color('startAutoSync:' + this.syncing, 'h3|bgdanger');
+        this.setNextSync(successCallback, errorCallback);
+    };
+
+    Zentao.prototype.setNextSync = function(successCallback, errorCallback)
+    {
         var that = this;
-        this.syncing = interval;
         setTimeout(function()
         {
             that.sync('AUTO', successCallback, errorCallback);
-        }, interval);
+        }, that.syncing);
     };
 
     Zentao.prototype.stopAutoSync = function()
@@ -667,11 +677,15 @@
     Zentao.prototype.sync = function(tab, successCallback, errorCallback)
     {
         if(!this.syncing) return;
-        if(this.network === 'disconnect') return;
-        if(!window.user || window.user.status !== 'online') return;
 
-        var subTab = 'all';
+        if(http.working || this.network === 'disconnect' || !window.user || window.user.status !== 'online')
+        {
+            this.setNextSync(successCallback, errorCallback);
+            return;
+        }
+
         var that = this;
+        var subTab = 'all';
         if(typeof tab === 'undefined' || tab === 'AUTO')
         {
             tab = dataTabsSet[(this.syncId++)%dataTabsSet.length];
@@ -683,10 +697,6 @@
         }
 
         var params = {tab: tab};
-        var syncFn = function()
-        {
-            that.sync('AUTO', successCallback, errorCallback);
-        };
         that.trigger('syncing', params);
         that.loadData({type: tab, tab: subTab}, function()
         {
@@ -695,13 +705,13 @@
             params.latestItem = that.data[tab].latestItem;
             successCallback && successCallback(params);
             that.trigger('sync', params);
-            setTimeout(syncFn, that.syncing);
+            that.setNextSync(successCallback, errorCallback);
         }, function(e){
             params.result = false;
             params.e = e;
             errorCallback && errorCallback(params);
             that.trigger('sync', params);
-            setTimeout(syncFn, that.syncing);
+            that.setNextSync(successCallback, errorCallback);
         });
     };
 
