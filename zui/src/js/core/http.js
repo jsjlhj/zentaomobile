@@ -3,6 +3,7 @@
     'use strict';
 
     var xhr;
+    var uuid = 0;
     var Http = function() {};
 
     /**
@@ -24,39 +25,46 @@
      */
     Http.prototype.send = function(method, url, successCallback, errorCallback)
     {
-        if(this.debug) console.groupCollapsed('%cHTTP ' + method + ': ' + url, 'color: blue; border-left: 10px solid blue; padding-left: 5px; font-size: 16px; font-weight: bold; background-color: lightblue;');
+        if(this.debug) console.groupCollapsed('%cHTTP[' + (uuid + 1) + '] ' + method + ': ' + url, 'color: blue; border-left: 10px solid blue; padding-left: 5px; font-size: 16px; font-weight: bold; background-color: lightblue;');
+
+        var workingId = ++uuid;
+        this.working = workingId;
 
         xhr = window.plus ? new window.plus.net.XMLHttpRequest() : new XMLHttpRequest();
         var that = this;
         var protocol = /^([\w-]+:)\/\//.test(url) ? RegExp.$1 : window.location.protocol;
 
-        if(this.debug) console.log('XMLHttpRequest:', xhr);
+        if(this.debug) console.log('XMLHttpRequest[' + workingId + ']:', xhr);
+        if(this.debug < 2) console.groupEnd();
 
         xhr.onreadystatechange = function()
         {
-            if(that.debug) console.log('readyState:', xhr.readyState, ', status:', xhr.status);
+            if(that.debug > 1) console.log('readyState[' + workingId + ']:', xhr.readyState, ', status:', xhr.status);
 
             if (xhr.readyState === 4)
             {
                 if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304 || (xhr.status === 0 && protocol === 'file:'))
                 {
-                    if(that.debug)
+                    if(that.debug > 1)
                     {
-                        console.group('responseText');
+                        console.group('responseText[' + workingId + ']');
                         console.log("%c" + xhr.responseText, 'color:blue; margin: 3px 0; padding:2px 5px; background: #fafafa');
                         console.groupEnd();
-                        console.groupCollapsed('ResponseHeaders');
+                        console.groupCollapsed('ResponseHeaders[' + workingId + ']');
                         console.log(xhr.getAllResponseHeaders());
                         console.groupEnd();
 
                         console.groupEnd();
                     }
 
+                    if(that.working === workingId) that.working = false;
                     successCallback && successCallback(xhr.responseText, xhr);
                 }
                 else
                 {
                     if(that.debug) console.groupEnd();
+
+                    if(that.working === workingId) that.working = false;
                     errorCallback && errorCallback(xhr);
                 }
             }
@@ -117,5 +125,5 @@
     };
 
     window.http = new Http();
-    window.http.debug = true;
+    window.http.debug = 1;
 }());
