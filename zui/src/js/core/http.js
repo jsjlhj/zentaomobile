@@ -14,6 +14,14 @@
         return xhr;
     };
 
+    /**
+     * Send an request to remote server
+     * @param  {string}   method          "GET" or "POST"
+     * @param  {string}   url            
+     * @param  {function} successCallback
+     * @param  {function} errorCallback  
+     * @return {object}   
+     */
     Http.prototype.send = function(method, url, successCallback, errorCallback)
     {
         if(this.debug) console.groupCollapsed('%cHTTP ' + method + ': ' + url, 'color: blue; border-left: 10px solid blue; padding-left: 5px; font-size: 16px; font-weight: bold; background-color: lightblue;');
@@ -60,14 +68,29 @@
         return xhr;
     };
 
+    /**
+     * Send request to remote server as "GET" method
+     * @param  {string}   url
+     * @param  {function} successCallback
+     * @param  {function} errorCallback 
+     * @return {object}      
+     */
     Http.prototype.get = function(url, successCallback, errorCallback)
     {
         return this.send('GET', url, successCallback, errorCallback);
     };
 
+    /**
+     * Send request to remote server and get json data back
+     * @param  {string}   url             
+     * @param  {function} successCallback
+     * @param  {function} errorCallback
+     * @return {object}            
+     */
     Http.prototype.getJSON = function(url, successCallback, errorCallback)
     {
-        return this.send('GET', url, function(response, xhr)
+        var debug = this.debug;
+        return this.get(url, function(response, xhr)
         {
             try
             {
@@ -75,12 +98,19 @@
             }
             catch(e)
             {
-                console.log('%cWrong json string.', 'color: red; font-weight: bold;');
+                if(debug) console.log('%cWrong json string.', 'color: red; font-weight: bold;');
                 errorCallback && errorCallback(response, xhr);
             }
         }, errorCallback);
     };
 
+    /**
+     * Send request to remote server as "POST" method
+     * @param  {string}   url        
+     * @param  {function} successCallback
+     * @param  {function} errorCallback 
+     * @return {object}             
+     */
     Http.prototype.post = function(url, successCallback, errorCallback)
     {
         return this.send('POST', url, successCallback, errorCallback);

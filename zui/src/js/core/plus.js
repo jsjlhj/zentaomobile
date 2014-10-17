@@ -4,6 +4,11 @@
 
     if(!window.plusReady)
     {
+        /**
+         * Called on plus ready
+         * @param  {Function} callback
+         * @return {window}
+         */
         window.plusReady = function(callback)
         {
             if (window.plus)
@@ -23,6 +28,14 @@
 
     if(!window.fire)
     {
+
+        /**
+         * Trigger event on the given webview
+         * @param  {object} webview 
+         * @param  {string} eventType
+         * @param  {object} data   
+         * @return {undefined}       
+         */
         window.fire = function(webview, eventType, data)
         {
             console.groupCollapsed('%cFIRE: ' + eventType, 'color: #fff; background-color: orange;');
@@ -37,6 +50,12 @@
             }
         };
 
+        /**
+         * Trigger event when receive an fire
+         * @param  {string} eventType
+         * @param  {object} data
+         * @return {undefined}       
+         */
         window.receive = function(eventType, data)
         {
             console.groupCollapsed('%cRECEIVE: ' + eventType, 'color: #fff; background-color: orange;');
@@ -55,15 +74,16 @@
     {
         window.plusReady(function()
         {
+            /**
+             * Set current webview to window
+             */
             window.currentWebview = window.plus.webview.currentWebview();
         });
     }
 }());
 
 /**
- * pullRefresh 5+
- * @param {type} $
- * @returns {undefined}
+ * pullRefresh
  */
 (function(document)
 {
@@ -191,6 +211,11 @@
         }
     };
 
+    /**
+     * Pull refresh
+     * @param  {object} options
+     * @return {undefined}  
+     */
     window.pullRefresh = function(options)
     {
         window.plusReady(function()

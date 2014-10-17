@@ -12,6 +12,10 @@
     var EVENT_CANCEL = 'touchcancel';
     var EVENT_CLICK = 'click';
 
+    /**
+     * Gesture config
+     * @type {object}
+     */
     if (!window.gestureConfig)
     {
         window.gestureConfig =

@@ -4,6 +4,10 @@
 
     var forEach = Array.prototype.forEach;
 
+    /**
+     * Global data, set key with window.uuid
+     * @type {Object}
+     */
     window.data = {};
 
     /**
@@ -22,7 +26,7 @@
 
     /**
      * Gesture preventDefault
-     * @param {type} e
+     * @param   {object} e
      * @returns {undefined}
      */
     window.preventDefault = function(e)
@@ -32,7 +36,7 @@
 
     /**
      * Gesture stopPropagation
-     * @param {type} e
+     * @param   {type} e
      * @returns {undefined}
      */
     window.stopPropagation = function(e)
@@ -42,7 +46,6 @@
 
     /**
      * forEach for NodeList
-     * @type {[type]}
      */
     NodeList.prototype.forEach = forEach;
 
@@ -415,16 +418,34 @@
         }
     };
 
+    /**
+     * Select node with id
+     * @param  {string} id
+     * @param  {object} context
+     * @return {object}  
+     */
     document.$id = function(id, context)
     {
         return (context || document).getElementById(id);
     };
 
+    /**
+     * Select nodes with class
+     * @param  {string} className
+     * @param  {object} context   
+     * @return {object}
+     */
     document.$class = function(className, context)
     {
         return (context || document).getElementsByClassName(className);
     };
 
+    /**
+     * Select nodes with tag name
+     * @param  {string} tag
+     * @param  {object} context
+     * @return {object}     
+     */
     document.$tag = function(tag, context)
     {
         return (context || document).getElementsByTagName(tag);
@@ -446,6 +467,11 @@
         return (result && result.length == 1) ? result[0] : result;
     };
 
+    /**
+     * Select nodes with css selectors
+     * @param  {string} selector
+     * @return {object}
+     */
     Node.prototype.$ = function(selector)
     {
         return document.$(selector, this);

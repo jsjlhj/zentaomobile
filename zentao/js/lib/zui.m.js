@@ -1,5 +1,5 @@
 /*!
- * ZUI for mobile - v0.1.0-beta - 2014-10-16
+ * ZUI for mobile - v0.1.0-beta - 2014-10-17
  * http://zui.sexy
  * GitHub: https://github.com/easysoft/zui.git 
  * Copyright (c) 2014 cnezsoft.com; Licensed MIT
@@ -1207,6 +1207,10 @@
         window.store = new Store();
     }
 
+    /**
+     * No conflict and get origin object named 'store'
+     * @return {object}
+     */
     window.store.noConflict = function() {
         window.store = old;
         return window.store;
@@ -1219,6 +1223,10 @@
 
     var forEach = Array.prototype.forEach;
 
+    /**
+     * Global data, set key with window.uuid
+     * @type {Object}
+     */
     window.data = {};
 
     /**
@@ -1237,7 +1245,7 @@
 
     /**
      * Gesture preventDefault
-     * @param {type} e
+     * @param   {object} e
      * @returns {undefined}
      */
     window.preventDefault = function(e)
@@ -1247,7 +1255,7 @@
 
     /**
      * Gesture stopPropagation
-     * @param {type} e
+     * @param   {type} e
      * @returns {undefined}
      */
     window.stopPropagation = function(e)
@@ -1257,7 +1265,6 @@
 
     /**
      * forEach for NodeList
-     * @type {[type]}
      */
     NodeList.prototype.forEach = forEach;
 
@@ -1630,16 +1637,34 @@
         }
     };
 
+    /**
+     * Select node with id
+     * @param  {string} id
+     * @param  {object} context
+     * @return {object}  
+     */
     document.$id = function(id, context)
     {
         return (context || document).getElementById(id);
     };
 
+    /**
+     * Select nodes with class
+     * @param  {string} className
+     * @param  {object} context   
+     * @return {object}
+     */
     document.$class = function(className, context)
     {
         return (context || document).getElementsByClassName(className);
     };
 
+    /**
+     * Select nodes with tag name
+     * @param  {string} tag
+     * @param  {object} context
+     * @return {object}     
+     */
     document.$tag = function(tag, context)
     {
         return (context || document).getElementsByTagName(tag);
@@ -1661,6 +1686,11 @@
         return (result && result.length == 1) ? result[0] : result;
     };
 
+    /**
+     * Select nodes with css selectors
+     * @param  {string} selector
+     * @return {object}
+     */
     Node.prototype.$ = function(selector)
     {
         return document.$(selector, this);
@@ -1688,6 +1718,10 @@
     var EVENT_CANCEL = 'touchcancel';
     var EVENT_CLICK = 'click';
 
+    /**
+     * Gesture config
+     * @type {object}
+     */
     if (!window.gestureConfig)
     {
         window.gestureConfig =
@@ -2101,6 +2135,14 @@
         return xhr;
     };
 
+    /**
+     * Send an request to remote server
+     * @param  {string}   method          "GET" or "POST"
+     * @param  {string}   url            
+     * @param  {function} successCallback
+     * @param  {function} errorCallback  
+     * @return {object}   
+     */
     Http.prototype.send = function(method, url, successCallback, errorCallback)
     {
         if(this.debug) console.groupCollapsed('%cHTTP ' + method + ': ' + url, 'color: blue; border-left: 10px solid blue; padding-left: 5px; font-size: 16px; font-weight: bold; background-color: lightblue;');
@@ -2147,14 +2189,29 @@
         return xhr;
     };
 
+    /**
+     * Send request to remote server as "GET" method
+     * @param  {string}   url
+     * @param  {function} successCallback
+     * @param  {function} errorCallback 
+     * @return {object}      
+     */
     Http.prototype.get = function(url, successCallback, errorCallback)
     {
         return this.send('GET', url, successCallback, errorCallback);
     };
 
+    /**
+     * Send request to remote server and get json data back
+     * @param  {string}   url             
+     * @param  {function} successCallback
+     * @param  {function} errorCallback
+     * @return {object}            
+     */
     Http.prototype.getJSON = function(url, successCallback, errorCallback)
     {
-        return this.send('GET', url, function(response, xhr)
+        var debug = this.debug;
+        return this.get(url, function(response, xhr)
         {
             try
             {
@@ -2162,12 +2219,19 @@
             }
             catch(e)
             {
-                console.log('%cWrong json string.', 'color: red; font-weight: bold;');
+                if(debug) console.log('%cWrong json string.', 'color: red; font-weight: bold;');
                 errorCallback && errorCallback(response, xhr);
             }
         }, errorCallback);
     };
 
+    /**
+     * Send request to remote server as "POST" method
+     * @param  {string}   url        
+     * @param  {function} successCallback
+     * @param  {function} errorCallback 
+     * @return {object}             
+     */
     Http.prototype.post = function(url, successCallback, errorCallback)
     {
         return this.send('POST', url, successCallback, errorCallback);
@@ -2183,6 +2247,11 @@
 
     if(!window.plusReady)
     {
+        /**
+         * Called on plus ready
+         * @param  {Function} callback
+         * @return {window}
+         */
         window.plusReady = function(callback)
         {
             if (window.plus)
@@ -2202,6 +2271,14 @@
 
     if(!window.fire)
     {
+
+        /**
+         * Trigger event on the given webview
+         * @param  {object} webview 
+         * @param  {string} eventType
+         * @param  {object} data   
+         * @return {undefined}       
+         */
         window.fire = function(webview, eventType, data)
         {
             console.groupCollapsed('%cFIRE: ' + eventType, 'color: #fff; background-color: orange;');
@@ -2216,6 +2293,12 @@
             }
         };
 
+        /**
+         * Trigger event when receive an fire
+         * @param  {string} eventType
+         * @param  {object} data
+         * @return {undefined}       
+         */
         window.receive = function(eventType, data)
         {
             console.groupCollapsed('%cRECEIVE: ' + eventType, 'color: #fff; background-color: orange;');
@@ -2234,15 +2317,16 @@
     {
         window.plusReady(function()
         {
+            /**
+             * Set current webview to window
+             */
             window.currentWebview = window.plus.webview.currentWebview();
         });
     }
 }());
 
 /**
- * pullRefresh 5+
- * @param {type} $
- * @returns {undefined}
+ * pullRefresh
  */
 (function(document)
 {
@@ -2370,6 +2454,11 @@
         }
     };
 
+    /**
+     * Pull refresh
+     * @param  {object} options
+     * @return {undefined}  
+     */
     window.pullRefresh = function(options)
     {
         window.plusReady(function()

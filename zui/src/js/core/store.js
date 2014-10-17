@@ -264,6 +264,10 @@
         window.store = new Store();
     }
 
+    /**
+     * No conflict and get origin object named 'store'
+     * @return {object}
+     */
     window.store.noConflict = function() {
         window.store = old;
         return window.store;
