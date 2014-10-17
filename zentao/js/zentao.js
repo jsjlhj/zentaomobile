@@ -642,8 +642,8 @@
 
     Zentao.prototype.startAutoSync = function(interval, successCallback, errorCallback)
     {
-        // if(!interval) interval = window.userStore.get('syncInterval', 20000) / dataTabsSet.length;
-        if(!interval) interval = window.userStore.get('syncInterval', 200000) / dataTabsSet.length;
+        if(!interval) interval = window.userStore.get('syncInterval', 20000) / dataTabsSet.length;
+        // if(!interval) interval = window.userStore.get('syncInterval', 200000) / dataTabsSet.length;
         console.color('startAutoSync:' + interval, 'h3|bgdanger');
         var that = this;
         this.syncing = interval;

@@ -9,7 +9,7 @@
         {
             if(window.currentWebview)
             {
-                var options = e.detail || e || {};
+                var options = e && (e.detail || e) || {};
                 window.currentWebview.close(options.aniClose || 'slide-out-right', options.duration || 150);
             }
         };
@@ -18,6 +18,7 @@
 
         var swipeback = function()
         {
+            console.log('swipeback');
             if(document.body.classList.contains('swipeback'))
             {
                 closeWindow();

@@ -320,7 +320,7 @@
         checkStatus();
     }).on('syncing', function()
     {
-        startSync();
+        // startSync();
     }).on('sync', function(e)
     {
         if(e.result)
@@ -361,10 +361,11 @@
 
             lastSyncTime = new Date().getTime();
         }
-        stopSync();
+        // stopSync();
     }).on('ready', function()
     {
         openListView({offline: true});
+
         if(window.userStore.get('autoSync', true))
         {
             zentao.startAutoSync();
