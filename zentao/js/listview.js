@@ -39,22 +39,21 @@
 
             window.userStore.init();
             that.datalist = new DataList(that.name);
-            console.log('datalist', that.datalist);
-            that.mainview = window.currentWebview.parent();
+            // console.log('datalist', that.datalist);
             that.showAll(false);
         });
 
         window.pullRefresh(
         {
-            container: '#listview',//待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+            container: '#listview',
             down :
             {
-              contentdown    : "下拉可以刷新",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
-              contentover    : "释放立即刷新",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
-              contentrefresh : "正在刷新...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+              contentdown    : "下拉可以刷新",
+              contentover    : "释放立即刷新",
+              contentrefresh : "正在刷新...",
               callback       : function(callback)
               {
-                  window.fire(that.mainview, 'loadListView', {type: that.name, tab: that.currentFilter()});
+                  window.fire(window.plus.webview.currentWebview().opener(), 'loadListView', {type: that.name, tab: that.currentFilter()});
               }
             }
         });

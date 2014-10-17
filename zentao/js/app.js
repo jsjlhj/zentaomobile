@@ -12,6 +12,7 @@
         listViews       = {todo: "todos.html", task: "tasks.html", bug: "bugs.html", story: "stories.html"},
         loginWindow,
         settingWindow,
+        waitingTip,
         mainView,
         currentListView,
         defaultListView;
@@ -71,7 +72,7 @@
 
         if(typeof listViews[options.name] === 'string')
         {
-            listViews[options.name] = plus.webview.create(listViews[options.name], options.name, 
+            var view = listViews[options.name] = plus.webview.create(listViews[options.name], options.name, 
             {
                 top             : "44px",
                 bottom          : "51px",
@@ -79,7 +80,12 @@
                 scrollIndicator : "none"
             });
 
-            mainView.append(listViews[options.name]);
+            showWaiting();
+            setTimeout(function()
+            {
+                mainView.append(view);
+                hideWaiting();
+            }, 500);
         }
         else
         {
@@ -221,6 +227,21 @@
         console.color('RUNNING IN BACKGROUND', 'bgdanger');
     };
 
+    var showWaiting = function(e)
+    {
+        var options = e ? (e.detail || e) : {title: ''};
+        waitingTip = plus.nativeUI.showWaiting(options.title, options.options);
+    };
+
+    var hideWaiting = function()
+    {
+        if(waitingTip)
+        {
+            waitingTip.close();
+            waitingTip = null;
+        }
+    };
+
     var onNetChange = function()
     {
         var nt = plus.networkinfo.getCurrentType();
@@ -342,6 +363,8 @@
           .on('startSync', startSync)
           .on('stopSync', stopSync)
           .on('restartSync', restartSync)
+          .on('showWaiting', showWaiting)
+          .on('hideWaiting', hideWaiting)
           .on('updateSetting', updateSetting)
           .on('loadListView', loadListView);
 
