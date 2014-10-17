@@ -9,6 +9,8 @@
         {
             if(window.currentWebview)
             {
+                window.trigger('beforeClose');
+
                 var options = e && (e.detail || e) || {};
                 window.currentWebview.close(options.aniClose || 'slide-out-right', options.duration || 150);
             }

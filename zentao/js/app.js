@@ -6,6 +6,8 @@
         $statusName     = document.getElementById('userStatusName'),
         $settingBtn     = document.getElementById('settingBtn'),
         animateSpeed    = 200,
+        receiveNotify   = true,
+        syncInterval    = 20000,
         listViewsOrder  = {todo: 1, task: 2, bug: 3, story: 4},
         listViews       = {todo: "todos.html", task: "tasks.html", bug: "bugs.html", story: "stories.html"},
         loginWindow,
@@ -133,6 +135,16 @@
         });
     };
 
+    var logout = function(options)
+    {
+        options = options ? (options.detail || options) : {};
+        if(options.updateSetting)
+        {
+            updateSetting(options.updateSetting);
+        }
+        zentao.logout(false, checkStatus);
+    };
+
     var checkStatus = function()
     {
         var status = window.user ? window.user.status : 'logout';
@@ -192,7 +204,7 @@
 
     var restartSync = function()
     {
-        zentao.restartAutoSync();
+        zentao.restartAutoSync(syncInterval);
     };
 
     var onResume = function()
@@ -271,6 +283,23 @@
         });
     };
 
+    var updateSetting = function(e)
+    {
+        var options = e ? (e.detail || e) : {};
+
+        receiveNotify   = options.receiveNotify;
+        window.userStore.set('receiveNotify', receiveNotify);
+
+        if(syncInterval != options.syncInterval)
+        {
+            syncInterval    = options.syncInterval;
+            window.userStore.set('syncInterval', syncInterval);
+            restartSync();
+        }
+
+        checkStatus();
+    };
+
     $status.on('tap', function()
     {
         var user = window.user;
@@ -282,14 +311,20 @@
 
     $settingBtn.on('tap', function()
     {
+        var options =
+        {
+            user          : window.user,
+            receiveNotify : receiveNotify,
+            syncInterval  : syncInterval
+        };
         settingWindow = plus.webview.create('setting/index.html', 'setting', 
         {
             top             : "0px",
             bottom          : "0px",
             bounce          : "vertical",
             scrollIndicator : "none"
-        });
-        settingWindow.addEventListener('close', checkStatus);
+        }, {options: options});
+        settingWindow.addEventListener('close', function(){settingWindow = null;});
         settingWindow.show('slide-in-right', 200);
     });
 
@@ -301,11 +336,13 @@
 
     window.on('login', function(e){tryLogin(e.detail);})
           .on('openLogin', openLoginWindow)
+          .on('logout', logout)
           .on('checkStatus', checkStatus)
           .on('openListView', function(e){openListView(e.detail);})
           .on('startSync', startSync)
           .on('stopSync', stopSync)
           .on('restartSync', restartSync)
+          .on('updateSetting', updateSetting)
           .on('loadListView', loadListView);
 
     zentao.on('logging', function()
@@ -337,7 +374,7 @@
                 document.getElementById('tab-' + e.tab).classList.add('unread');
             }
 
-            if(window.userStore.get('receiveNotify', true) && zentao.runningInBackground)
+            if(receiveNotify && zentao.runningInBackground)
             {
                 var unreadCount = e.unreadCount;
                 plus.runtime.setBadgeNumber(unreadCount);
@@ -361,15 +398,18 @@
 
             lastSyncTime = new Date().getTime();
         }
-        // stopSync();
+        stopSync();
     }).on('ready', function()
     {
         openListView({offline: true});
 
         if(window.userStore.get('autoSync', true))
         {
-            zentao.startAutoSync();
+            zentao.startAutoSync(syncInterval);
         }
+
+        receiveNotify = window.userStore.get('receiveNotify', receiveNotify);
+        syncInterval = window.userStore.get('syncInterval', syncInterval);
     });
 
     window.plusReady(function()

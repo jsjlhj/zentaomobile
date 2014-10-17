@@ -78,7 +78,7 @@
         window.user = this.user;
 
         console.groupCollapsed('%cUSER: ' + this.user.account + '@' + this.user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
-        console.log(user, this.user);
+        console.log('user:', this.user);
         console.groupEnd();
 
         return this.user;

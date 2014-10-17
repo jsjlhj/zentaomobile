@@ -3,136 +3,137 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>禅道</title>
-    <link href="../css/mui.min.css" rel="stylesheet"/>
-    <link href="../css/font-awesome.min.css" rel="stylesheet"/>
+    <title>设置</title>
+    <link href="../css/zui.m.min.css" rel="stylesheet"/>
     <link href="../css/style.css" rel="stylesheet"/>
     <link href="../css/subpage.css" rel="stylesheet"/>
+    <link href="../css/dialog.css" rel="stylesheet"/>
     <style>
-    #syncIntervalDialog {padding-top: 44px; left: 100%; transition: all 0.15s;}
+    #syncIntervalDialog {padding-top: 0; left: 100%; transition: all 0.2s;}
+    #syncIntervalDialog > header {padding-left: 10px;}
     #syncIntervalDialog.show.in {left: 0}
     </style>
 </head>
-<body>
-  <header class="mui-bar mui-bar-nav">
-    <h1 class="mui-title mui-action-back"><i class="fa fa-angle-left"></i> 设置</h1>
+<body class="swipeback">
+  <header class="bar bar-nav">
+    <h1 class="title action-back"><i class="icon icon-angle-left"></i> 设置</h1>
   </header>
-  <div class="mui-content">
+  <div class="content">
     <h5 style="padding: 8px 10px 2px">帐号</h5>
-    <ul class="mui-table-view">
-      <li class="mui-table-view-cell"><span class="text-muted">禅道地址 </span><span id="userUrl"></span> <button class="mui-btn" id="openUserUrl">访问</button></li>
-      <li class="mui-table-view-cell"><span class="text-muted">当前用户 </span><strong id="userAccount"></strong> <button class="mui-btn mui-btn-danger" id="logoutBtn">注销</button></li>
+    <ul class="table-view">
+      <li class="table-view-cell"><span class="text-muted">禅道地址 </span><span id="userUrl"></span> <button class="btn" id="openUserUrl">访问</button></li>
+      <li class="table-view-cell"><span class="text-muted">当前用户 </span><strong id="userAccount"></strong> <button class="btn btn-negative" id="logoutBtn">注销</button></li>
     </ul>
     <h5 style="padding: 8px 10px 2px">更新与通知</h5>
-    <ul class="mui-table-view">
-      <li class="mui-table-view-cell">显示通知
-        <div class="mui-switch mui-active" id="notifySwitch">
-          <div class="mui-switch-handle"></div>
+    <ul class="table-view">
+      <li class="table-view-cell">显示通知
+        <div class="toggle" id="notifySwitch">
+          <div class="toggle-handle"></div>
         </div>
       </li>
-      <li class="mui-table-view-cell">
-        <a class="mui-navigate-right open-dialog">
-          <span class="mui-badge mui-badge-inverted" id="syncIntervalOption">10分钟</span>
+      <li class="table-view-cell">
+        <a class="navigate-right open-dialog">
+          <span class="badge badge-inverted" id="syncIntervalOption">10分钟</span>
           自动更新间隔
         </a>
       </li>
     </ul>
   </div>
   <div class="dialog fixed" id="syncIntervalDialog">
-    <header class="mui-bar mui-bar-nav">
-      <h1 class="mui-title close-dialog"><i class="fa fa-angle-left"></i> 自动更新间隔</h1>
+    <header class="bar bar-nav">
+      <h1 class="title close-dialog"><i class="icon icon-angle-left"></i> 自动更新间隔</h1>
     </header>
-    <ul class="mui-table-view" id="syncIntervalList">
-      <li class="mui-table-view-cell mui-radio mui-left syncInterval syncInterval-20000" data-val='20000' data-name="20秒">
-        <input id="syncInterval-20000" name="syncInterval" type="radio" value='20000'> 20秒
+    <ul class="table-view" id="syncIntervalList">
+      <li class="table-view-cell radio left sync-interval-option" id="syncInterval-20000">
+        <input name="syncInterval" type="radio" value='20000'> <span class="name">20秒</span>
       </li>
-      <li class="mui-table-view-cell mui-radio mui-left syncInterval syncInterval-60000" data-val='60000' data-name="1分钟">
-        <input id="syncInterval-60000" name="syncInterval" type="radio" value='60000'> 1分钟
+      <li class="table-view-cell radio left sync-interval-option" id="syncInterval-60000">
+        <input name="syncInterval" type="radio" value='60000'> <span class="name">1分钟</span>
       </li>
-      <li class="mui-table-view-cell mui-radio mui-left syncInterval syncInterval-300000" data-val='300000' data-name="5分钟">
-        <input id="syncInterval-300000" name="syncInterval" type="radio" value='300000'> 5分钟
+      <li class="table-view-cell radio left sync-interval-option" id="syncInterval-300000">
+        <input name="syncInterval" type="radio" value='300000'> <span class="name">5分钟</span>
       </li>
-      <li class="mui-table-view-cell mui-radio mui-left syncInterval syncInterval-600000" data-val='600000' data-name="10分钟">
-        <input id="syncInterval-600000" name="syncInterval" type="radio" value='600000'> 10分钟
+      <li class="table-view-cell radio left sync-interval-option" id="syncInterval-600000">
+        <input name="syncInterval" type="radio" value='600000'> <span class="name">10分钟</span>
       </li>
-      <li class="mui-table-view-cell mui-radio mui-left syncInterval syncInterval-1800000" data-val='1800000' data-name="30分钟">
-        <input id="syncInterval-1800000" name="syncInterval" type="radio" value='1800000'> 30分钟
+      <li class="table-view-cell radio left sync-interval-option" id="syncInterval-1800000">
+        <input name="syncInterval" type="radio" value='1800000'> <span class="name">30分钟</span>
       </li>
-      <li class="mui-table-view-cell mui-radio mui-left syncInterval syncInterval-3600000" data-val='3600000' data-name="60分钟">
-        <input id="syncInterval-3600000" name="syncInterval" type="radio" value='3600000'> 60分钟
+      <li class="table-view-cell radio left sync-interval-option" id="syncInterval-3600000">
+        <input name="syncInterval" type="radio" value='3600000'> <span class="name">60分钟</span>
       </li>
     </ul>
   </div>
 
-<script src="../js/core.js"></script>
-<script src="../js/$.js"></script>
-<script src="../js/console.js"></script>
-<script src="../js/store.js"></script>
-<script src="../js/md5.min.js"></script>
-<script src="../js/mui.js"></script>
-<script src="../js/zentao.js"></script>
+<script src="../js/lib/zui.m.js"></script>
 <script src="../js/webview.js"></script>
 <script>
-$('.open-dialog').on('tap', function()
+var $dialog = document.$id('syncIntervalDialog');
+var openDialog = function()
 {
-    var $dialog = $('#syncIntervalDialog');
     $dialog.classList.add('show');
     setTimeout(function(){$dialog.classList.add('in')}, 100);
-});
-
-$('.close-dialog').on('tap', function()
+};
+var closeDialog = function()
 {
-    var $dialog = $('#syncIntervalDialog');
     $dialog.classList.remove('in');
     setTimeout(function(){$dialog.classList.remove('show')}, 200);
-});
+};
 
-zentao.on('ready', function()
+document.$class('open-dialog').on('tap', openDialog);
+document.$class('close-dialog').on('tap', closeDialog);
+
+window.plusReady(function()
 {
-    var wv   = plus.webview.currentWebview();
-    var user = window.user;
+    var wv       = window.currentWebview;
+    var mainView = wv.opener();
+    var options  = wv.options;
 
-    $('#userUrl').innerHTML     = user.url;
-    $('#userAccount').innerHTML = user.account;
+    document.$id('userUrl').innerHTML     = options.user.url;
+    document.$id('userAccount').innerHTML = options.user.account;
 
-    $('#logoutBtn').on('tap', function()
+    document.$id('openUserUrl').on('tap', function()
     {
-        zentao.logout(false, function(){wv.close('zoom-out', 200);});
-    });
-
-    $('#openUserUrl').on('tap', function()
-    {
-        plus.runtime.openURL(user.url, function()
+        plus.runtime.openURL(options.user.url, function()
         {
             alert('无法调用内置浏览器打开。');
         });
     });
 
-    $('#notifySwitch').on('toggle', function(event)
+    document.$id('logoutBtn').on('tap', function()
     {
-        window.storage.set('receiveNotify', event.detail.isActive);
+        window.fire(mainView, 'logout', {updateSetting: options});
+        wv.close('slide-out-right', 150);
     });
 
-    $('#notifySwitch .mui-switch-handle').classList[window.storage.get('receiveNotify', true) ? 'add' : 'remove']('mui-acitve');
+    var $switcher = document.$id('notifySwitch');
+    if(options.receiveNotify)
+    {
+        $switcher.classList.add('active');
+    }
+    $switcher.on('toggle', function(event)
+    {
+        console.log('toggle', event);
+        options.receiveNotify = event.detail.isActive;
+    });
 
-    var syncInterval = window.storage.get('syncInterval', 60000);
-    $('#syncInterval-' + syncInterval).checked = true;
-    $('#syncIntervalOption').innerHTML = $('.syncInterval-' + syncInterval).getAttribute('data-name');
-
-    document.querySelector("#syncIntervalList").addDelegateListener("tap", ".syncInterval", function(e)
+    var $syncOption = document.$id('syncInterval-' + options.syncInterval);
+    var $syncIntervalLabel = document.$id('syncIntervalOption');
+    $syncOption.$('input').checked = true;
+    $syncIntervalLabel.innerHTML = $syncOption.$('.name').innerHTML;
+    document.$id("syncIntervalList").on("tap", ".sync-interval-option", function(e)
     {
         var that = this;
-        setTimeout(function()
-        {
-            var $dialog = $('#syncIntervalDialog');
-            $dialog.classList.remove('in');
-            setTimeout(function(){$dialog.classList.remove('show')}, 200);
+        $syncIntervalLabel.innerHTML = this.$('.name').innerHTML;
+        options.syncInterval = this.$('input').value;
+        this.$('input').checked = true;
 
-            window.storage.set('syncInterval', that.getAttribute('data-val'));
-            $('#syncIntervalOption').innerHTML = that.getAttribute('data-name');
+        setTimeout(closeDialog, 500);
+    });
 
-            mui.fire(plus.webview.currentWebview().opener(), 'restartSync');
-        }, 500);
+    window.on('beforeClose', function()
+    {
+        window.fire(mainView, 'updateSetting', options);
     });
 });
 </script>
