@@ -9,31 +9,31 @@
   <link href="css/subpage.css" rel="stylesheet"/>
   <style>.table-view-cell > .list-title {padding-right: 90px;}</style>
 </head>
-<body>
+<body data-slider="#slider">
 <div class="content">
-  <div class="slider">
+  <div class="slider" id="slider">
       <div class="slider-header">
         <nav class="slider-indicator segmented-control segmented-control-inverted" id="listviewNav">
           <a class="control-item active" href="#assignedTo">指派给我 <span class="badge badge-danger hidden" id="tab-badge-assignedTo"></span></a>
           <a class="control-item" href="#openedBy">由我创建 <span class="badge badge-danger hidden" id="tab-badge-openedBy"></span></a>
           <a class="control-item" href="#finishedBy">由我完成 <span class="badge badge-danger hidden" id="tab-badge-finishedBy"></span></a>
         </nav>
-        <div class="slider-progress-bar col-xs-4"></div>
+        <!-- <div class="slider-progress-bar col-xs-4"></div> -->
       </div>
-      <div class="slider-group" id="listview">
-        <div id="assignedTo" class="slider-item control-content active">
+      <div class="slide-group" id="listview">
+        <div id="assignedTo" class="slide control-content active">
           <ul class="table-view listview-list">
           </ul>
         </div>
-        <div id="openedBy" class="slider-item control-content">
+        <div id="openedBy" class="slide control-content">
           <ul class="table-view listview-list">
           </ul>
         </div>
-        <div id="finishedBy" class="slider-item control-content">
+        <div id="finishedBy" class="slide control-content">
           <ul class="table-view listview-list">
           </ul>
         </div>
-        <div id="closedBy" class="slider-item control-content">
+        <div id="closedBy" class="slide control-content">
           <ul class="table-view listview-list">
           </ul>
         </div>

@@ -16,3 +16,4 @@ html {background: #EFEFF4;}
 
 .table-view {border-top: none; margin-bottom: 0;}
 .table-view:empty {display: none}
+.table-view-divider {border-top: 0; margin-top: 0;}

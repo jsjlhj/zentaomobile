@@ -8,9 +8,9 @@
   <link href="css/style.css" rel="stylesheet"/>
   <link href="css/subpage.css" rel="stylesheet"/>
 </head>
-<body>
+<body data-slider="#slider">
 <div class="content">
-  <div class="slider">
+  <div class="slider" id="slider">
       <div class="slider-header">
         <div class="slider-indicator segmented-control segmented-control-inverted" id="listviewNav">
           <a class="control-item active" href="#assignedTo">指派给我 <span class="badge badge-danger hidden" id="tab-badge-assignedTo"></span></a>
@@ -19,20 +19,20 @@
         </div>
         <div class="slider-progress-bar col-xs-4"></div>
       </div>
-      <div class="slider-group" id="listview">
-        <div id="assignedTo" class="slider-item control-content active">
+      <div class="slide-group" id="listview">
+        <div id="assignedTo" class="slide control-content active">
           <ul class="table-view listview-list">
           </ul>
         </div>
-        <div id="openedBy" class="slider-item control-content">
+        <div id="openedBy" class="slide control-content">
           <ul class="table-view listview-list">
           </ul>
         </div>
-        <div id="reviewedBy" class="slider-item control-content">
+        <div id="reviewedBy" class="slide control-content">
           <ul class="table-view listview-list">
           </ul>
         </div>
-        <div id="closedBy" class="slider-item control-content">
+        <div id="closedBy" class="slide control-content">
           <ul class="table-view listview-list">
           </ul>
         </div>
