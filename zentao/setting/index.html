@@ -11,6 +11,11 @@
     #syncIntervalDialog {padding-top: 0; left: 100%; transition: all 0.2s;}
     #syncIntervalDialog > header {padding-left: 10px;}
     #syncIntervalDialog.show.in {left: 0}
+    .table-view-cell {padding-right: 15px;}
+    .table-view-cell .pull-right .icon-check {color: #5cb85c; opacity: 0}
+    .table-view-cell.active .pull-right .icon-check {color: #5cb85c; opacity: 1}
+    .table-view-cell input {display: none;}
+    #syncIntervalOption {width: auto; right: 60px}
     </style>
 </head>
 <body class="swipeback">
@@ -44,22 +49,22 @@
     </header>
     <ul class="table-view" id="syncIntervalList">
       <li class="table-view-cell radio left sync-interval-option" id="syncInterval-20000">
-        <input name="syncInterval" type="radio" value='20000'> <span class="name">20秒</span>
+      <input name="syncInterval" type="radio" value='20000'> <span class="name">20秒</span> <span class="pull-right"><i class="icon icon-check"></i></span>
       </li>
       <li class="table-view-cell radio left sync-interval-option" id="syncInterval-60000">
-        <input name="syncInterval" type="radio" value='60000'> <span class="name">1分钟</span>
+        <input name="syncInterval" type="radio" value='60000'> <span class="name">1分钟</span> <span class="pull-right"><i class="icon icon-check"></i></span>
       </li>
       <li class="table-view-cell radio left sync-interval-option" id="syncInterval-300000">
-        <input name="syncInterval" type="radio" value='300000'> <span class="name">5分钟</span>
+        <input name="syncInterval" type="radio" value='300000'> <span class="name">5分钟</span> <span class="pull-right"><i class="icon icon-check"></i></span>
       </li>
       <li class="table-view-cell radio left sync-interval-option" id="syncInterval-600000">
-        <input name="syncInterval" type="radio" value='600000'> <span class="name">10分钟</span>
+        <input name="syncInterval" type="radio" value='600000'> <span class="name">10分钟</span> <span class="pull-right"><i class="icon icon-check"></i></span>
       </li>
       <li class="table-view-cell radio left sync-interval-option" id="syncInterval-1800000">
-        <input name="syncInterval" type="radio" value='1800000'> <span class="name">30分钟</span>
+        <input name="syncInterval" type="radio" value='1800000'> <span class="name">30分钟</span> <span class="pull-right"><i class="icon icon-check"></i></span>
       </li>
       <li class="table-view-cell radio left sync-interval-option" id="syncInterval-3600000">
-        <input name="syncInterval" type="radio" value='3600000'> <span class="name">60分钟</span>
+        <input name="syncInterval" type="radio" value='3600000'> <span class="name">60分钟</span> <span class="pull-right"><i class="icon icon-check"></i></span>
       </li>
     </ul>
   </div>
@@ -117,15 +122,18 @@ window.plusReady(function()
     });
 
     var $syncOption = document.$id('syncInterval-' + options.syncInterval);
+    $syncOption.classList.add('active');
     var $syncIntervalLabel = document.$id('syncIntervalOption');
     $syncOption.$('input').checked = true;
     $syncIntervalLabel.innerHTML = $syncOption.$('.name').innerHTML;
     document.$id("syncIntervalList").on("tap", ".sync-interval-option", function(e)
     {
+        document.$('.sync-interval-option.active').classList.remove('active');
         var that = this;
         $syncIntervalLabel.innerHTML = this.$('.name').innerHTML;
         options.syncInterval = this.$('input').value;
         this.$('input').checked = true;
+        this.classList.add('active');
 
         setTimeout(closeDialog, 500);
     });
