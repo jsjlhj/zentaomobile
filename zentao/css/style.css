@@ -123,3 +123,7 @@ body,#content
 
 .title {text-align: left; padding-left: 10px;}
 .bar > .btn-link > .icon {display: inline-block; min-width: 44px; padding: 0px; position: relative; top: 7px; font-size: 30px; line-height: 30px;text-align: center;}
+
+.table-view-cell.show-more {text-align: center; color: #666; background: #eee; padding-right: 10px;}
+.table-view-cell.show-more .icon {position: relative; top: 0px; border: none}
+.table-view-cell.show-more > a {margin: -11px 0}

@@ -13,21 +13,31 @@
         this.name            = name;
         this.filters         = filters[name];
         this.isLoading       = false;
+        this.lessCount       = 12;
         if(showfn) this.show = showfn;
         var that = this;
 
         document.$id('listview').on('tap', '.table-view-cell', function(e)
         {
-            if(this.classList.contains('unread'))
+            if(this.classList.contains('show-more'))
             {
-                document.getElementsByClassName('item-id-' + this.getAttribute('data-id')).forEach(function(el)
-                {
-                    el.classList.remove('unread');
-                });
-                this.classList.remove('unread');
-                that.updateTabBadge();
+                var tab = this.getAttribute('data-tab');
+                that.lessCount = false;
+                that.show(tab, that.datalist.filter(tab), that.lessCount);
             }
-            that.showItem(this.getAttribute('data-id'), this);
+            else
+            {
+                if(this.classList.contains('unread'))
+                {
+                    document.getElementsByClassName('item-id-' + this.getAttribute('data-id')).forEach(function(el)
+                    {
+                        el.classList.remove('unread');
+                    });
+                    this.classList.remove('unread');
+                    that.updateTabBadge();
+                }
+                that.showItem(this.getAttribute('data-id'), this);
+            }
         });
 
         window.plusReady(function()
@@ -100,7 +110,7 @@
         var that = this;
         this.filters.forEach(function(val)
         {
-            that.show(val, that.datalist.filter(val));
+            that.show(val, that.datalist.filter(val), that.lessCount);
         });
         if(makeRead)
         {

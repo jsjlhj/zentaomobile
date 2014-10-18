@@ -30,6 +30,7 @@
       <div class="slider-group" id="listview">
         <div id="today" class="slider control-content active">
           <ul class="table-view listview-list">
+            <li class="table-view-cell show-more"><a>显示更多 <i class="icon icon-chevron-down"></i></a></li>
           </ul>
         </div>
         <div id="yestoday" class="slider control-content">
@@ -53,13 +54,14 @@
 <script src="js/userdata.js"></script>
 <script src="js/listview.js"></script>
 <script>
-var listview = new ListView('todo', function(tab, data)
+var listview = new ListView('todo', function(tab, data, lessCount)
 {
     var $tab        = document.$id(tab);
     var $todos      = $tab.$('.listview-list'),
         unreadCount = 0,
         waitCount   = 0,
         doneCount   = 0,
+        count       = 0,
         today       = Date.parseName('today');
 
     for(var i = $todos.childNodes.length - 1; i >= 0; i--)
@@ -84,10 +86,19 @@ var listview = new ListView('todo', function(tab, data)
             $todos.appendChild(item);
         }
 
-        data.forEach(function(val)
+        data.each(function(val)
         {
             var item = document.createElement('li');
             item.classList.add('table-view-cell');
+            item.setAttribute('data-tab', tab);
+            if(lessCount && (++count) >= lessCount)
+            {
+                item.classList.add('show-more');
+                item.innerHTML = '<a>显示更多 <i class="icon icon-chevron-down"></i></a>';
+                $todos.appendChild(item);
+                return false;
+            }
+
             item.classList.add('pri');
             item.classList.add('pri-' + val.pri);
             item.classList.add('item-id-' + val.id);
@@ -97,7 +108,6 @@ var listview = new ListView('todo', function(tab, data)
                 unreadCount++;
             }
             item.setAttribute('data-id', val.id);
-            item.setAttribute('data-tab', tab);
             var dateStr = '<span class="badge' + (val.status === 'wait' && val.date < today ? ' badge-warning' : '') + '">' + (tab === 'thisweek' ? val.date.getDayName() + ' ' : (tab === 'undone' ? val.date.format('MM月dd日') + ' ' : '')) + val.begin + '</span>';
             if(val.status === 'wait')
             {

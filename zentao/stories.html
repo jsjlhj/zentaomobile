@@ -45,7 +45,7 @@
 <script src="js/userdata.js"></script>
 <script src="js/listview.js"></script>
 <script>
-var listview = new ListView('story', function(tab, data)
+var listview = new ListView('story', function(tab, data, lessCount)
 {
     var $tab = document.$id(tab),
         $storys = $tab.$('.listview-list'),
@@ -59,10 +59,19 @@ var listview = new ListView('story', function(tab, data)
     }
 
     var item;
-    data.forEach(function(val)
+    data.each(function(val)
     {
         item = document.createElement('li');
         item.classList.add('table-view-cell');
+        item.setAttribute('data-tab', tab);
+        if(lessCount && (++count) >= lessCount)
+        {
+            item.classList.add('show-more');
+            item.innerHTML = '<a>显示更多 <i class="icon icon-chevron-down"></i></a>';
+            $bugs.appendChild(item);
+            return false;
+        }
+
         item.classList.add('pri');
         item.classList.add('pri-' + val.pri);
         item.classList.add('item-id-' + val.id);
@@ -73,7 +82,6 @@ var listview = new ListView('story', function(tab, data)
         }
         item.setAttribute('id', 'item-' + val.id);
         item.setAttribute('data-id', val.id);
-        item.setAttribute('data-tab', tab);
         item.innerHTML = '<a><span class="list-title"><span class="list-item-id">' + val.id + '</span>' + val.title + '</span>' + '<span class="badge badge-' + val.statusColor + '">' + val.statusName + '</span></a>';
         $storys.appendChild(item);
     });
