@@ -2576,33 +2576,35 @@
 (function () {
   'use strict';
 
-  var pageX;
-  var pageY;
-  var slider;
-  var deltaX;
-  var deltaY;
-  var offsetX;
-  var lastSlide;
-  var startTime;
-  var resistance;
-  var sliderWidth;
-  var slideNumber;
-  var isScrolling;
-  var scrollableArea;
-  var startedMoving;
-  var documentSlider = null;
+  var pageX,
+      pageY,
+      slider,
+      slideGroup,
+      segmentedControl,
+      deltaX,
+      deltaY,
+      offsetX,
+      lastSlide,
+      startTime,
+      resistance,
+      sliderWidth,
+      slideNumber,
+      isScrolling,
+      scrollableArea,
+      startedMoving,
+      documentSlider = null;
 
   var getSlider = function (target) {
     if(documentSlider === null)
     {
         var docAttr = document.body.getAttribute('data-slider');
-        documentSlider = docAttr ? document.$(docAttr + ' > .slide-group') : false;
+        documentSlider = docAttr ? document.querySelector(docAttr) : false;
     }
 
     if(documentSlider) return documentSlider;
 
     var i;
-    var sliders = document.querySelectorAll('.slider > .slide-group');
+    var sliders = document.getElementsByClassName('slider');
 
     for (; target && target !== document; target = target.parentNode) {
       for (i = sliders.length; i--;) {
@@ -2614,8 +2616,8 @@
   };
 
   var getScroll = function () {
-    if ('webkitTransform' in slider.style) {
-      var translate3d = slider.style.webkitTransform.match(/translate3d\(([^,]*)/);
+    if ('webkitTransform' in slideGroup.style) {
+      var translate3d = slideGroup.style.webkitTransform.match(/translate3d\(([^,]*)/);
       var ret = translate3d ? translate3d[1] : 0;
       return parseInt(ret, 10);
     }
@@ -2623,28 +2625,29 @@
 
   var setSlideNumber = function (offset) {
     var round = offset ? (deltaX < 0 ? 'ceil' : 'floor') : 'round';
-    slideNumber = Math[round](getScroll() / (scrollableArea / slider.children.length));
+    slideNumber = Math[round](getScroll() / (scrollableArea / slideGroup.children.length));
     slideNumber += offset;
     slideNumber = Math.min(slideNumber, 0);
-    slideNumber = Math.max(-(slider.children.length - 1), slideNumber);
+    slideNumber = Math.max(-(slideGroup.children.length - 1), slideNumber);
   };
 
   var onTouchStart = function (e) {
 
-    console.log('--------------------');
     slider = getSlider(e.target);
-    console.log(slider);
     if (!slider) {
       return;
     }
 
-    var firstItem  = slider.querySelector('.slide');
+    slideGroup = slider.querySelector('.slide-group');
+    segmentedControl = slider.querySelector('.segmented-control');
 
-    scrollableArea = firstItem.offsetWidth * slider.children.length;
+    var firstItem  = slideGroup.querySelector('.slide');
+
+    scrollableArea = firstItem.offsetWidth * slideGroup.children.length;
     isScrolling    = undefined;
-    sliderWidth    = slider.offsetWidth;
+    sliderWidth    = slideGroup.offsetWidth;
     resistance     = 1;
-    lastSlide      = -(slider.children.length - 1);
+    lastSlide      = -(slideGroup.children.length - 1);
     startTime      = +new Date();
     pageX          = e.touches[0].pageX;
     pageY          = e.touches[0].pageY;
@@ -2653,7 +2656,7 @@
 
     setSlideNumber(0);
 
-    slider.style['-webkit-transition-duration'] = 0;
+    slideGroup.style['-webkit-transition-duration'] = 0;
   };
 
   var onTouchMove = function (e) {
@@ -2686,7 +2689,7 @@
     resistance = slideNumber === 0         && deltaX > 0 ? (pageX / sliderWidth) + 1.25 :
                  slideNumber === lastSlide && deltaX < 0 ? (Math.abs(pageX) / sliderWidth) + 1.25 : 1;
 
-    slider.style.webkitTransform = 'translate3d(' + offsetX + 'px,0,0)';
+    slideGroup.style.webkitTransform = 'translate3d(' + offsetX + 'px,0,0)';
 
     // started moving
     startedMoving = true;
@@ -2706,8 +2709,8 @@
 
     offsetX = slideNumber * sliderWidth;
 
-    slider.style['-webkit-transition-duration'] = '.2s';
-    slider.style.webkitTransform = 'translate3d(' + offsetX + 'px,0,0)';
+    slideGroup.style['-webkit-transition-duration'] = '.2s';
+    slideGroup.style.webkitTransform = 'translate3d(' + offsetX + 'px,0,0)';
 
     e = new CustomEvent('slide', {
       detail: { slideNumber: Math.abs(slideNumber) },
@@ -2715,7 +2718,37 @@
       cancelable: true
     });
 
-    slider.parentNode.dispatchEvent(e);
+    slideGroup.parentNode.dispatchEvent(e);
+
+    // set active class to controller
+    if(segmentedControl)
+    {
+        var activeControlContent = slideGroup.querySelector('.control-content.active');
+        if(activeControlContent)
+        {
+            activeControlContent.classList.remove('active');
+        }
+        var slide = slideGroup.children[0 - slideNumber];
+        slide.classList.add('active');
+
+        var activeControlItem = segmentedControl.querySelector('.control-item.active');
+        if(activeControlItem)
+        {
+            activeControlItem.classList.remove('active');
+        }
+
+        var slideId = '#' + slide.getAttribute('id'),
+            sgLen = segmentedControl.children.length,
+            sgItem;
+        for (var i = sgLen - 1; i >= 0; i--)
+        {
+            sgItem = segmentedControl.children[i];
+            if(sgItem.getAttribute('href') === slideId)
+            {
+                sgItem.classList.add('active');
+            }
+        }
+    }
   };
 
   window.addEventListener('touchstart', onTouchStart);
