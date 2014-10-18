@@ -50,6 +50,7 @@ var listview = new ListView('bug', function(tab, data, lessCount)
     var $tab = document.$id(tab),
         $bugs = $tab.$('.listview-list'),
         unreadCount = 0,
+        count       = 0,
         today = Date.parseName('today');
 
     for(var i = $bugs.childNodes.length - 1; i >= 0; i--)

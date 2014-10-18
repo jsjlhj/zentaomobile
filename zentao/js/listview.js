@@ -13,7 +13,7 @@
         this.name            = name;
         this.filters         = filters[name];
         this.isLoading       = false;
-        this.lessCount       = 12;
+        this.lessCount       = Math.floor((window.getViewport().height - 34)/45) + 1;
         if(showfn) this.show = showfn;
         var that = this;
 

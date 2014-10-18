@@ -51,6 +51,7 @@ var listview = new ListView('task', function(tab, data, lessCount)
     var $tab        = document.$id(tab);
         $tasks      = $tab.$('.listview-list'),
         unreadCount = 0,
+        count       = 0,
         today = Date.parseName('today');
 
     for(var i = $tasks.childNodes.length - 1; i >= 0; i--)
@@ -69,7 +70,7 @@ var listview = new ListView('task', function(tab, data, lessCount)
         {
             item.classList.add('show-more');
             item.innerHTML = '<a>显示更多 <i class="icon icon-chevron-down"></i></a>';
-            $bugs.appendChild(item);
+            $tasks.appendChild(item);
             return false;
         }
 

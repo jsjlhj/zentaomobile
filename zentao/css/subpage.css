@@ -14,5 +14,5 @@ body:before
 }
 html {background: #EFEFF4;}
 
-.table-view {border-top: none}
+.table-view {border-top: none; margin-bottom: 0;}
 .table-view:empty {display: none}
