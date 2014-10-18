@@ -70,14 +70,14 @@ var listview = new ListView('todo', function(tab, data, lessCount)
     }
 
     var groupedData = data.groupBy('status'),
-        item;
+        item, displayShowMore;
     var showgrounp = function(group)
     {
         data = groupedData[group];
 
         if(!data) return;
 
-        if(tab != 'undone')
+        if(tab != 'undone' && !displayShowMore)
         {
             item = document.createElement('li');
             item.classList.add('table-view-divider');
@@ -95,6 +95,7 @@ var listview = new ListView('todo', function(tab, data, lessCount)
                 item.classList.add('show-more');
                 item.innerHTML = '<a>显示更多 <i class="icon icon-chevron-down"></i></a>';
                 $todos.appendChild(item);
+                displayShowMore = true;
                 return false;
             }
 

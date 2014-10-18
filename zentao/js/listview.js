@@ -77,7 +77,7 @@
     ListView.prototype.showItem = function(id, $item)
     {
         var item = this.datalist.getById(id);
-        this.dialog = window.openWebview(
+        this.dialog = window.openWindow(
         {
             url: this.name + ".html",
             id: this.name + "-" + id,

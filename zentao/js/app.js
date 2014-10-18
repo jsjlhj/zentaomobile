@@ -32,7 +32,7 @@
             options.url = window.user.url;
         }
 
-        loginWindow = window.openWebview(
+        loginWindow = window.openWindow(
         {
             url: 'login.html',
             id: 'login',
@@ -345,7 +345,7 @@
             receiveNotify : receiveNotify,
             syncInterval  : syncInterval
         };
-        settingWindow = window.openWebview(
+        settingWindow = window.openWindow(
         {
             url: 'setting/index.html',
             id: 'setting',
