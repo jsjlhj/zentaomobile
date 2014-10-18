@@ -1,5 +1,5 @@
 /*!
- * ZUI for mobile - v0.1.0-beta - 2014-10-17
+ * ZUI for mobile - v0.1.0-beta - 2014-10-18
  * http://zui.sexy
  * GitHub: https://github.com/easysoft/zui.git 
  * Copyright (c) 2014 cnezsoft.com; Licensed MIT
@@ -307,6 +307,28 @@
     if (!Array.prototype.forEach)
     {
         Array.prototype.forEach = function(fun /*, thisp*/ )
+        {
+            var len = this.length;
+            if (typeof fun != "function")
+                throw new TypeError();
+
+            var thisp = arguments[1];
+            for (var i = 0; i < len; i++)
+            {
+                if (i in this)
+                {
+                    fun.call(thisp, this[i], i, this);
+                }
+            }
+        };
+    }
+
+    /**
+     * Call a function for each element in the array, break by return false
+     */
+    if(!Array.each)
+    {
+        Array.prototype.each = function(fun /*, thisp*/ )
         {
             var len = this.length;
             if (typeof fun != "function")
