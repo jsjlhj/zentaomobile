@@ -11,6 +11,7 @@
     "core/http.js",
     "core/plus.js",
 
+    "components/pullrefresh.js",
     "components/sliders.js",
     "components/segmented-controllers.js",
     "components/toggles.js"

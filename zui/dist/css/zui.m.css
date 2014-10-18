@@ -998,6 +998,14 @@ select {
 .toggle input[type="checkbox"] {
   display: none;
 }
+body.plus-pullrefresh,
+body.plus-pullrefresh > .content {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+}
 @font-face {
   font-family: 'zeniconm';
   font-style: normal;
