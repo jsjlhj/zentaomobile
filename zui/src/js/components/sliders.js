@@ -24,8 +24,17 @@
   var isScrolling;
   var scrollableArea;
   var startedMoving;
+  var documentSlider = null;
 
   var getSlider = function (target) {
+    if(documentSlider === null)
+    {
+        var docAttr = document.body.getAttribute('data-slider');
+        documentSlider = docAttr ? document.$(docAttr + ' > .slide-group') : false;
+    }
+
+    if(documentSlider) return documentSlider;
+
     var i;
     var sliders = document.querySelectorAll('.slider > .slide-group');
 
@@ -55,8 +64,10 @@
   };
 
   var onTouchStart = function (e) {
-    slider = getSlider(e.target);
 
+    console.log('--------------------');
+    slider = getSlider(e.target);
+    console.log(slider);
     if (!slider) {
       return;
     }

@@ -15,9 +15,9 @@
   .table-view-cell > .list-title {padding-right: 90px;}
   </style>
 </head>
-<body> 
+<body data-slider="#slider"> 
 <div class="content">
-  <div class="slider">
+  <div class="slider" id="slider">
       <div class="slider-header">
         <nav class="slider-indicator segmented-control segmented-control-inverted" id="listviewNav">
           <a class="control-item active" href="#today">今日 <span class="badge badge-danger hidden" id="tab-badge-today"></span></a>
@@ -27,20 +27,20 @@
         </nav>
         <div class="slider-progress-bar col-xs-3"></div>
       </div>
-      <div class="slider-group" id="listview">
-        <div id="today" class="slider control-content active">
+      <div class="slide-group" id="listview">
+        <div id="today" class="slide control-content active">
           <ul class="table-view listview-list">
           </ul>
         </div>
-        <div id="yestoday" class="slider control-content">
+        <div id="yestoday" class="slide control-content">
           <ul class="table-view listview-list">
           </ul>
         </div>
-        <div id="thisweek" class="slider control-content">
+        <div id="thisweek" class="slide control-content">
           <ul class="table-view listview-list">
           </ul>
         </div>
-        <div id="undone" class="slider control-content">
+        <div id="undone" class="slide control-content">
           <ul class="table-view listview-list">
           </ul>
         </div>
