@@ -14,9 +14,9 @@
   <div class="slider" id="slider">
       <div class="slider-header">
         <nav class="slider-indicator segmented-control segmented-control-inverted" id="listviewNav">
-          <a class="control-item active" href="#assignedTo">指派给我 <span class="badge badge-danger hidden" id="tab-badge-assignedTo"></span></a>
-          <a class="control-item" href="#openedBy">由我创建 <span class="badge badge-danger hidden" id="tab-badge-openedBy"></span></a>
-          <a class="control-item" href="#finishedBy">由我完成 <span class="badge badge-danger hidden" id="tab-badge-finishedBy"></span></a>
+          <a class="control-item active" href="#assignedTo">指派给我 <span class="badge badge-negative hidden" id="tab-badge-assignedTo"></span></a>
+          <a class="control-item" href="#openedBy">由我创建 <span class="badge badge-negative hidden" id="tab-badge-openedBy"></span></a>
+          <a class="control-item" href="#finishedBy">由我完成 <span class="badge badge-negative hidden" id="tab-badge-finishedBy"></span></a>
         </nav>
         <!-- <div class="slider-progress-bar col-xs-4"></div> -->
       </div>
@@ -88,15 +88,15 @@ var listview = new ListView('task', function(tab, data, lessCount)
         $tasks.appendChild(item);
     });
 
-    if(!displayShowMore)
-    {
-        item = document.createElement('li');
-        item.classList.add('table-view-cell');
-        item.classList.add('nomore-tip');
-        item.setAttribute('data-tab', tab);
-        item.innerHTML = '共 <strong>' + count + '</strong>项，没有更多';
-        $tasks.appendChild(item);
-    }
+    // if(!displayShowMore)
+    // {
+    //     item = document.createElement('li');
+    //     item.classList.add('table-view-cell');
+    //     item.classList.add('nomore-tip');
+    //     item.setAttribute('data-tab', tab);
+    //     item.innerHTML = '共 <strong>' + count + '</strong>项，没有更多';
+    //     $tasks.appendChild(item);
+    // }
 
     this.updateTabBadge(tab, unreadCount);
 });

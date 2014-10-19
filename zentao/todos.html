@@ -20,10 +20,10 @@
   <div class="slider" id="slider">
       <div class="slider-header">
         <nav class="slider-indicator segmented-control segmented-control-inverted" id="listviewNav">
-          <a class="control-item active" href="#today">今日 <span class="badge badge-danger hidden" id="tab-badge-today"></span></a>
-          <a class="control-item" href="#yestoday">昨日 <span class="badge badge-danger hidden" id="tab-badge-yestoday"></span></a>
-          <a class="control-item" href="#thisweek">本周 <span class="badge badge-danger hidden" id="tab-badge-thisweek"></span></a>
-          <a class="control-item" href="#undone">未完成 <span class="badge badge-danger hidden" id="tab-badge-undone"></span></a>
+          <a class="control-item active" href="#today">今日 <span class="badge badge-negative hidden" id="tab-badge-today"></span></a>
+          <a class="control-item" href="#yestoday">昨日 <span class="badge badge-negative hidden" id="tab-badge-yestoday"></span></a>
+          <a class="control-item" href="#thisweek">本周 <span class="badge badge-negative hidden" id="tab-badge-thisweek"></span></a>
+          <a class="control-item" href="#undone">未完成 <span class="badge badge-negative hidden" id="tab-badge-undone"></span></a>
         </nav>
         <!-- <div class="slider-progress-bar col-xs-3"></div> -->
       </div>
@@ -132,15 +132,15 @@ var listview = new ListView('todo', function(tab, data, lessCount)
 
     ['doing', 'wait', 'done'].forEach(showgrounp);
     
-    if(!displayShowMore)
-    {
-        item = document.createElement('li');
-        item.classList.add('table-view-cell');
-        item.classList.add('nomore-tip');
-        item.setAttribute('data-tab', tab);
-        item.innerHTML = (tab === 'undone') ? ('共 <strong>' + count + '</strong>项，没有更多') : '没有更多';
-        $todos.appendChild(item);
-    }
+    // if(!displayShowMore)
+    // {
+    //     item = document.createElement('li');
+    //     item.classList.add('table-view-cell');
+    //     item.classList.add('nomore-tip');
+    //     item.setAttribute('data-tab', tab);
+    //     item.innerHTML = (tab === 'undone') ? ('共 <strong>' + count + '</strong>项，没有更多') : '没有更多';
+    //     $todos.appendChild(item);
+    // }
 
     this.updateTabBadge(tab, unreadCount);
 });

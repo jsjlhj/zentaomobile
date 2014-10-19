@@ -19,9 +19,9 @@
 
         document.$id('listview').on('tap', '.table-view-cell', function(e)
         {
+            var tab = this.getAttribute('data-tab');
             if(this.classList.contains('show-more'))
             {
-                var tab = this.getAttribute('data-tab');
                 that.lessCount = false;
                 that.show(tab, that.datalist.filter(tab), that.lessCount);
             }
@@ -33,11 +33,15 @@
             {
                 if(this.classList.contains('unread'))
                 {
-                    document.getElementsByClassName('item-id-' + this.getAttribute('data-id')).forEach(function(el)
+                    var id = this.getAttribute('data-id');
+                    document.$class('item-id-' + id).forEach(function(el)
                     {
                         el.classList.remove('unread');
                     });
                     this.classList.remove('unread');
+
+                    that.datalist.markRead(id);
+                    window.fire(window.plus.webview.currentWebview().opener(), 'markRead', {name: that.name, id: id});
                     that.updateTabBadge();
                 }
                 that.showItem(this.getAttribute('data-id'), this);
@@ -67,6 +71,8 @@
               contentrefresh : "正在刷新...",
               callback       : function(callback)
               {
+                  // that.datalist.markRead();
+                  window.fire(window.plus.webview.currentWebview().opener(), 'markRead', {name: tab});
                   window.fire(window.plus.webview.currentWebview().opener(), 'loadListView', {type: that.name, tab: that.currentFilter()});
               }
             }
@@ -109,18 +115,13 @@
         }
     };
 
-    ListView.prototype.showAll = function(makeRead)
+    ListView.prototype.showAll = function()
     {
         var that = this;
         this.filters.forEach(function(val)
         {
             that.show(val, that.datalist.filter(val), that.lessCount);
         });
-        if(makeRead)
-        {
-            this.datalist.markRead();
-            this.datalist.getUnreadCount(true);
-        }
     };
 
     ListView.prototype.reload = function(options)
@@ -140,7 +141,7 @@
         }
 
         this.datalist.loadFromStore();
-        this.showAll(true);
+        this.showAll();
         options.callback && options.callback();
         return true;
     };
@@ -152,13 +153,13 @@
             if(typeof count === 'undefined')
             {
                 count = 0;
-                document.getElementById('listview').querySelectorAll('.table-view-cell').forEach(function(el)
+                document.$class('table-view-cell', document.$id(tab)).forEach(function(el)
                 {
                     if(el.classList.contains('unread')) count++;
                 });
             }
             var $tabBadge = document.$id('tab-badge-' + tab);
-            $tabBadge.classList[count > 0 ? 'remove' : 'add']('mui-hidden');
+            $tabBadge.classList[count > 0 ? 'remove' : 'add']('hidden');
             $tabBadge.innerHTML = count;
         }
         else

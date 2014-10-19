@@ -51,17 +51,17 @@
         return false;
     };
 
-    Zentao.prototype.unreadCount = function(tab)
-    {
-        if(tab) return this.data[tab].getUnreadCount();
+    // Zentao.prototype.unreadCount = function(tab)
+    // {
+    //     if(tab) return this.data[tab].getUnreadCount();
 
-        var count = 0;
-        for(var t in this.data)
-        {
-            count += this.data[t].getUnreadCount();
-        }
-        return count;
-    };
+    //     var count = 0;
+    //     for(var t in this.data)
+    //     {
+    //         count += this.data[t].getUnreadCount();
+    //     }
+    //     return count;
+    // };
 
     Zentao.prototype.on = function(e, fn)
     {
@@ -701,8 +701,9 @@
         that.loadData({type: tab, tab: subTab}, function()
         {
             params.result = true;
-            params.unreadCount = that.data[tab].getUnreadCount(that.runningInBackground);
+            params.unreadCount = that.data[tab].unreadCount;
             params.latestItem = that.data[tab].latestItem;
+
             successCallback && successCallback(params);
             that.trigger('sync', params);
             that.setNextSync(successCallback, errorCallback);

@@ -428,7 +428,6 @@
             if(item)
             {
                 item.unread = false;
-                this.unreadCount--;
                 this.save();
             }
         }
@@ -439,7 +438,6 @@
                 item.unread = false;
             });
             this.save();
-            this.unreadCount = 0;
         }
     };
 
@@ -458,6 +456,7 @@
         var setName = this.name === 'story' ? 'stories' : (this.name + 's');
         data = data[this.name] || data[setName];
 
+        that.unreadCount = 0;
         data.forEach(function(obj)
         {
             obj = that.clean(obj);
@@ -466,8 +465,8 @@
             {
                 obj.unread = true;
                 dt.push(obj);
-                that.unreadCount++;
 
+                that.unreadCount++;
                 if(!that.latestItem || that.latestItem.id < obj.id)
                 {
                     that.latestItem = obj;
@@ -475,31 +474,27 @@
             }
             else
             {
+                if(dObj.unread)
+                {
+                    obj.unread = true;
+                }
                 dt.splice(dt.indexOf(dObj), 1, obj);
             }
         });
 
         this.sort();
         this.save();
-
-        console.log(this);
     };
 
     DataList.prototype.getUnreadCount = function(muted)
     {
-        var count = this.unreadCount;
-        if(muted && count)
-        {
-            this.markRead();
-        }
-        return count;
+        return this.getUnreadItems(muted).length;
     };
 
     DataList.prototype.getUnreadItems = function(muted)
     {
         var unreadItems = [];
         var needSave = false;
-        this.unreadCount = 0;
         this.data.forEach(function(item)
         {
             if(item.unread)
@@ -508,10 +503,6 @@
                 {
                     item.unread = false;
                     needSave = true;
-                }
-                else
-                {
-                    this.unreadCount++;
                 }
                 unreadItems.push(item);
             }

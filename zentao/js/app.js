@@ -108,9 +108,6 @@
 
         currentListView = options.name;
         window.userStore.set('lastListView', currentListView);
-
-        document.getElementById('tab-' + options.name).classList.remove('unread');
-        // zentao.data[currentListView].getUnreadCount(true);
     };
 
     var tryLogin = function(key)
@@ -295,6 +292,7 @@
         startSync();
         zentao.loadData(options, function(datalist)
         {
+            updateListBadge(options.type);
             if(typeof view == 'object')
             {
                 window.fire(view, 'reloadData');
@@ -327,6 +325,28 @@
         }
 
         checkStatus();
+    };
+
+    var updateListBadge = function(list)
+    {
+        var datalist = zentao.data[list];
+        if(datalist)
+        {
+            var unreadCount = datalist.getUnreadCount();
+            var $listNav = document.$id('tab-' + list);
+            $listNav.classList[unreadCount > 0 ? 'add' : 'remove']('unread');
+            $listNav.$('.unread-count').innerHTML = unreadCount < 100 ? unreadCount : '99+';
+        }
+    };
+
+    var markRead = function(tab, id)
+    {
+        var datalist = zentao.data[tab];
+        if(datalist)
+        {
+            datalist.markRead(id);
+            updateListBadge(tab);
+        }
     };
 
     $status.on('tap', function()
@@ -366,7 +386,6 @@
     document.getElementById('listviewNav').on('tap', '.open-listview', function()
     {
         openListView(this.getAttribute('data-id'));
-        this.classList.remove('unread');
     });
 
     window.on('login', function(e){tryLogin(e.detail);})
@@ -380,7 +399,12 @@
           .on('showWaiting', showWaiting)
           .on('hideWaiting', hideWaiting)
           .on('updateSetting', updateSetting)
-          .on('loadListView', loadListView);
+          .on('loadListView', loadListView)
+          .on('markRead', function(e)
+          {
+              var options = e && e.detail ? e.detail : {name: currentListView};
+              markRead(options.name, options.id);
+          });
 
     zentao.on('logging', function()
     {
@@ -400,6 +424,8 @@
         if(e.result)
         {
             console.color('SYNC>>> ' + e.tab, 'h5|bginfo');
+            updateListBadge(e.tab);
+
             var currentWin = listViews[e.tab];
             if(typeof currentWin === 'object')
             {
@@ -439,6 +465,10 @@
     }).on('ready', function()
     {
         openListView({offline: true});
+        for(var key in listViews)
+        {
+            updateListBadge(key);
+        }
 
         if(window.userStore.get('autoSync', true))
         {
