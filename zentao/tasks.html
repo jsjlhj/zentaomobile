@@ -60,7 +60,7 @@ var listview = new ListView('task', function(tab, data, lessCount)
         $tasks.removeChild(child);
     }
 
-    var item;
+    var item, displayShowMore;
     data.each(function(val)
     {
         item = document.createElement('li');
@@ -69,8 +69,9 @@ var listview = new ListView('task', function(tab, data, lessCount)
         if(lessCount && (++count) >= lessCount)
         {
             item.classList.add('show-more');
-            item.innerHTML = '<a>显示更多 <i class="icon icon-chevron-down"></i></a>';
+            item.innerHTML = '<a>已显示 <strong>' + (count - 1) + '</strong> 项，显示更多 <i class="icon icon-chevron-down"></i></a>';
             $tasks.appendChild(item);
+            displayShowMore = true;
             return false;
         }
 
@@ -86,6 +87,16 @@ var listview = new ListView('task', function(tab, data, lessCount)
         item.innerHTML = '<a><span class="list-title"><span class="list-item-id">' + val.id + '</span>' + val.name + '</span>' + '<span class="badge badge-' + val.statusColor + '">' + val.statusName + '</span></a>';
         $tasks.appendChild(item);
     });
+
+    if(!displayShowMore)
+    {
+        item = document.createElement('li');
+        item.classList.add('table-view-cell');
+        item.classList.add('nomore-tip');
+        item.setAttribute('data-tab', tab);
+        item.innerHTML = '共 <strong>' + count + '</strong>项，没有更多';
+        $tasks.appendChild(item);
+    }
 
     this.updateTabBadge(tab, unreadCount);
 });

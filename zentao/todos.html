@@ -61,6 +61,7 @@ var listview = new ListView('todo', function(tab, data, lessCount)
         waitCount   = 0,
         doneCount   = 0,
         count       = 0,
+        groupCount  = 0,
         today       = Date.parseName('today');
 
     for(var i = $todos.childNodes.length - 1; i >= 0; i--)
@@ -73,6 +74,7 @@ var listview = new ListView('todo', function(tab, data, lessCount)
         item, displayShowMore;
     var showgrounp = function(group)
     {
+        groupCount = 0;
         data = groupedData[group];
 
         if(!data) return;
@@ -87,7 +89,8 @@ var listview = new ListView('todo', function(tab, data, lessCount)
 
         data.each(function(val)
         {
-            var item = document.createElement('li');
+            groupCount++;
+            item = document.createElement('li');
             item.classList.add('table-view-cell');
             item.setAttribute('data-tab', tab);
             if(lessCount && (++count) >= lessCount)
@@ -95,7 +98,7 @@ var listview = new ListView('todo', function(tab, data, lessCount)
                 if(!displayShowMore)
                 {
                     item.classList.add('show-more');
-                    item.innerHTML = '<a>显示更多 <i class="icon icon-chevron-down"></i></a>';
+                    item.innerHTML = '<a>已显示 <strong>' + (count - 1) + '</strong> 项，显示更多 <i class="icon icon-chevron-down"></i></a>';
                     $todos.appendChild(item);
                     displayShowMore = true;
                 }
@@ -128,6 +131,16 @@ var listview = new ListView('todo', function(tab, data, lessCount)
     };
 
     ['doing', 'wait', 'done'].forEach(showgrounp);
+    
+    if(!displayShowMore)
+    {
+        item = document.createElement('li');
+        item.classList.add('table-view-cell');
+        item.classList.add('nomore-tip');
+        item.setAttribute('data-tab', tab);
+        item.innerHTML = (tab === 'undone') ? ('共 <strong>' + count + '</strong>项，没有更多') : '没有更多';
+        $todos.appendChild(item);
+    }
 
     this.updateTabBadge(tab, unreadCount);
 });
