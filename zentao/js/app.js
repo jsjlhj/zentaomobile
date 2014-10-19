@@ -12,6 +12,7 @@
         listViews       = {todo: "todos.html", task: "tasks.html", bug: "bugs.html", story: "stories.html"},
         loginWindow,
         settingWindow,
+        firstBackbutton,
         waitingTip,
         mainView,
         currentListView,
@@ -472,6 +473,28 @@
                 if(lastPush.unreadCount === 1 && lastPush.latestItem)
                 {
                     window.fire(windows[currentListView], 'showItem', lastPush.latestItem.id);
+                }
+            }
+        }, false);
+
+        plus.key.addEventListener('backbutton', function()
+        {
+            if(!firstBackbutton)
+            {
+                window.plus.nativeUI.toast('再按一次退出应用');
+                firstBackbutton = new Date().getTime();
+                setTimeout(function(){firstBackbutton = null;}, 1000);
+                return false;
+            }
+            else
+            {
+                if((new Date().getTime() - firstBackbutton) < 1000)
+                {
+                    plus.runtime.quit();
+                }
+                else
+                {
+                    return false;
                 }
             }
         }, false);
