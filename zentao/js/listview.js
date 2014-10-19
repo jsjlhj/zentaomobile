@@ -25,6 +25,10 @@
                 that.lessCount = false;
                 that.show(tab, that.datalist.filter(tab), that.lessCount);
             }
+            else if(this.classList.contains('nomore-tip'))
+            {
+                return;
+            }
             else
             {
                 if(this.classList.contains('unread'))
