@@ -92,10 +92,13 @@ var listview = new ListView('todo', function(tab, data, lessCount)
             item.setAttribute('data-tab', tab);
             if(lessCount && (++count) >= lessCount)
             {
-                item.classList.add('show-more');
-                item.innerHTML = '<a>显示更多 <i class="icon icon-chevron-down"></i></a>';
-                $todos.appendChild(item);
-                displayShowMore = true;
+                if(!displayShowMore)
+                {
+                    item.classList.add('show-more');
+                    item.innerHTML = '<a>显示更多 <i class="icon icon-chevron-down"></i></a>';
+                    $todos.appendChild(item);
+                    displayShowMore = true;
+                }
                 return false;
             }
 

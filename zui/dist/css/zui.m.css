@@ -1,5 +1,5 @@
 /*!
- * ZUI for mobile - v0.1.0-beta - 2014-10-18
+ * ZUI for mobile - v0.1.0-beta - 2014-10-19
  * http://zui.sexy
  * GitHub: https://github.com/easysoft/zui.git 
  * Copyright (c) 2014 cnezsoft.com; Licensed MIT
@@ -642,7 +642,7 @@ input[type="button"] {
   margin-top: 0;
   margin-bottom: 15px;
   list-style: none;
-  background-color: #fff;
+  background-color: transparent;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
 }
@@ -650,6 +650,7 @@ input[type="button"] {
   position: relative;
   padding: 11px 65px 11px 15px;
   overflow: hidden;
+  background-color: #fff;
   border-bottom: 1px solid #ddd;
 }
 .table-view-cell:last-child {
@@ -938,6 +939,9 @@ select {
   font-size: 14px;
   vertical-align: top;
 }
+.slider .slide-group .slide .table-view {
+  font-size: 17px;
+}
 .toggle {
   position: relative;
   display: block;
@@ -1005,6 +1009,7 @@ body.plus-pullrefresh > .content {
   right: auto;
   bottom: auto;
   left: auto;
+  background-color: transparent;
 }
 @font-face {
   font-family: 'zeniconm';

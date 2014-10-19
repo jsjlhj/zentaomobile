@@ -48,7 +48,7 @@
 .btn-show-more.mui-btn-block {background-color: #f1f1f1; font-size: 15px; color: #999}
 .btn-show-more.mui-btn-block:active {background-color: #ccc; color: #888}
 
-.list-item-id {border: 1px solid #bbb; display: inline-block; margin-right: 5px; padding: 0 2px; font-size: 12px; line-height: 18px; color: #666; border-radius: 2px; min-width: 20px; text-align: center;}
+.list-item-id {border: 1px solid #bbb; display: inline-block; margin-right: 5px; padding: 0 2px; font-size: 12px; line-height: 18px; color: #666; border-radius: 2px; min-width: 20px; text-align: center; position: relative; top: -2px}
 
 .mui-slider-progress-bar {height: 3px}
 .mui-slider-progress-bar + .mui-slider-group, .mui-slider-header + .mui-slider-group{border-top: 1px solid #ddd}
