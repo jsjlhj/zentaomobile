@@ -3,7 +3,7 @@
     "id": "H50FC7A92",/*必选，应用的标识*/
     "name": "禅道",/*必选，应用名称*/
     "version": {
-        "name": "0.1.1",/*必选，版本名称*/
+        "name": "0.1.2",/*必选，版本名称*/
         "code": ""
     },
     "description": "",/*可选，应用描述信息*/
@@ -158,11 +158,11 @@
                     }
                 },
                 "android": {
-                    "mdpi": "D:\\Projects\\zentaomobile\\resourse\\andriod\\zentao-logo.ldpi.png", /*必选，48x48，普通屏程序图标*/
-                    "ldpi": "D:\\Projects\\zentaomobile\\resourse\\andriod\\zentao-logo.mdpi.png", /*必选，48x48，大屏程序图标*/
-                    "hdpi": "D:\\Projects\\zentaomobile\\resourse\\andriod\\zentao-logo.hdpi.png", /*必选，72x72，高分屏程序图标*/
-                    "xhdpi": "D:\\Projects\\zentaomobile\\resourse\\andriod\\zentao-logo.xhdpi.png",/*必选，96x96，720P高分屏程序图标*/
-                    "xxhdpi": "D:\\Projects\\zentaomobile\\resourse\\andriod\\zentao-logo.xxhdpi.png" /*1080P 高分屏程序图标*/
+                    "mdpi": "C:\\Projects\\zentaomobile\\resourse\\andriod\\zentao-logo.ldpi.png", /*必选，48x48，普通屏程序图标*/
+                    "ldpi": "C:\\Projects\\zentaomobile\\resourse\\andriod\\zentao-logo.mdpi.png", /*必选，48x48，大屏程序图标*/
+                    "hdpi": "C:\\Projects\\zentaomobile\\resourse\\andriod\\zentao-logo.hdpi.png", /*必选，72x72，高分屏程序图标*/
+                    "xhdpi": "C:\\Projects\\zentaomobile\\resourse\\andriod\\zentao-logo.xhdpi.png",/*必选，96x96，720P高分屏程序图标*/
+                    "xxhdpi": "C:\\Projects\\zentaomobile\\resourse\\andriod\\zentao-logo.xxhdpi.png" /*1080P 高分屏程序图标*/
                 }
             },
             "splashscreen": {
@@ -184,11 +184,11 @@
                     }
                 },
                 "android": {
-                    "mdpi": "D:\\Projects\\zentaomobile\\resourse\\andriod\\splash.240x282.png", /*必选，240x282，普通屏启动图片*/
-                    "ldpi": "D:\\Projects\\zentaomobile\\resourse\\andriod\\splash.320x442.png", /*必选，320x442，大屏启动图片*/
-                    "hdpi": "D:\\Projects\\zentaomobile\\resourse\\andriod\\splash.480x762.png", /*必选，480x762，高分屏启动图片*/
-                    "xhdpi": "D:\\Projects\\zentaomobile\\resourse\\andriod\\splash.720x1242.png", /*必选，720x1242，720P高分屏启动图片*/
-                    "xxhdpi": "D:\\Projects\\zentaomobile\\resourse\\andriod\\splash.1080x1882.png" /*1080p 高分屏启动图片*/
+                    "mdpi": "C:\\Projects\\zentaomobile\\resourse\\andriod\\splash.240x282.png", /*必选，240x282，普通屏启动图片*/
+                    "ldpi": "C:\\Projects\\zentaomobile\\resourse\\andriod\\splash.320x442.png", /*必选，320x442，大屏启动图片*/
+                    "hdpi": "C:\\Projects\\zentaomobile\\resourse\\andriod\\splash.480x762.png", /*必选，480x762，高分屏启动图片*/
+                    "xhdpi": "C:\\Projects\\zentaomobile\\resourse\\andriod\\splash.720x1242.png", /*必选，720x1242，720P高分屏启动图片*/
+                    "xxhdpi": "C:\\Projects\\zentaomobile\\resourse\\andriod\\splash.1080x1882.png" /*1080p 高分屏启动图片*/
                 }
             }
         }
