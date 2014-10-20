@@ -12,7 +12,6 @@
     {
         this.name            = name;
         this.filters         = filters[name];
-        this.isLoading       = false;
         this.lessCount       = Math.floor((window.getViewport().height - 34)/45) + 1;
         if(showfn) this.show = showfn;
         var that = this;
@@ -71,7 +70,8 @@
               contentrefresh : "正在刷新...",
               callback       : function(callback)
               {
-                  // that.datalist.markRead();
+                  that.datalist.markRead();
+                  this.showAll();
                   window.fire(window.plus.webview.currentWebview().opener(), 'markRead', {name: that.name});
                   window.fire(window.plus.webview.currentWebview().opener(), 'loadListView', {type: that.name, tab: that.currentFilter()});
               }
@@ -132,12 +132,6 @@
         if(typeof options === 'function')
         {
             options = {callback: options};
-        }
-
-        if(this.isLoading)
-        {
-            options.callback && options.callback();
-            return false;
         }
 
         this.datalist.loadFromStore();
