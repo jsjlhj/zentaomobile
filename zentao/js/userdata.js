@@ -35,7 +35,7 @@
         }
         else
         {
-            console.error('存储失败！无法获取用户数据。');
+            // console.error('存储失败！无法获取用户数据。');
         }
     };
 
@@ -47,7 +47,7 @@
         }
         else
         {
-            console.error('获取存储数据失败！无法获取用户数据。');
+            // console.error('获取存储数据失败！无法获取用户数据。');
             return defaultValue;
         }
     };
@@ -77,9 +77,9 @@
 
         window.user = this.user;
 
-        console.groupCollapsed('%cUSER: ' + this.user.account + '@' + this.user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
-        console.log('user:', this.user);
-        console.groupEnd();
+        // console.groupCollapsed('%cUSER: ' + this.user.account + '@' + this.user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
+        // console.log('user:', this.user);
+        // console.groupEnd();
 
         return this.user;
     };
@@ -103,7 +103,7 @@
         }
         else
         {
-            console.error('存储失败！无法获取用户数据。');
+            // console.error('存储失败！无法获取用户数据。');
         }
     };
 
@@ -401,7 +401,7 @@
         }
         else
         {
-            console.error('The "Id" must be a number.');
+            // console.error('The "Id" must be a number.');
         }
         return result;
     };
@@ -450,7 +450,7 @@
         if (this.account != window.user.account)
         {
             this.loadFromStore();
-            console.color('所获取的数据与当前帐号不匹配。已重新从磁盘读取', 'h3|danger');
+            // console.color('所获取的数据与当前帐号不匹配。已重新从磁盘读取', 'h3|danger');
         }
 
         var setName = this.name === 'story' ? 'stories' : (this.name + 's');
@@ -522,7 +522,7 @@
 
     DataList.prototype.filter = function(filter, reload)
     {
-        console.color('FilterData: ' + this.name + ',' + filter, 'h4|info');
+        // console.color('FilterData: ' + this.name + ',' + filter, 'h4|info');
 
         if(reload) this.loadFromStore();
 
@@ -592,7 +592,7 @@
             }
         }
 
-        console.log('FilterData:', result);
+        // console.log('FilterData:', result);
         return result;
     };
 

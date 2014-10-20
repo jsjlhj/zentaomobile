@@ -126,8 +126,8 @@
 
     ListView.prototype.reload = function(options)
     {
-        console.color('RELOAD', 'h5|bginfo');
-        console.log('options', options);
+        // console.color('RELOAD', 'h5|bginfo');
+        // console.log('options', options);
 
         if(typeof options === 'function')
         {

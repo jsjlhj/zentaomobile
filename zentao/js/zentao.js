@@ -24,7 +24,7 @@
 
         window.plusReady(function()
         {
-            console.color('zentao ready', 'h5|bgsuccess');
+            // console.color('zentao ready', 'h5|bgsuccess');
             window.userStore.init();
 
             that.data = {};
@@ -65,7 +65,7 @@
 
     Zentao.prototype.on = function(e, fn)
     {
-        console.color("ZENTAO ON: " + e, 'h5|bgwarning');
+        // console.color("ZENTAO ON: " + e, 'h5|bgwarning');
         this.eventDrawer.on(e, fn);
 
         if(e === 'ready' && this.isReady) this.trigger(e);
@@ -81,7 +81,7 @@
 
     Zentao.prototype.trigger = function(e, pramas)
     {
-        console.color("ZENTAO TRIGGER: " + e, 'h5|bgwarning');
+        // console.color("ZENTAO TRIGGER: " + e, 'h5|bgwarning');
         
         this.eventDrawer.trigger(e, pramas, this);
 
@@ -135,8 +135,8 @@
         var that = this;
         if (loginkey)
         {
-            console.log(loginkey.url);
-            console.log(loginkey.url.startWith('http://'));
+            // console.log(loginkey.url);
+            // console.log(loginkey.url.startWith('http://'));
             if(!loginkey.url.startWith('http://') && !loginkey.url.startWith('https://'))
             {
                 loginkey.url = 'http://' + loginkey.url;
@@ -161,16 +161,16 @@
                 return;
             }
 
-            consolelog('1.成功获取配置。', 'success');
+            // consolelog('1.成功获取配置。', 'success');
             that.getSession(function()
             {
-                consolelog('2.成功获取Session。', 'success');
+                // consolelog('2.成功获取Session。', 'success');
                 that.tryLogin(function()
                 {
-                    consolelog('3.成功登陆。', 'success');
+                    // consolelog('3.成功登陆。', 'success');
                     that.getRole(function()
                     {
-                        consolelog('4.成功获取角色。', 'success');
+                        // consolelog('4.成功获取角色。', 'success');
                         successCallback && successCallback();
                         that.trigger('logged', true);
                     }, that.fnToCallWidthMessage(callError, '在登录时无法获取角色。'));
@@ -490,11 +490,11 @@
         if (typeof count === 'undefined') count = 10;
         else if (count === 'all') count = 999999;
 
-        console.color('GetData: ' + dataType + ',' + start + ',' + count, 'h4|info');
+        // console.color('GetData: ' + dataType + ',' + start + ',' + count, 'h4|info');
 
         if (typeof dataType === 'undefined' || this.hasTab(dataType))
         {
-            console.error('无法检索数据，因为没有指定DataType或者指定的dataType不受支持。');
+            // console.error('无法检索数据，因为没有指定DataType或者指定的dataType不受支持。');
             return false;
         }
 
@@ -518,7 +518,7 @@
         }
         else
         {
-            console.error('无法检索数据，因为没有指定start边界不是数字或日期。');
+            // console.error('无法检索数据，因为没有指定start边界不是数字或日期。');
             return false;
         }
 
@@ -553,7 +553,7 @@
 
     Zentao.prototype.filterData = function(dataType, filter)
     {
-        console.color('FilterData: ' + dataType + ',' + filter, 'h4|info');
+        // console.color('FilterData: ' + dataType + ',' + filter, 'h4|info');
 
         return this.data[dataType].filter(filter);
     };
@@ -567,7 +567,7 @@
 
         if(options.type === 'todo' || this.isNewVersion || !options.tab) options.tab = 'all';
 
-        console.color('LoadData: type=' + options.type + ', tab=' + options.tab, 'h4|info');
+        // console.color('LoadData: type=' + options.type + ', tab=' + options.tab, 'h4|info');
 
         if(this.network === 'disconnect')
         {
@@ -650,7 +650,7 @@
     Zentao.prototype.startAutoSync = function(interval, successCallback, errorCallback)
     {
         this.syncing = interval || window.userStore.get('syncInterval', 20000) / dataTabsSet.length;
-        console.color('startAutoSync:' + this.syncing, 'h3|bgdanger');
+        // console.color('startAutoSync:' + this.syncing, 'h3|bgdanger');
         this.setNextSync(successCallback, errorCallback);
     };
 

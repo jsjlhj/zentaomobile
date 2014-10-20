@@ -1,5 +1,4 @@
 [
-    "core/console.js",
     "core/object.js",
     "core/string.js",
     "core/array.js",

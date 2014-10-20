@@ -128,10 +128,10 @@
             element = window;
         }
 
-        console.groupCollapsed('%cTRIGGER: ' + eventType, 'color: #fff; background-color: orange;');
-        console.log('element', element);
-        console.log('eventData', eventData);
-        console.groupEnd();
+        // console.groupCollapsed('%cTRIGGER: ' + eventType, 'color: #fff; background-color: orange;');
+        // console.log('element', element);
+        // console.log('eventData', eventData);
+        // console.groupEnd();
 
         var et = new window.CustomEvent(eventType,
         {
@@ -185,19 +185,19 @@
     Element.prototype.on = 
     Element.prototype.addDelegateListener = function(type, selector, fn)
     {
-        console.groupCollapsed('%cON: ' + type, 'color: #fff; background-color: orange;');
-        console.log('element', this);
-        console.log('selector', selector);
-        console.log('fn', fn);
+        // console.groupCollapsed('%cON: ' + type, 'color: #fff; background-color: orange;');
+        // console.log('element', this);
+        // console.log('selector', selector);
+        // console.log('fn', fn);
 
         if(typeof selector === 'function')
         {
-            console.log('delegate', false);
+            // console.log('delegate', false);
             this.addEventListener(type, selector, false);
         }
         else if(typeof fn === 'function')
         {
-            console.log('delegate', true);
+            // console.log('delegate', true);
             this.addEventListener(type, function(e)
             {
                 var target = e.target;
@@ -219,7 +219,7 @@
         this.removeEventListener('click.touchable', window.preventDefault);
         this.addEventListener('click.touchable', window.preventDefault);
 
-        console.groupEnd();
+        // console.groupEnd();
         return this;
     };
 

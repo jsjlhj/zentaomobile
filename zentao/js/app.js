@@ -22,7 +22,7 @@
     {
         if(loginWindow)
         {
-            console.error('登录窗口已经打开。');
+            // console.error('登录窗口已经打开。');
             return;
         }
         var status = window.user.status;
@@ -161,7 +161,7 @@
     {
         var status = window.user ? window.user.status : 'logout';
 
-        console.color('CHECKSTATUS:' + status, 'h5|bgwarning');
+        // console.color('CHECKSTATUS:' + status, 'h5|bgwarning');
 
         $settingBtn.classList.remove('hidden');
         if(status === 'logout')
@@ -224,13 +224,13 @@
         zentao.runningInBackground = false;
         plus.runtime.setBadgeNumber(0);
         plus.push.clear();
-        console.color('RUNNING IN FRONT', 'bgsuccess');
+        // console.color('RUNNING IN FRONT', 'bgsuccess');
     };
 
     var onPause = function()
     {
         zentao.runningInBackground = true;
-        console.color('RUNNING IN BACKGROUND', 'bgdanger');
+        // console.color('RUNNING IN BACKGROUND', 'bgdanger');
     };
 
     var showWaiting = function(e)
@@ -267,7 +267,7 @@
             break;
         }
         zentao.network = network;
-        console.color('NET CHANGE:' + network, "h3|bgdanger");
+        // console.color('NET CHANGE:' + network, "h3|bgdanger");
 
         var user   = window.user;
         if(user.status === 'online' && network === 'disconnect')
@@ -414,7 +414,7 @@
         $status.setAttribute('data-status', 'logging');
     }).on('logged', function(result)
     {
-        console.color('logged: ' + result, 'h4|bg' + (result ? 'success' : 'danger'));
+        // console.color('logged: ' + result, 'h4|bg' + (result ? 'success' : 'danger'));
         isLoging = false;
         checkStatus();
     }).on('syncing', function()
@@ -424,7 +424,7 @@
     {
         if(e.result)
         {
-            console.color('SYNC>>> ' + e.tab, 'h5|bginfo');
+            // console.color('SYNC>>> ' + e.tab, 'h5|bginfo');
             updateListBadge(e.tab);
 
             var currentWin = listViews[e.tab];
@@ -456,7 +456,7 @@
                         message = '新的' + zentao.dataTabs[e.tab].name + ": " + (e.latestItem.name || e.latestItem.title);
                     }
                     plus.push.createMessage(message, "LocalMSG", {cover: true, test: 'testtest4343'});
-                    console.color('消息已推送：' + message, 'h3|info');
+                    // console.color('消息已推送：' + message, 'h3|info');
                 }
             }
 
@@ -530,6 +530,6 @@
             }
         }, false);
 
-        console.color('app plus ready', 'bgsuccess');
+        // console.color('app plus ready', 'bgsuccess');
     });
 }());
