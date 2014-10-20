@@ -211,10 +211,10 @@
     Store.prototype.set = function(key, val) {
         if (val === undefined) return this.remove(key);
         this.setItem(key, this.serialize(val));
-        console.groupCollapsed('%cSTORE SET: ' + key, 'color: purple; border-left: 10px solid orange; padding-left: 5px;font-size: 14px; font-weight: bold;');
-        console.log(val);
-        console.log('JSON:', this.serialize(val));
-        console.groupEnd();
+        // console.groupCollapsed('%cSTORE SET: ' + key, 'color: purple; border-left: 10px solid orange; padding-left: 5px;font-size: 14px; font-weight: bold;');
+        // console.log(val);
+        // console.log('JSON:', this.serialize(val));
+        // console.groupEnd();
         return this;
     };
 
