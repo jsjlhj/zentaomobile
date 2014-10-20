@@ -2406,7 +2406,7 @@
     PlusPullRefresh.prototype.initPulldownRefresh = function()
     {
         var self = this;
-        var sw = window.currentWebview;
+        var sw = window.plus.webview.currentWebview();
 
         sw.setPullToRefresh(
         {
