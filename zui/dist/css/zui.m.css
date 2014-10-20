@@ -653,6 +653,10 @@ input[type="button"] {
   background-color: #fff;
   border-bottom: 1px solid #ddd;
 }
+.table-view-cell > a {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .table-view-cell:last-child {
   border-bottom: 0;
 }
