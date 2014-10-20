@@ -71,7 +71,7 @@
               callback       : function(callback)
               {
                   that.datalist.markRead();
-                  this.showAll();
+                  that.showAll();
                   window.fire(window.plus.webview.currentWebview().opener(), 'markRead', {name: that.name});
                   window.fire(window.plus.webview.currentWebview().opener(), 'loadListView', {type: that.name, tab: that.currentFilter()});
               }
