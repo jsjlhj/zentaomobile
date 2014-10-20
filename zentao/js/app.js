@@ -5,7 +5,7 @@
         $status         = document.getElementById('userStatus'),
         $statusName     = document.getElementById('userStatusName'),
         $settingBtn     = document.getElementById('settingBtn'),
-        animateSpeed    = 200,
+        animateSpeed    = 100,
         receiveNotify   = true,
         syncInterval    = 20000,
         listViewsOrder  = {todo: 1, task: 2, bug: 3, story: 4},
@@ -76,7 +76,7 @@
                 return;
             }
 
-            lastListView.hide(aniType, animateSpeed);
+            lastListView.hide('fade-out', animateSpeed);
         }
 
         if(typeof listViews[options.name] === 'string')
@@ -99,7 +99,7 @@
         else
         {
             // aniType = listViewsOrders.name] > listViewsOrdertListView] ? 'slide-in-right' : 'slide-in-left';
-            listViews[options.name].show(aniType, animateSpeed);
+            listViews[options.name].show('fade-in', animateSpeed);
         }
 
         document.getElementsByClassName('open-listview').forEach(function(el)
