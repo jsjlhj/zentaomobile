@@ -337,6 +337,11 @@
             var $listNav = document.$id('tab-' + list);
             $listNav.classList[unreadCount > 0 ? 'add' : 'remove']('unread');
             $listNav.$('.unread-count').innerHTML = unreadCount < 100 ? unreadCount : '99+';
+
+            if(unreadCount > 10)
+            {
+                window.plus.nativeUI.toast('下拉来标记所有条目已读');
+            }
         }
     };
 
