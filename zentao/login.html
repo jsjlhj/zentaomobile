@@ -88,7 +88,7 @@
             <input id="password" type="password" placeholder="密码">
           </div>
           <button id="loginBtn" type="button" class="btn btn-primary btn-block">登录</button>
-          <button id="backBtn" type="button" class="btn btn-block action-back hidden">离线使用 <i class="icon icon-arrow-right"></i></button>
+          <button id="backBtn" type="button" class="btn btn-block action-back hidden" data-aniType='fade-out'>离线使用<!--  <i class="icon icon-arrow-right"></i> --></button>
           <button id="tipButton" type="button" class="btn btn-block action-back">0.2 BETA</button>
         </div>
       </div>
@@ -148,7 +148,7 @@ window.plusReady(function()
         {
             loginBtn.innerHTML = '已登录';
             window.plus.nativeUI.toast('登录成功');
-            view.close('zoom-out', 200);
+            view.close('zoom-out', 300);
         }
         else
         {

@@ -44,7 +44,8 @@
                 bounce          : "vertical",
                 scrollIndicator : "none"
             },
-            aniType: 'zoom-in',
+            aniType: 'fade-in',
+            duration: 200,
             extras: {options: options}
         });
         loginWindow.addEventListener('close', function()

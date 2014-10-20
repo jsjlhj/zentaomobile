@@ -28,7 +28,10 @@
         window.on('swiperight', swipeback);
         plus.key.addEventListener('backbutton', swipeback, false);
 
-        document.on('tap', '.action-back', closeWindow);
+        document.on('tap', '.action-back', function()
+        {
+            closeWindow({duration: this.getAttribute('data-durantion'), aniClose: this.getAttribute('data-aniType')});
+        });
     });
 
 })();
