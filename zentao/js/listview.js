@@ -81,7 +81,7 @@
 
     ListView.prototype.currentFilter = function()
     {
-        return document.$id('listviewNav').$('.control-item.active').getAttribute('href').substr(0);
+        return document.$id('listviewNav').$('.control-item.active').getAttribute('href').substr(1);
     };
 
     ListView.prototype.showItem = function(id, $item)

@@ -128,11 +128,17 @@
         {
             key.pwdMd5 = window.md5(key.pwdMd5);
         }
+
+        var oldUser = window.user.account;
         zentao.login(key, function()
         {
             if(withUi)
             {
                 window.fire(loginWindow, 'logged', {result: true});
+                if(oldUser != key.account)
+                {
+                    openListView();
+                }
             }
         }, function(e)
         {
