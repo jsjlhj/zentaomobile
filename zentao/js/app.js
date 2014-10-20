@@ -11,6 +11,7 @@
         listViewsOrder  = {todo: 1, task: 2, bug: 3, story: 4},
         listViews       = {todo: "todos.html", task: "tasks.html", bug: "bugs.html", story: "stories.html"},
         loginWindow,
+        markReadTip,
         settingWindow,
         firstBackbutton,
         waitingTip,
@@ -344,9 +345,10 @@
             $listNav.classList[unreadCount > 0 ? 'add' : 'remove']('unread');
             $listNav.$('.unread-count').innerHTML = unreadCount < 100 ? unreadCount : '99+';
 
-            if(unreadCount > 10)
+            if(!markReadTip && unreadCount > 10)
             {
                 window.plus.nativeUI.toast('下拉来标记所有条目已读');
+                markReadTip = true;
             }
         }
     };
