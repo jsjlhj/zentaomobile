@@ -161,7 +161,7 @@
     /* Check enable status */
     Store.prototype.check = function() {
         if (!this.enable) {
-            if (!this.slience) throw new Error('Browser not support localStorage or enable status been set true.');
+            if (!this.slience) throw new Error('Your browser not support localStorage or enable status been set true.');
         }
         return this.enable;
     };
