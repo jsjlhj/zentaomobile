@@ -108,7 +108,7 @@
             }
             catch(e)
             {
-                if(debug) console.error('%cWrong json string:' + response, 'color: red; font-weight: bold;');
+                if(debug) console.error(e, '%cWrong json string:' + response, 'color: red; font-weight: bold;');
                 errorCallback && errorCallback(response, xhr);
             }
         }, errorCallback);
