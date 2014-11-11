@@ -207,13 +207,13 @@ body {
   background-color: #fff;
 }
 a {
-  color: #2d81e5;
+  color: #007bc6;
   text-decoration: none;
 
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 a:active {
-  color: #1968c6;
+  color: #005b93;
 }
 .content {
   position: absolute;
@@ -353,14 +353,14 @@ button {
 }
 .btn-primary {
   color: #fff;
-  background-color: #2d81e5;
-  border: 1px solid #2d81e5;
+  background-color: #007bc6;
+  border: 1px solid #007bc6;
 }
 .btn-primary:active,
 .btn-primary.active {
   color: #fff;
-  background-color: #1968c6;
-  border: 1px solid #1968c6;
+  background-color: #005b93;
+  border: 1px solid #005b93;
 }
 .btn-positive {
   color: #fff;
@@ -388,7 +388,7 @@ button {
   background-color: transparent;
 }
 .btn-outlined.btn-primary {
-  color: #2d81e5;
+  color: #007bc6;
 }
 .btn-outlined.btn-positive {
   color: #5cb85c;
@@ -404,13 +404,13 @@ button {
 .btn-link {
   padding-top: 6px;
   padding-bottom: 6px;
-  color: #2d81e5;
+  color: #007bc6;
   background-color: transparent;
   border: 0;
 }
 .btn-link:active,
 .btn-link.active {
-  color: #1968c6;
+  color: #005b93;
   background-color: transparent;
 }
 .btn-block {
@@ -525,7 +525,7 @@ input[type="button"] {
 }
 .bar-tab .tab-item.active,
 .bar-tab .tab-item:active {
-  color: #2d81e5;
+  color: #007bc6;
 }
 .bar-tab .tab-item .icon {
   top: 3px;
@@ -557,12 +557,12 @@ input[type="button"] {
   padding: 0;
   font-size: 16px;
   line-height: 44px;
-  color: #2d81e5;
+  color: #007bc6;
   border: 0;
 }
 .bar .btn-link:active,
 .bar .btn-link.active {
-  color: #1968c6;
+  color: #005b93;
 }
 .bar .btn-block {
   top: 6px;
@@ -625,10 +625,10 @@ input[type="button"] {
 }
 .badge-primary {
   color: #fff;
-  background-color: #2d81e5;
+  background-color: #007bc6;
 }
 .badge-primary.badge-inverted {
-  color: #2d81e5;
+  color: #007bc6;
 }
 .badge-positive {
   color: #fff;
@@ -877,23 +877,23 @@ select {
   border-bottom: 3px solid rgba(0, 0, 0, .075);
 }
 .segmented-control.segmented-control-inverted .control-item.active {
-  color: #2d81e5;
+  color: #007bc6;
   background: none;
-  border-color: #2d81e5;
+  border-color: #007bc6;
 }
 .segmented-control-primary {
-  border-color: #2d81e5;
+  border-color: #007bc6;
 }
 .segmented-control-primary .control-item {
-  color: #2d81e5;
+  color: #007bc6;
   border-color: inherit;
 }
 .segmented-control-primary .control-item:active {
-  background-color: #cce0f9;
+  background-color: #7accff;
 }
 .segmented-control-primary .control-item.active {
   color: #fff;
-  background-color: #2d81e5;
+  background-color: #007bc6;
 }
 .segmented-control-positive {
   border-color: #5cb85c;
