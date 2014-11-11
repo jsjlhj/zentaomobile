@@ -576,7 +576,7 @@
 
     Zentao.prototype.startAutoSync = function(interval, successCallback, errorCallback)
     {
-        this.syncing = interval || window.userStore.get('syncInterval', 20000) / dataTabsSet.length;
+        this.syncing = interval || window.userStore.get('syncInterval', 20000);
         // console.color('startAutoSync:' + this.syncing, 'h3|bgdanger');
         this.setNextSync(successCallback, errorCallback);
     };
@@ -586,7 +586,7 @@
         var that = this;
         setTimeout(function()
         {
-            that.sync('AUTO', successCallback, errorCallback);
+            that.sync(successCallback, errorCallback);
         }, that.syncing);
     };
 

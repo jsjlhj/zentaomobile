@@ -604,7 +604,7 @@
 
     DataList.prototype.filter = function(name, filter, reload)
     {
-        // console.color('FilterData: ' + this.name + ',' + filter, 'h4|info');
+        // console.color('FilterData: ' + name + ',' + filter, 'h4|info');
 
         if(reload) this.loadFromStore();
 

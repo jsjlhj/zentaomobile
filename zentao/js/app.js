@@ -448,10 +448,10 @@
                 window.fire(currentWin, 'reloadData', {offline: true});
             }
 
-            if(e.tab != currentListView && e.unreadCount)
-            {
-                document.getElementById('tab-' + e.tab).classList.add('unread');
-            }
+            // if(e.tab != currentListView && e.unreadCount)
+            // {
+            //     document.getElementById('tab-' + e.tab).classList.add('unread');
+            // }
 
             if(receiveNotify && zentao.runningInBackground)
             {

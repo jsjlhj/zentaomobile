@@ -22,7 +22,7 @@
             if(this.classList.contains('show-more'))
             {
                 that.lessCount = false;
-                that.show(tab, that.datalist.filter(tab), that.lessCount);
+                that.show(tab, that.datalist.filter(this.name, tab), that.lessCount);
             }
             else if(this.classList.contains('nomore-tip'))
             {
@@ -120,7 +120,7 @@
         var that = this;
         this.filters.forEach(function(val)
         {
-            that.show(val, that.datalist.filter(val), that.lessCount);
+            that.show(val, that.datalist.filter(that.name, val), that.lessCount);
         });
     };
 
