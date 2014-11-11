@@ -18,7 +18,7 @@
 
     UserStore.prototype.setStorage = function(storage)
     {
-        window.store.setStorage(storage);
+        // window.store.setStorage(storage);
     };
 
     UserStore.prototype.setAccount = function(account)
@@ -77,9 +77,9 @@
 
         window.user = this.user;
 
-        // console.groupCollapsed('%cUSER: ' + this.user.account + '@' + this.user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
-        // console.log('user:', this.user);
-        // console.groupEnd();
+        console.groupCollapsed('%cUSER: ' + this.user.account + '@' + this.user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
+        console.log('user:', this.user);
+        console.groupEnd();
 
         return this.user;
     };
@@ -103,7 +103,7 @@
         }
         else
         {
-            // console.error('存储失败！无法获取用户数据。');
+            console.error('存储失败！无法获取用户数据。');
         }
     };
 
@@ -265,36 +265,56 @@
         }
     };
 
-    var DataList = function(name, data)
+    var DataList = function(names /*, data*/)
     {
-        this.name = name;
-        this.loadFromStore();
+        // this.loadFromStore();
         this.account = window.user.account;
-        this.clean();
-        if (data)
-        {
-            this.load(data);
-        }
+        // this.clean();
+        this.data = {};
+        this.isEmpty = true;
+        if(names) this.loadFromStore(names);
+        // if (data)
+        // {
+        //     this.load(data);
+        // }
     };
 
-    DataList.prototype.loadFromStore = function()
+    DataList.prototype.loadFromStore = function(name)
     {
-        var storeData = window.userStore.get('datalist::' + this.name,
+        if(!name)
+        {
+            for(var n in this.data)
+            {
+                this.loadFromStore(n);
+            }
+            return;
+        }
+        else if(Array.isArray(name))
+        {
+            var that = this;
+            name.forEach(function(n)
+            {
+                that.loadFromStore(n);
+            });
+            return;
+        }
+
+        var storeData = window.userStore.get('datalist::' + name,
         {
             data: [],
             updateTime: new Date(0)
         });
-        this.data = storeData.data;
-        this.updateTime = storeData.updateTime;
-        if (typeof this.updateTime === 'string')
-        {
-            this.updateTime = new Date(Date.parse(this.updateTime));
-        }
+        if(typeof storeData.updateTime === 'string') storeData.updateTime = new Date(Date.parse(storeData.updateTime));
+        this.data[name] = storeData;
     };
 
+    /**
+     * Clean object
+     * @param  {Array|Object} objOrArray
+     * @return {Object}
+     */
     DataList.prototype.clean = function(objOrArray)
     {
-        objOrArray = objOrArray || this.data;
         var that = this;
 
         if (Array.isArray(objOrArray))
@@ -371,26 +391,29 @@
         }
     };
 
-    DataList.prototype.save = function()
+    DataList.prototype.save = function(name)
     {
-        window.userStore.set('datalist::' + this.name,
+        if(!name)
         {
-            data: this.data,
-            updateTime: this.updateTime
-        });
+            for(var n in this.data)
+            {
+                this.save(n);
+            }
+            return;
+        }
+        window.userStore.set('datalist::' + name, this.data[name]);
     };
 
-    DataList.prototype.getById = function(id)
+    DataList.prototype.getById = function(name, id)
     {
-        var result = null,
-            that   = this;
+        var result = null;
         if (typeof id === 'string')
         {
             id = parseInt(id);
         }
         if (typeof id === 'number')
         {
-            this.data.forEach(function(obj)
+            this.data[name].data.forEach(function(obj)
             {
                 if (obj.id === id)
                 {
@@ -401,101 +424,160 @@
         }
         else
         {
-            // console.error('The "Id" must be a number.');
+            console.error('The "Id" must be a number.');
         }
         return result;
     };
 
-    DataList.prototype.has = function(idOrObj)
+    DataList.prototype.has = function(name, idOrObj)
     {
         var obj = null;
         if (typeof idOrObj === 'object')
         {
-            obj = this.getById(idOrObj.id);
+            obj = this.getById(name, idOrObj.id);
         }
         else
         {
-            obj = this.getById(idOrObj);
+            obj = this.getById(name, idOrObj);
         }
         return obj !== null;
     };
 
-    DataList.prototype.markRead = function(id)
+    DataList.prototype.markRead = function(name, id)
     {
         if(id)
         {
-            var item = this.getById(id);
+            var item = this.getById(name, id);
             if(item)
             {
                 item.unread = false;
-                this.save();
+                this.save(name);
             }
         }
         else
         {
-            this.data.forEach(function(item)
+            this.data[name].data.forEach(function(item)
             {
                 item.unread = false;
             });
-            this.save();
+            this.save(name);
         }
     };
 
-    DataList.prototype.load = function(data)
+    DataList.prototype.load = function(data, name)
     {
-        var dt = this.data,
-            that = this,
-            dObj, idx;
-        this.updateTime = new Date();
-        if (this.account != window.user.account)
+        if(!data)
         {
-            this.loadFromStore();
-            // console.color('所获取的数据与当前帐号不匹配。已重新从磁盘读取', 'h3|danger');
+            return;
         }
 
-        var setName = this.name === 'story' ? 'stories' : (this.name + 's');
-        data = data[this.name] || data[setName];
-
-        that.unreadCount = 0;
-        data.forEach(function(obj)
+        if(!name)
         {
-            obj = that.clean(obj);
-            dObj = that.getById(obj.id);
-            if (dObj === null)
+            for(var n in data)
             {
-                obj.unread = true;
-                dt.push(obj);
+                var setName = n === 'stories' ? 'story' : (n.substr(0, n.length-1));
+                this.load(data[n], setName);
+            }
+            return;
+        }
 
-                that.unreadCount++;
-                if(!that.latestItem || that.latestItem.id < obj.id)
+        if (this.account != window.user.account)
+        {
+            this.loadFromStore(name);
+            this.account = window.user.account;
+            console.color('所获取的数据与当前帐号不匹配。已重新从磁盘读取', 'h3|danger');
+        }
+
+        var dt = this.data[name];
+        if(!dt)
+        {
+            dt = {data: []};
+        }
+        dt.updateTime = new Date();
+
+        var that = this,
+            dObj;
+        dt.unreadCount = 0;
+        var key = data.key;
+        if(key)
+        {
+            var getObj = function(valArray)
+            {
+                var result = {};
+                valArray.forEach(function(val, iKey)
                 {
+                    result[key[iKey]] = val;
+                });
+                return result;
+            };
+            for(var idx in data)
+            {
+                if(idx === 'key') continue;
+                var obj = getObj(data[idx]);
+                obj = that.clean(obj);
+                dObj = that.getById(name, obj.id);
+                if (dObj === null)
+                {
+                    obj.unread = true;
+                    dt.data.push(obj);
+
+                    dt.unreadCount++;
+                }
+                else
+                {
+                    if(dObj.unread)
+                    {
+                        obj.unread = true;
+                    }
+                    dt.data.splice(dt.data.indexOf(dObj), 1, obj);
+                }
+
+                if(!dt.latestItem || dt.latestItem.id <= obj.id)
+                {
+                    dt.latestItem = obj;
                     that.latestItem = obj;
                 }
             }
-            else
+        }
+
+        if(dt.data.length) that.isEmpty = false;
+
+        that.data[name] = dt;
+
+        that.sort(name);
+        that.save(name);
+    };
+
+    DataList.prototype.getUnreadCount = function(name, muted)
+    {
+        if(!name)
+        {
+            var unRreadCount = {};
+            var unreadItems = this.getUnreadItems();
+            for(var n in unreadItems)
             {
-                if(dObj.unread)
-                {
-                    obj.unread = true;
-                }
-                dt.splice(dt.indexOf(dObj), 1, obj);
+                unRreadCount[n] = unreadItems[n].length;
             }
-        });
+            return unRreadCount;
+        }
 
-        this.sort();
-        this.save();
+        return this.getUnreadItems(name, muted).length;
     };
 
-    DataList.prototype.getUnreadCount = function(muted)
+    DataList.prototype.getUnreadItems = function(name, muted)
     {
-        return this.getUnreadItems(muted).length;
-    };
-
-    DataList.prototype.getUnreadItems = function(muted)
-    {
+        if(!name)
+        {
+            var unRreadData = {};
+            for(var n in this.data)
+            {
+                unRreadData[n] = this.getUnreadItems(n, muted);
+            }
+            return unRreadData;
+        }
         var unreadItems = [];
         var needSave = false;
-        this.data.forEach(function(item)
+        this.data[name].data.forEach(function(item)
         {
             if(item.unread)
             {
@@ -508,26 +590,26 @@
             }
         });
 
-        if(needSave) this.save();
+        if(needSave) this.save(name);
         return unreadItems;
     };
 
-    DataList.prototype.sort = function(fn)
+    DataList.prototype.sort = function(name, fn)
     {
-        this.data.sort(fn || function(a, b)
+        this.data[name].data.sort(fn || function(a, b)
         {
             return b.id - a.id;
         });
     };
 
-    DataList.prototype.filter = function(filter, reload)
+    DataList.prototype.filter = function(name, filter, reload)
     {
         // console.color('FilterData: ' + this.name + ',' + filter, 'h4|info');
 
         if(reload) this.loadFromStore();
 
         var result = [],
-            data = this.data;
+            data = this.data[name].data;
 
         if(typeof filter === 'function')
         {
@@ -587,7 +669,7 @@
             else if(this.name === 'task' || this.name === 'bug' || this.name === 'story')
             {
                 var cdt = {};
-                cdt[filter] = window.user.account;
+                cdt[filter] = this.account;
                 data.where(cdt, result);
             }
         }
