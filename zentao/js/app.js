@@ -8,13 +8,15 @@
         animateSpeed    = 100,
         receiveNotify   = true,
         syncInterval    = 20000,
-        listViewsOrder  = {todo: 1, task: 2, bug: 3, story: 4},
+        // listViewsOrder  = {todo: 1, task: 2, bug: 3, story: 4},
         listViews       = {todo: "todos.html", task: "tasks.html", bug: "bugs.html", story: "stories.html"},
         loginWindow,
         markReadTip,
         settingWindow,
         firstBackbutton,
         waitingTip,
+        lastPush,
+        lastSyncTime,
         mainView,
         currentListView,
         defaultListView;
@@ -64,7 +66,7 @@
         options.name = options.name || currentListView || defaultListView;
 
         var lastListView = listViews[currentListView];
-        var aniType = 'none';
+        // var aniType = 'none';
 
         if(lastListView)
         {
@@ -186,7 +188,7 @@
 
             setTimeout(function()
             {
-                if(user.status === 'online') $statusName.classList.add('hide-name');
+                if(window.user.status === 'online') $statusName.classList.add('hide-name');
             }, 2000);
             openListView({checkStatus: true});
         }
@@ -298,8 +300,8 @@
         options = options.detail || options;
         var view = listViews[options.type];
         startSync();
-        zentao.loadData(options, function(datalist)
-        {
+        console.log('hahah');
+        zentao.loadData(function(/*datalist*/) {
             updateListBadge(options.type);
             if(typeof view == 'object')
             {
@@ -337,10 +339,10 @@
 
     var updateListBadge = function(list)
     {
-        var datalist = zentao.data[list];
+        var datalist = zentao.datalist.data[list];
         if(datalist)
         {
-            var unreadCount = datalist.getUnreadCount();
+            var unreadCount = zentao.datalist.getUnreadCount(list);
             var $listNav = document.$id('tab-' + list);
             $listNav.classList[unreadCount > 0 ? 'add' : 'remove']('unread');
             $listNav.$('.unread-count').innerHTML = unreadCount < 100 ? unreadCount : '99+';
@@ -355,7 +357,7 @@
 
     var markRead = function(tab, id)
     {
-        var datalist = zentao.data[tab];
+        var datalist = zentao.datalist.data[tab];
         if(datalist)
         {
             datalist.markRead(id);
@@ -425,7 +427,7 @@
         isLoging = true;
         $statusName.innerHTML = '登录中...';
         $status.setAttribute('data-status', 'logging');
-    }).on('logged', function(result)
+    }).on('logged', function(/*result*/)
     {
         // console.color('logged: ' + result, 'h4|bg' + (result ? 'success' : 'danger'));
         isLoging = false;
@@ -509,14 +511,14 @@
         document.addEventListener('pause', onPause, false);
         document.addEventListener('resume', onResume, false);
 
-        plus.push.addEventListener('click', function(msg)
+        plus.push.addEventListener('click', function(/*msg*/)
         {
             if(lastPush)
             {
                 openListView({name: lastPush.tab, offline: true});
                 if(lastPush.unreadCount === 1 && lastPush.latestItem)
                 {
-                    window.fire(windows[currentListView], 'showItem', lastPush.latestItem.id);
+                    window.fire(listViews[currentListView], 'showItem', lastPush.latestItem.id);
                 }
             }
         }, false);
