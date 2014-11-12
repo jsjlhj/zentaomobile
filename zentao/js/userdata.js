@@ -260,6 +260,14 @@
                     }
 
                     return date;
+                },
+                begin: function(obj)
+                {
+                    return obj.begin.substr(0, 2) + ':' + obj.begin.substr(2);
+                },
+                end: function(obj)
+                {
+                    return obj.end.substr(0, 2) + ':' + obj.end.substr(2);
                 }
             }
         }
@@ -313,7 +321,7 @@
      * @param  {Array|Object} objOrArray
      * @return {Object}
      */
-    DataList.prototype.clean = function(objOrArray)
+    DataList.prototype.clean = function(objOrArray, name)
     {
         var that = this;
 
@@ -321,13 +329,14 @@
         {
             objOrArray.forEach(function(obj)
             {
-                obj = that.clean(obj);
+                obj = that.clean(obj, name);
             });
             return objOrArray;
         }
         else
         {
             var oldVal;
+            name = objOrArray.dataType || name;
 
             // clean numbers
             cleanMaps.number.forEach(function(tag)
@@ -351,7 +360,7 @@
             });
 
             // added expand attribute
-            var expands = cleanMaps.expand[this.name], key;
+            var expands = cleanMaps.expand[name], key;
             for(key in expands)
             {
                 if(objOrArray[key]) // e.g. key = 'status'
@@ -359,9 +368,9 @@
                     var epd = expands[key][objOrArray[key]]; // e.g. epd = {name: '', ...} or ''
                     if(typeof epd === 'object')
                     {
-                        for(var name in epd)
+                        for(var n in epd)
                         {
-                            objOrArray[key + name.upperCaseFirstLetter()] = epd[name];
+                            objOrArray[key + n.upperCaseFirstLetter()] = epd[n];
                         }
                     }
                     else
@@ -372,7 +381,7 @@
             }
 
             // apply filter
-            var filters = cleanMaps.filter[this.name],
+            var filters = cleanMaps.filter[name],
                 filter,
                 result;
             for(key in filters)
@@ -514,6 +523,7 @@
             {
                 if(idx === 'key') continue;
                 var obj = getObj(data[idx]);
+                obj.dataType = name;
                 obj = that.clean(obj);
                 dObj = that.getById(name, obj.id);
                 if (dObj === null)
@@ -619,7 +629,7 @@
         {
             result = [];
             var today;
-            if (this.name === 'todo')
+            if (name === 'todo')
             {
                 if (filter === 'today')
                 {
@@ -666,7 +676,7 @@
                     });
                 }
             }
-            else if(this.name === 'task' || this.name === 'bug' || this.name === 'story')
+            else if(name === 'task' || name === 'bug' || name === 'story')
             {
                 var cdt = {};
                 cdt[filter] = this.account;
