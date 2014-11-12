@@ -536,6 +536,7 @@
             module: 'api',
             method: 'mobileGetList',
             format: 'all',
+            zip: 0,
             type: this.datalist.isEmpty ? 'full' : 'increment',
             last: this.lastSyncTime ? Math.floor(this.lastSyncTime/1000) : ''
         });
@@ -546,7 +547,14 @@
         {
             if (dt.status === 'success')
             {
-                dt = JSON.parse(dt.data);
+                var jsonData = dt.data;
+                // if(dt.zip)
+                // {
+                //     var decodedData = window.decodeB64(jsonData);
+                //     jsonData = window.gunzip(decodedData);
+                //     console.log(decodedData, jsonData);
+                // }
+                dt = JSON.parse(jsonData);
                 that.datalist.load(dt);
                 successCallback && successCallback(dt);
             }
