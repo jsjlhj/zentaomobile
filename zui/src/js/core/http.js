@@ -103,7 +103,6 @@
             try
             {
                 var jsonObject = JSON.parse(response);
-                if(debug) console.log('GET JSON', jsonObject);
                 successCallback(jsonObject, response, xhr);
             }
             catch(e)

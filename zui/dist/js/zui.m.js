@@ -1,5 +1,5 @@
 /*!
- * ZUI for mobile - v0.1.0-beta - 2014-11-11
+ * ZUI for mobile - v0.1.0-beta - 2014-11-12
  * http://zui.sexy
  * GitHub: https://github.com/easysoft/zui.git 
  * Copyright (c) 2014 cnezsoft.com; Licensed MIT
@@ -2247,7 +2247,6 @@
             try
             {
                 var jsonObject = JSON.parse(response);
-                if(debug) console.log('GET JSON', jsonObject);
                 successCallback(jsonObject, response, xhr);
             }
             catch(e)
