@@ -450,9 +450,11 @@
         {
             // console.color('SYNC>>> ', 'h5|bginfo');
             updateBadge(e.unreadCount);
+            var newItems = e.newItems;
 
-            if(firstSync || e.unreadCount[currentListView] > 0)
+            if(firstSync || newItems[currentListView].length > 0)
             {
+                // console.log(firstSync, currentListView, e.unreadCount, listViews[currentListView]);
                 window.fire(listViews[currentListView], 'reloadData');
                 firstSync = false;
             }
@@ -460,7 +462,6 @@
             if(receiveNotify && zentao.runningInBackground)
             {
                 lastPush = null;
-                var newItems = e.newItems;
                 plus.runtime.setBadgeNumber(newItems.total);
 
                 if(newItems.total)

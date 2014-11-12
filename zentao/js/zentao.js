@@ -586,7 +586,7 @@
 
     Zentao.prototype.startAutoSync = function(interval, successCallback, errorCallback)
     {
-        interval = 5000;
+        // interval = 5000;
         this.syncing = interval || window.userStore.get('syncInterval', 20000);
         // console.color('startAutoSync:' + this.syncing, 'h3|bgdanger');
         this.setNextSync(successCallback, errorCallback);

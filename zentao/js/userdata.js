@@ -18,7 +18,7 @@
 
     UserStore.prototype.setStorage = function(storage)
     {
-        window.store.setStorage(storage);
+        // window.store.setStorage(storage);
     };
 
     UserStore.prototype.setAccount = function(account)
@@ -77,9 +77,9 @@
 
         window.user = this.user;
 
-        console.groupCollapsed('%cUSER: ' + this.user.account + '@' + this.user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
-        console.log('user:', this.user);
-        console.groupEnd();
+        // console.groupCollapsed('%cUSER: ' + this.user.account + '@' + this.user.url, 'color: orange; border-left: 10px solid orange; padding-left: 5px;font-size: 16px; font-weight: bold;');
+        // console.log('user:', this.user);
+        // console.groupEnd();
 
         return this.user;
     };
@@ -103,7 +103,7 @@
         }
         else
         {
-            console.error('存储失败！无法获取用户数据。');
+            // console.error('存储失败！无法获取用户数据。');
         }
     };
 
@@ -433,7 +433,7 @@
         }
         else
         {
-            console.error('The "Id" must be a number.');
+            // console.error('The "Id" must be a number.');
         }
         return result;
     };
@@ -504,7 +504,7 @@
         {
             this.loadFromStore(name);
             this.account = window.user.account;
-            console.color('所获取的数据与当前帐号不匹配。已重新从磁盘读取', 'h3|danger');
+            // console.color('所获取的数据与当前帐号不匹配。已重新从磁盘读取', 'h3|danger');
         }
 
         var dt = this.data[name];
