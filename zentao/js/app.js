@@ -298,7 +298,6 @@
         options = options.detail || options;
         var view = listViews[options.type];
         startSync();
-        console.log('hahah');
         zentao.loadData(function(/*datalist*/) {
             updateBadge();
             if(typeof view == 'object')

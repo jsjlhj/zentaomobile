@@ -9,61 +9,6 @@
 
 (function()
 {
-    'use strict';
-    
-    var cstyle = 
-    {
-        h1: 'font-size: 28px; font-weight: bold;',
-        h2: 'font-size: 24px; font-weight: bold;',
-        h3: 'font-size: 20px; font-weight: bold;',
-        h4: 'font-size: 16px; font-weight: bold;',
-        h5: 'font-size: 14px; font-weight: bold;',
-        h6: 'font-size: 12px; font-weight: bold;',
-        success: 'color: green; border-left: 10px solid green; padding-left: 5px;',
-        danger: 'color: red; border-left: 10px solid red; padding-left: 5px;',
-        warning: 'color: orange; border-left: 10px solid orange; padding-left: 5px;',
-        info: 'color: blue; border-left: 10px solid blue; padding-left: 5px;',
-        muted: 'color: gray; border-left: 10px solid gray; padding-left: 5px;',
-        u: 'text-decoration: underline;',
-        bd: 'border: 1px solid #ddd',
-        bgsuccess: 'color: #fff; background: green; padding: 2px 5px;',
-        bgdanger: 'color: #fff; background: red; padding: 2px 5px;',
-        bgwarning: 'color: #fff; background: orange; padding: 2px 5px;',
-        bginfo: 'color: #fff; background: blue; padding: 2px 5px;',
-        bgmuted: 'color: #fff; background: gray; padding: 2px 5px;',
-        bdsuccess: 'border:1px solid green;',
-        bddanger: 'border:1px solid red;',
-        bdwarning: 'border:1px solid orange;',
-        bdinfo: 'border:1px solid blue;',
-        bdmuted: 'border:1px solid gray;',
-        strong: 'font-weight: bold;',
-        small: 'font-size: 0.85em'
-    };
-
-    window.consolelog = function(text, style)
-    {
-        if (style.indexOf('|') >= 0)
-        {
-            var styles = style.split('|');
-            style = '';
-            for (var i = 0; i < (styles.length); ++i)
-            {
-                style += cstyle[styles[i]];
-            }
-        }
-        else
-        {
-            style = cstyle[style] || style;
-        }
-        console.log('%c' + text, style);
-    };
-
-    console.color = window.consolelog;
-    console.cstyle = cstyle;
-}());
-
-(function()
-{
     /**
      * Get prototype of a object
      * @param  {object} obj
@@ -2169,7 +2114,7 @@
      */
     Http.prototype.send = function(method, url, successCallback, errorCallback)
     {
-        if(this.debug) console.groupCollapsed('%cHTTP[' + (uuid + 1) + '] ' + method + ': ' + url, 'color: blue; border-left: 10px solid blue; padding-left: 5px; font-size: 16px; font-weight: bold; background-color: lightblue;');
+        // if(this.debug) console.groupCollapsed('%cHTTP[' + (uuid + 1) + '] ' + method + ': ' + url, 'color: blue; border-left: 10px solid blue; padding-left: 5px; font-size: 16px; font-weight: bold; background-color: lightblue;');
 
         var workingId = ++uuid;
         this.working = workingId;
@@ -2178,8 +2123,8 @@
         var that = this;
         var protocol = /^([\w-]+:)\/\//.test(url) ? RegExp.$1 : window.location.protocol;
 
-        if(this.debug) console.log('XMLHttpRequest[' + workingId + ']:', xhr);
-        if(this.debug < 2) console.groupEnd();
+        // if(this.debug) console.log('XMLHttpRequest[' + workingId + ']:', xhr);
+        // if(this.debug < 2) console.groupEnd();
 
         xhr.onreadystatechange = function()
         {
@@ -2191,14 +2136,14 @@
                 {
                     if(that.debug > 1)
                     {
-                        console.group('responseText[' + workingId + ']');
-                        console.log("%c" + xhr.responseText, 'color:blue; margin: 3px 0; padding:2px 5px; background: #fafafa');
-                        console.groupEnd();
-                        console.groupCollapsed('ResponseHeaders[' + workingId + ']');
-                        console.log(xhr.getAllResponseHeaders());
-                        console.groupEnd();
+                        // console.group('responseText[' + workingId + ']');
+                        // console.log("%c" + xhr.responseText, 'color:blue; margin: 3px 0; padding:2px 5px; background: #fafafa');
+                        // console.groupEnd();
+                        // console.groupCollapsed('ResponseHeaders[' + workingId + ']');
+                        // console.log(xhr.getAllResponseHeaders());
+                        // console.groupEnd();
 
-                        console.groupEnd();
+                        // console.groupEnd();
                     }
 
                     if(that.working === workingId) that.working = false;
@@ -2206,7 +2151,7 @@
                 }
                 else
                 {
-                    if(that.debug) console.groupEnd();
+                    // if(that.debug) console.groupEnd();
 
                     if(that.working === workingId) that.working = false;
                     errorCallback && errorCallback(xhr);
@@ -2241,7 +2186,7 @@
      */
     Http.prototype.getJSON = function(url, successCallback, errorCallback)
     {
-        var debug = this.debug;
+        // var debug = this.debug;
         return this.get(url, function(response, xhr)
         {
             var success = true;
@@ -2253,7 +2198,7 @@
             catch(e)
             {
                 success = false;
-                if(debug) console.error('%cWrong json string:' + response, 'color: red; font-weight: bold;');
+                // if(debug) console.error('%cWrong json string:' + response, 'color: red; font-weight: bold;');
             }
             if(success)
             {
@@ -2279,7 +2224,7 @@
     };
 
     window.http = new Http();
-    window.http.debug = 2;
+    window.http.debug = 0;
 }());
 
 (function()
