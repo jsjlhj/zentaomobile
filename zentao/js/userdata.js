@@ -454,6 +454,7 @@
 
     DataList.prototype.markRead = function(name, id, notSave)
     {
+        // console.log('MARK READ', name, id, notSave);
         if(id)
         {
             var item = this.getById(name, id);
@@ -528,16 +529,19 @@
                 });
                 return result;
             };
+            dt.newItems = [];
             for(var idx in data)
             {
                 if(idx === 'key') continue;
                 var obj = getObj(data[idx]);
                 obj.dataType = name;
+                obj.syncTime = new Date();
                 obj = that.clean(obj);
                 dObj = that.getById(name, obj.id);
                 if (dObj === null)
                 {
                     obj.unread = true;
+                    dt.newItems.push(obj);
                     dt.data.push(obj);
 
                     dt.unreadCount++;
@@ -567,15 +571,35 @@
         that.save(name);
     };
 
+    DataList.prototype.getNewItems = function(name)
+    {
+        if(!name)
+        {
+            var newItems = {total: 0};
+            for(var n in this.data)
+            {
+                newItems[n] = this.data[n].newItems;
+                newItems.total += newItems[n].length;
+                if(newItems[n].length)
+                {
+                    newItems.latest = newItems[n][0];
+                }
+            }
+            return newItems;
+        }
+        return this.data[name].newItems;
+    };
+
     DataList.prototype.getUnreadCount = function(name, muted)
     {
         if(!name)
         {
-            var unRreadCount = {};
+            var unRreadCount = {total: 0};
             var unreadItems = this.getUnreadItems();
             for(var n in unreadItems)
             {
                 unRreadCount[n] = unreadItems[n].length;
+                unRreadCount.total += unRreadCount[n];
             }
             return unRreadCount;
         }

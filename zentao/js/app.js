@@ -100,6 +100,7 @@
         else
         {
             listViews[options.name].show('fade-in', animateSpeed);
+            window.fire(listViews[options.name], 'reloadData');
         }
 
         document.getElementsByClassName('open-listview').forEach(function(el)
@@ -299,7 +300,7 @@
         startSync();
         console.log('hahah');
         zentao.loadData(function(/*datalist*/) {
-            updateListBadge(options.type);
+            updateBadge();
             if(typeof view == 'object')
             {
                 window.fire(view, 'reloadData');
@@ -334,21 +335,34 @@
         checkStatus();
     };
 
-    var updateListBadge = function(list)
+    var updateListBadge = function(list, unreadCount)
     {
-        var datalist = zentao.datalist.data[list];
-        if(datalist)
+        // console.log('updateListBadge', list, unreadCount);
+        if(!unreadCount)
         {
-            var unreadCount = zentao.datalist.getUnreadCount(list);
-            var $listNav = document.$id('tab-' + list);
-            $listNav.classList[unreadCount > 0 ? 'add' : 'remove']('unread');
-            $listNav.$('.unread-count').innerHTML = unreadCount < 100 ? unreadCount : '99+';
+            unreadCount = zentao.datalist.getUnreadCount(list);
+        }
 
-            if(!markReadTip && unreadCount > 10)
-            {
-                window.plus.nativeUI.toast('下拉来标记所有条目已读');
-                markReadTip = true;
-            }
+        var $listNav = document.$id('tab-' + list);
+        $listNav.classList[unreadCount > 0 ? 'add' : 'remove']('unread');
+        $listNav.$('.unread-count').innerHTML = unreadCount < 100 ? unreadCount : '99+';
+
+        if(!markReadTip && unreadCount > 10)
+        {
+            window.plus.nativeUI.toast('下拉来标记所有条目已读');
+            markReadTip = true;
+        }
+    };
+
+    var updateBadge = function(unreadCount)
+    {
+        if(!unreadCount)
+        {
+            unreadCount = zentao.datalist.getUnreadCount();
+        }
+        for(var list in unreadCount)
+        {
+            if(list !== 'total') updateListBadge(list, unreadCount[list]);
         }
     };
 
@@ -432,38 +446,33 @@
     {
         if(e.result)
         {
-            // console.color('SYNC>>> ' + e.tab, 'h5|bginfo');
-            updateListBadge(e.tab);
+            // console.color('SYNC>>> ', 'h5|bginfo');
+            updateBadge(e.unreadCount);
 
-            var currentWin = listViews[e.tab];
-            if(typeof currentWin === 'object')
+            if(e.unreadCount[currentListView] > 0)
             {
-                window.fire(currentWin, 'reloadData', {offline: true});
+                window.fire(listViews[currentListView], 'reloadData');
             }
-
-            // if(e.tab != currentListView && e.unreadCount)
-            // {
-            //     document.getElementById('tab-' + e.tab).classList.add('unread');
-            // }
 
             if(receiveNotify && zentao.runningInBackground)
             {
-                var unreadCount = e.unreadCount;
-                plus.runtime.setBadgeNumber(unreadCount);
+                lastPush = null;
+                var newItems = e.newItems;
+                plus.runtime.setBadgeNumber(newItems.total);
 
-                if(unreadCount)
+                if(newItems.total)
                 {
                     var message;
-                    lastPush = e;
-                    if(unreadCount > 1)
+                    if(newItems.total > 1)
                     {
-                        message = '收到' + unreadCount + '个新的' + zentao.dataTabs[e.tab].name;
+                        message = '收到' + newItems.total + '个新的条目';
                     }
-                    else
+                    else if(newItems.total === 1)
                     {
-                        message = '新的' + zentao.dataTabs[e.tab].name + ": " + (e.latestItem.name || e.latestItem.title);
+                        lastPush = newItems.latest;
+                        message = '新的' + zentao.dataTabs[newItems.latest.dataType].name + ": " + (newItems.latest.name || newItems.latest.title);
                     }
-                    plus.push.createMessage(message, "LocalMSG", {cover: true, test: 'testtest4343'});
+                    plus.push.createMessage(message, "LocalMSG", {cover: true});
                     // console.color('消息已推送：' + message, 'h3|info');
                 }
             }
@@ -474,10 +483,7 @@
     }).on('ready', function()
     {
         openListView({offline: true});
-        for(var key in listViews)
-        {
-            updateListBadge(key);
-        }
+        updateBadge();
 
         if(window.userStore.get('autoSync', true))
         {
@@ -508,11 +514,7 @@
         {
             if(lastPush)
             {
-                openListView({name: lastPush.tab, offline: true});
-                if(lastPush.unreadCount === 1 && lastPush.latestItem)
-                {
-                    window.fire(listViews[currentListView], 'showItem', lastPush.latestItem.id);
-                }
+                window.fire(listViews[lastPush.dataType], 'showItem', lastPush.id);
             }
         }, false);
 

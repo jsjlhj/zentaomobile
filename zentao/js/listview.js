@@ -22,7 +22,7 @@
             if(this.classList.contains('show-more'))
             {
                 that.lessCount = false;
-                that.show(tab, that.datalist.filter(this.name, tab), that.lessCount);
+                that.show(tab, that.datalist.filter(that.name, tab), that.lessCount);
             }
             else if(this.classList.contains('nomore-tip'))
             {
@@ -39,7 +39,7 @@
                     });
                     this.classList.remove('unread');
 
-                    that.datalist.markRead(this.name, id, true);
+                    that.datalist.markRead(that.name, id, true);
                     window.fire(window.plus.webview.currentWebview().opener(), 'markRead', {name: that.name, id: id});
                     that.updateTabBadge();
                 }
@@ -56,7 +56,7 @@
 
             window.userStore.init();
             that.datalist = new DataList(that.name);
-            console.log('datalist', that.datalist);
+            // console.log('datalist', that.datalist);
             that.showAll(false);
         });
 
@@ -86,7 +86,7 @@
 
     ListView.prototype.showItem = function(id/*, $item*/)
     {
-        var item = this.datalist.getById(id);
+        var item = this.datalist.getById(this.name, id);
         this.dialog = window.openWindow(
         {
             url: this.name + ".html",

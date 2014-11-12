@@ -535,9 +535,12 @@
         {
             module: 'api',
             method: 'mobileGetList',
+            format: 'all',
             type: this.datalist.isEmpty ? 'full' : 'increment',
             last: this.lastSyncTime ? Math.floor(this.lastSyncTime/1000) : ''
         });
+
+        that.lastSyncTime = new Date();
 
         http.getJSON(url, function(dt)
         {
@@ -575,6 +578,7 @@
 
     Zentao.prototype.startAutoSync = function(interval, successCallback, errorCallback)
     {
+        interval = 5000;
         this.syncing = interval || window.userStore.get('syncInterval', 20000);
         // console.color('startAutoSync:' + this.syncing, 'h3|bgdanger');
         this.setNextSync(successCallback, errorCallback);
@@ -617,7 +621,8 @@
         {
             params.result = true;
             params.unreadCount = that.datalist.getUnreadCount();
-            params.latestItem = that.datalist.latestItem;
+            // params.latestItem = that.datalist.latestItem;
+            params.newItems = that.datalist.getNewItems();
 
             successCallback && successCallback(params);
             that.trigger('sync', params);

@@ -100,14 +100,23 @@
         var debug = this.debug;
         return this.get(url, function(response, xhr)
         {
+            var success = true;
+            var jsonObject;
             try
             {
-                var jsonObject = JSON.parse(response);
-                successCallback(jsonObject, response, xhr);
+                jsonObject = JSON.parse(response);
             }
             catch(e)
             {
-                if(debug) console.error(e, '%cWrong json string:' + response, 'color: red; font-weight: bold;');
+                success = false;
+                if(debug) console.error('%cWrong json string:' + response, 'color: red; font-weight: bold;');
+            }
+            if(success)
+            {
+                successCallback(jsonObject, response, xhr);
+            }
+            else
+            {
                 errorCallback && errorCallback(response, xhr);
             }
         }, errorCallback);

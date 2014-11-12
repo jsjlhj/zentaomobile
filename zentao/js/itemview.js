@@ -7,10 +7,10 @@
         var that = this;
         window.plusReady(function()
         {
-            currentView = window.currentWebview;
-            options = currentView.options;
+            that.currentView = window.currentWebview;
+            that.options = that.currentView.options;
 
-            that.render(options.data);
+            that.render(that.options.data);
         });
     };
 
