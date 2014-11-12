@@ -452,7 +452,7 @@
         return obj !== null;
     };
 
-    DataList.prototype.markRead = function(name, id)
+    DataList.prototype.markRead = function(name, id, notSave)
     {
         if(id)
         {
@@ -460,16 +460,25 @@
             if(item)
             {
                 item.unread = false;
-                this.save(name);
+                if(!notSave) this.save(name);
             }
         }
         else
         {
+            if(!name)
+            {
+                for(var n in this.data)
+                {
+                    this.markRead(n);
+                }
+                return;
+            }
+
             this.data[name].data.forEach(function(item)
             {
                 item.unread = false;
             });
-            this.save(name);
+            if(!notSave) this.save(name);
         }
     };
 

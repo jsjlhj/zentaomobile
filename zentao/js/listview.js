@@ -16,7 +16,7 @@
         if(showfn) this.show = showfn;
         var that = this;
 
-        document.$id('listview').on('tap', '.table-view-cell', function(e)
+        document.$id('listview').on('tap', '.table-view-cell', function()
         {
             var tab = this.getAttribute('data-tab');
             if(this.classList.contains('show-more'))
@@ -39,7 +39,7 @@
                     });
                     this.classList.remove('unread');
 
-                    that.datalist.markRead(id);
+                    that.datalist.markRead(this.name, id, true);
                     window.fire(window.plus.webview.currentWebview().opener(), 'markRead', {name: that.name, id: id});
                     that.updateTabBadge();
                 }
@@ -56,7 +56,7 @@
 
             window.userStore.init();
             that.datalist = new DataList(that.name);
-            // console.log('datalist', that.datalist);
+            console.log('datalist', that.datalist);
             that.showAll(false);
         });
 
@@ -68,9 +68,9 @@
               contentdown    : "下拉可以刷新",
               contentover    : "释放立即刷新",
               contentrefresh : "正在刷新...",
-              callback       : function(callback)
+              callback       : function(/*callback*/)
               {
-                  that.datalist.markRead();
+                  that.datalist.markRead(this.name, null, true);
                   that.showAll();
                   window.fire(window.plus.webview.currentWebview().opener(), 'markRead', {name: that.name});
                   window.fire(window.plus.webview.currentWebview().opener(), 'loadListView', {type: that.name, tab: that.currentFilter()});
@@ -84,7 +84,7 @@
         return document.$id('listviewNav').$('.control-item.active').getAttribute('href').substr(1);
     };
 
-    ListView.prototype.showItem = function(id, $item)
+    ListView.prototype.showItem = function(id/*, $item*/)
     {
         var item = this.datalist.getById(id);
         this.dialog = window.openWindow(

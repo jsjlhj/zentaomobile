@@ -535,7 +535,6 @@
         {
             module: 'api',
             method: 'mobileGetList',
-            records: 2,
             type: this.datalist.isEmpty ? 'full' : 'increment',
             last: this.lastSyncTime ? Math.floor(this.lastSyncTime/1000) : ''
         });

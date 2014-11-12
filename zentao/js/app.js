@@ -66,11 +66,9 @@
         options.name = options.name || currentListView || defaultListView;
 
         var lastListView = listViews[currentListView];
-        // var aniType = 'none';
 
         if(lastListView)
         {
-            // aniType = listViewsOrders.name] < listViewsOrdertListView] ? 'slide-out-right' : 'slide-out-left';
             window.fire(lastListView, 'closeDialog', {aniClose: 'fade-out'});
 
             if(currentListView === options.name)
@@ -101,7 +99,6 @@
         }
         else
         {
-            // aniType = listViewsOrders.name] > listViewsOrdertListView] ? 'slide-in-right' : 'slide-in-left';
             listViews[options.name].show('fade-in', animateSpeed);
         }
 
@@ -357,12 +354,8 @@
 
     var markRead = function(tab, id)
     {
-        var datalist = zentao.datalist.data[tab];
-        if(datalist)
-        {
-            datalist.markRead(id);
-            updateListBadge(tab);
-        }
+        zentao.datalist.markRead(tab, id);
+        updateListBadge(tab);
     };
 
     $status.on('tap', function()
