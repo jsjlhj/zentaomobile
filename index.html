@@ -30,16 +30,34 @@
         <button type="button" class="btn btn-link" id="showUpdate">版本亮点</button>
       </div>
     </div>
-    <div class="centerbox fade scale" style="display: none" id="backBox">
+    <div class="centerbox fade scale" id="backBox">
+      <h3 class='text-center'>版本亮点</h3>
+      <ul style="padding-left: 80px">
+        <li>仅支持禅道专业版4.2</li>
+        <li>全新API，更快，更省流量</li>
+        <li>新的配色方案，完善界面细节</li>
+        <li>修复一些问题</li>
+      </ul>
+      <div class="desc text-center">
+        <button type="button" class="btn btn-link">返回</button>
+      </div>
     </div>
   </div>
   <script src="js/jquery.js"></script>
 <script>
 $(function()
 {
+    var $front = $('#frontBox'), $back = $('#backBox');
     $('#showUpdate').on('click', function()
     {
+        $front.toggleClass('in');
+        $back.toggleClass('in');
+    });
 
+    $back.on('click', function()
+    {
+        $front.toggleClass('in');
+        $back.toggleClass('in');
     });
 });
 </script>
