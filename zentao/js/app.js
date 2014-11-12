@@ -18,6 +18,7 @@
         lastPush,
         lastSyncTime,
         mainView,
+        firstSync,
         currentListView,
         defaultListView;
 
@@ -438,6 +439,7 @@
         // console.color('logged: ' + result, 'h4|bg' + (result ? 'success' : 'danger'));
         isLoging = false;
         checkStatus();
+        firstSync = true;
         zentao.sync();
     }).on('syncing', function()
     {
@@ -449,9 +451,10 @@
             // console.color('SYNC>>> ', 'h5|bginfo');
             updateBadge(e.unreadCount);
 
-            if(e.unreadCount[currentListView] > 0)
+            if(firstSync || e.unreadCount[currentListView] > 0)
             {
                 window.fire(listViews[currentListView], 'reloadData');
+                firstSync = false;
             }
 
             if(receiveNotify && zentao.runningInBackground)
