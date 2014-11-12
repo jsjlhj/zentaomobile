@@ -597,7 +597,23 @@
         var that = this;
         setTimeout(function()
         {
-            that.sync(successCallback, errorCallback);
+            if(!that.syncing) return;
+            
+            if(http.working || that.network === 'disconnect' || !window.user || window.user.status !== 'online')
+            {
+                that.setNextSync(successCallback, errorCallback);
+                return;
+            }
+
+            that.sync(function()
+            {
+                successCallback && successCallback();
+                that.setNextSync(successCallback, errorCallback);
+            }, function()
+            {
+                errorCallback && errorCallback();
+                that.setNextSync(successCallback, errorCallback);
+            });
         }, that.syncing);
     };
 
@@ -614,14 +630,6 @@
 
     Zentao.prototype.sync = function(successCallback, errorCallback)
     {
-        if(!this.syncing) return;
-
-        if(http.working || this.network === 'disconnect' || !window.user || window.user.status !== 'online')
-        {
-            this.setNextSync(successCallback, errorCallback);
-            return;
-        }
-
         var that = this,
             params = {};
         that.trigger('syncing');
@@ -631,16 +639,13 @@
             params.unreadCount = that.datalist.getUnreadCount();
             // params.latestItem = that.datalist.latestItem;
             params.newItems = that.datalist.getNewItems();
-
             successCallback && successCallback(params);
             that.trigger('sync', params);
-            that.setNextSync(successCallback, errorCallback);
         }, function(e){
             params.result = false;
             params.e = e;
             errorCallback && errorCallback(params);
             that.trigger('sync', params);
-            that.setNextSync(successCallback, errorCallback);
         });
     };
 

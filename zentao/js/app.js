@@ -439,6 +439,7 @@
         // console.color('logged: ' + result, 'h4|bg' + (result ? 'success' : 'danger'));
         isLoging = false;
         checkStatus();
+        zentao.sync();
     }).on('syncing', function()
     {
         // startSync();
