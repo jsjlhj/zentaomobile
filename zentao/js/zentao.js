@@ -539,7 +539,7 @@
             module: 'api',
             method: 'mobileGetList',
             format: 'all',
-            zip: 0,
+            zip: 1,
             type: this.datalist.isEmpty ? 'full' : 'increment',
             last: this.lastSyncTime ? Math.floor(this.lastSyncTime/1000) : ''
         });
@@ -551,12 +551,12 @@
             if (dt.status === 'success')
             {
                 var jsonData = dt.data;
-                // if(dt.zip)
-                // {
-                //     var decodedData = window.decodeB64(jsonData);
-                //     jsonData = window.gunzip(decodedData);
-                //     console.log(decodedData, jsonData);
-                // }
+                if(dt.zip)
+                {
+                    var decodedData = window.decodeB64(jsonData);
+                    var inflate = new window.Zlib.Inflate(decodedData);
+                    jsonData = String.fromCharCode.apply(null, inflate.decompress());
+                }
                 dt = JSON.parse(jsonData);
                 that.datalist.load(dt);
                 successCallback && successCallback(dt);
