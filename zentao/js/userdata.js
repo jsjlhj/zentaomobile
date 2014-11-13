@@ -287,13 +287,19 @@
         // }
     };
 
-    DataList.prototype.loadFromStore = function(name)
+    DataList.prototype.loadFromStore = function(name, notCheckUser)
     {
+        if(!this.account || !notCheckUser)
+        {
+            window.userStore.getUser();
+            this.account = window.user.account;
+        }
+
         if(!name)
         {
             for(var n in this.data)
             {
-                this.loadFromStore(n);
+                this.loadFromStore(n, true);
             }
             return;
         }
@@ -302,7 +308,7 @@
             var that = this;
             name.forEach(function(n)
             {
-                that.loadFromStore(n);
+                that.loadFromStore(n, true);
             });
             return;
         }
