@@ -20,6 +20,7 @@
 </head>
 <body class="swipeback">
   <header class="bar bar-nav">
+    <a href="mailto:sunhao@cnezsoft.com?Subject=禅道手机客户端意见反馈" class="btn btn-link btn-nav pull-right" id="feedbackBtn"><i class="icon icon-smile-o"></i></a>
     <h1 class="title action-back"><i class="icon icon-angle-left"></i> 设置</h1>
   </header>
   <div class="content">
@@ -139,7 +140,8 @@ window.plusReady(function()
     }
     document.$id("syncIntervalList").on("tap", ".sync-interval-option", function(e)
     {
-        document.$('.sync-interval-option.active').classList.remove('active');
+        var activeOption = document.$('.sync-interval-option.active');
+        if(activeOption && activeOption.classList) activeOption.classList.remove('active');
         $syncIntervalLabel.innerHTML = this.$('.name').innerHTML;
         options.syncInterval = this.$('input').value;
         this.$('input').checked = true;
