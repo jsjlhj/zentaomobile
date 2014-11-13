@@ -80,12 +80,12 @@ var $dialog = document.$id('syncIntervalDialog');
 var openDialog = function()
 {
     $dialog.classList.add('show');
-    setTimeout(function(){$dialog.classList.add('in')}, 100);
+    setTimeout(function(){$dialog.classList.add('in');}, 100);
 };
 var closeDialog = function()
 {
     $dialog.classList.remove('in');
-    setTimeout(function(){$dialog.classList.remove('show')}, 200);
+    setTimeout(function(){$dialog.classList.remove('show');}, 200);
 };
 
 document.$class('open-dialog').on('tap', openDialog);
@@ -125,15 +125,21 @@ window.plusReady(function()
         options.receiveNotify = event.detail.isActive;
     });
 
-    var $syncOption = document.$id('syncInterval-' + options.syncInterval);
-    $syncOption.classList.add('active');
     var $syncIntervalLabel = document.$id('syncIntervalOption');
-    $syncOption.$('input').checked = true;
-    $syncIntervalLabel.innerHTML = $syncOption.$('.name').innerHTML;
+    var $syncOption = document.$id('syncInterval-' + options.syncInterval);
+    if($syncOption && $syncOption.classList)
+    {
+        $syncOption.classList.add('active');
+        $syncOption.$('input').checked = true;
+        $syncIntervalLabel.innerHTML = $syncOption.$('.name').innerHTML;
+    }
+    else
+    {
+        $syncIntervalLabel.innerHTML = Math.floor(options.syncInterval/1000) + '秒';
+    }
     document.$id("syncIntervalList").on("tap", ".sync-interval-option", function(e)
     {
         document.$('.sync-interval-option.active').classList.remove('active');
-        var that = this;
         $syncIntervalLabel.innerHTML = this.$('.name').innerHTML;
         options.syncInterval = this.$('input').value;
         this.$('input').checked = true;
