@@ -20,7 +20,7 @@
 </head>
 <body class="swipeback">
   <header class="bar bar-nav">
-    <a href="mailto:sunhao@cnezsoft.com?Subject=禅道手机客户端意见反馈" class="btn btn-link btn-nav pull-right" id="feedbackBtn"><i class="icon icon-smile-o"></i></a>
+    <button class="btn btn-link btn-nav pull-right" id="feedbackBtn"><i class="icon icon-smile-o"></i></button>
     <h1 class="title action-back"><i class="icon icon-angle-left"></i> 设置</h1>
   </header>
   <div class="content">
@@ -92,8 +92,26 @@ var closeDialog = function()
 document.$class('open-dialog').on('tap', openDialog);
 document.$class('close-dialog').on('tap', closeDialog);
 
+
 window.plusReady(function()
 {
+    document.$id('feedbackBtn').on('tap', function()
+    {
+        var msg = plus.messaging.createMessage(plus.messaging.TYPE_EMAIL);
+        msg.to = ['sunhao@cnezsoft.com'];
+        msg.subject = '禅道手机客户端意见反馈';
+        // msg.bodyType = 'html';
+        // msg.body = '<br/><span style="color: #808080">详细描述您的问题:)</span><hr/><strong>系统环境</strong><p>版本：0.1.3 beta</p>';
+        msg.body = '请详细描述您的问题。';
+        plus.messaging.sendMessage(msg, function()
+        {
+            window.plus.nativeUI.toast('谢谢反馈！我们会努力改进。', {verticalAlign: 'center'});
+        }, function()
+        {
+            window.plus.nativeUI.toast('操作失败，请重试。', {verticalAlign: 'center'});
+        });
+    });
+
     var wv       = window.currentWebview;
     var mainView = wv.opener();
     var options  = wv.options;

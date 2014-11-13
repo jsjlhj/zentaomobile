@@ -17,12 +17,12 @@
         "url": ""/*可选，开发者自定义地址*/
     },
     "permissions": {
-/*        "Accelerometer": {
+        "Accelerometer": {
             "description": "访问加速度感应器"
         },
         "Audio": {
             "description": "访问麦克风"
-        },*/
+        },
         "Cache": {
             "description": "管理应用缓存"
         },
@@ -32,9 +32,9 @@
         "Console": {
             "description": "跟踪调试输出日志"
         },
-/*        "Contacts": {
+        "Contacts": {
             "description": "访问系统联系人信息"
-        },*/
+        },
         "Device": {
             "description": "访问设备信息"
         },
@@ -56,10 +56,10 @@
         "Invocation": {
             "description": "调用Native JS桥功能"
         },
-/*        "Messaging": {
+        "Messaging": {
             "description": "访问通讯能力"
         },
-        "Orientation": {
+/*        "Orientation": {
             "description": "访问方向感应器"
         },
         "Proximity": {
@@ -98,9 +98,9 @@
         "Share": {
             "description": "管理社交分享插件"
         },
-/*        "Speech": {
+        "Speech": {
             "description": "管理语音识别插件"
-        },*/
+        },
         "Statistic": {
             "description": "管理统计插件"
         }
