@@ -18,7 +18,7 @@
 
     UserStore.prototype.setStorage = function(storage)
     {
-        // window.store.setStorage(storage);
+        window.store.setStorage(storage);
     };
 
     UserStore.prototype.setAccount = function(account)
@@ -273,6 +273,26 @@
         }
     };
 
+    var discardRules = 
+    {
+        todo: function(obj, account)
+        {
+            return obj.account !== account;
+        },
+        task: function(obj, account)
+        {
+            return obj.assignedTo !== account && obj.openedBy !== account && obj.finishedBy !== account;
+        },
+        bug: function(obj, account)
+        {
+            return obj.assignedTo !== account && obj.openedBy !== account && obj.resolvedBy !== account;
+        },
+        story: function(obj, account)
+        {
+            return obj.assignedTo !== account && obj.openedBy !== account && obj.reviewedBy !== account;
+        }
+    };
+
     var DataList = function(names /*, data*/)
     {
         // this.loadFromStore();
@@ -285,6 +305,16 @@
         // {
         //     this.load(data);
         // }
+    };
+
+    DataList.prototype.empty = function()
+    {
+        this.isEmpty = true;
+        this.account = null;
+        for(var n in this.data)
+        {
+            this.data[n] = {data: [], updateTime: new Date(0)};
+        }
     };
 
     DataList.prototype.loadFromStore = function(name, notCheckUser)
@@ -496,6 +526,12 @@
             return;
         }
 
+        if (this.account != window.user.account)
+        {
+            this.loadFromStore(name);
+            // console.log('所获取的数据与当前帐号不匹配。已重新从存储读取。', this.account);
+        }
+
         if(!name)
         {
             for(var n in data)
@@ -504,13 +540,6 @@
                 this.load(data[n], setName);
             }
             return;
-        }
-
-        if (this.account != window.user.account)
-        {
-            this.loadFromStore(name);
-            this.account = window.user.account;
-            // console.color('所获取的数据与当前帐号不匹配。已重新从磁盘读取', 'h3|danger');
         }
 
         var dt = this.data[name];
@@ -540,6 +569,13 @@
             {
                 if(idx === 'key') continue;
                 var obj = getObj(data[idx]);
+
+                if(discardRules[name](obj, this.account))
+                {
+                    // console.log('discard', name, obj, this.account);
+                    continue;
+                }
+
                 obj.dataType = name;
                 obj.syncTime = new Date();
                 obj = that.clean(obj);

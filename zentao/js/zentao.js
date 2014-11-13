@@ -90,6 +90,7 @@
 
     Zentao.prototype.logout = function(clean, callback)
     {
+        var that = this;
         var afterLogout = function()
         {
             if(clean)
@@ -100,6 +101,8 @@
             {
                 window.userStore.saveUser({status: 'logout', pwdMd5: null});
             }
+
+            that.datalist.empty();
 
             callback && callback(clean);
         };

@@ -162,7 +162,19 @@
         {
             updateSetting(options.updateSetting);
         }
-        zentao.logout(false, checkStatus);
+        zentao.logout(false, function()
+        {
+            updateBadge();
+            for(var list in listViews)
+            {
+                var view = listViews[list];
+                if(typeof view === 'object')
+                {
+                    window.fire(view, 'reloadData');
+                }
+            }
+            checkStatus();
+        });
     };
 
     var checkStatus = function()
