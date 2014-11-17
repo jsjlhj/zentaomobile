@@ -25,7 +25,7 @@
      */
     Http.prototype.send = function(method, url, successCallback, errorCallback)
     {
-        // if(this.debug) console.groupCollapsed('%cHTTP[' + (uuid + 1) + '] ' + method + ': ' + url, 'color: blue; border-left: 10px solid blue; padding-left: 5px; font-size: 16px; font-weight: bold; background-color: lightblue;');
+        if(this.debug) console.groupCollapsed('%cHTTP[' + (uuid + 1) + '] ' + method + ': ' + url, 'color: blue; border-left: 10px solid blue; padding-left: 5px; font-size: 16px; font-weight: bold; background-color: lightblue;');
 
         var workingId = ++uuid;
         this.working = workingId;
@@ -34,8 +34,8 @@
         var that = this;
         var protocol = /^([\w-]+:)\/\//.test(url) ? RegExp.$1 : window.location.protocol;
 
-        // if(this.debug) console.log('XMLHttpRequest[' + workingId + ']:', xhr);
-        // if(this.debug < 2) console.groupEnd();
+        if(this.debug) console.log('XMLHttpRequest[' + workingId + ']:', xhr);
+        if(this.debug && this.debug < 2) console.groupEnd();
 
         xhr.onreadystatechange = function()
         {
@@ -47,14 +47,14 @@
                 {
                     if(that.debug > 1)
                     {
-                        // console.group('responseText[' + workingId + ']');
-                        // console.log("%c" + xhr.responseText, 'color:blue; margin: 3px 0; padding:2px 5px; background: #fafafa');
-                        // console.groupEnd();
-                        // console.groupCollapsed('ResponseHeaders[' + workingId + ']');
-                        // console.log(xhr.getAllResponseHeaders());
-                        // console.groupEnd();
+                        console.group('responseText[' + workingId + ']');
+                        console.log("%c" + xhr.responseText, 'color:blue; margin: 3px 0; padding:2px 5px; background: #fafafa');
+                        console.groupEnd();
+                        console.groupCollapsed('ResponseHeaders[' + workingId + ']');
+                        console.log(xhr.getAllResponseHeaders());
+                        console.groupEnd();
 
-                        // console.groupEnd();
+                        console.groupEnd();
                     }
 
                     if(that.working === workingId) that.working = false;
@@ -62,7 +62,7 @@
                 }
                 else
                 {
-                    // if(that.debug) console.groupEnd();
+                    if(that.debug) console.groupEnd();
 
                     if(that.working === workingId) that.working = false;
                     errorCallback && errorCallback(xhr);
@@ -97,7 +97,7 @@
      */
     Http.prototype.getJSON = function(url, successCallback, errorCallback)
     {
-        // var debug = this.debug;
+        var debug = this.debug;
         return this.get(url, function(response, xhr)
         {
             var success = true;
@@ -109,7 +109,7 @@
             catch(e)
             {
                 success = false;
-                // if(debug) console.error('%cWrong json string:' + response, 'color: red; font-weight: bold;');
+                if(debug) console.error('%cWrong json string:' + response, 'color: red; font-weight: bold;');
             }
             if(success)
             {
