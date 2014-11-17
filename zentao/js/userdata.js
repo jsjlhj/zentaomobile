@@ -331,6 +331,7 @@
             {
                 this.loadFromStore(n, true);
             }
+            this.lastLoadTime = window.userStore.get('datalist::lastLoadTime');
             return;
         }
         else if(Array.isArray(name))
@@ -340,6 +341,7 @@
             {
                 that.loadFromStore(n, true);
             });
+            this.lastLoadTime = window.userStore.get('datalist::lastLoadTime');
             return;
         }
 
@@ -444,6 +446,7 @@
             {
                 this.save(n);
             }
+            window.userStore.set('datalist::lastLoadTime', this.lastLoadTime);
             return;
         }
         window.userStore.set('datalist::' + name, this.data[name]);
@@ -607,6 +610,7 @@
 
         if(dt.data.length) that.isEmpty = false;
 
+        that.lastLoadTime = new Date();
         that.data[name] = dt;
 
         that.sort(name);
@@ -621,10 +625,13 @@
             for(var n in this.data)
             {
                 newItems[n] = this.data[n].newItems;
-                newItems.total += newItems[n].length;
-                if(newItems[n].length)
+                if(newItems[n])
                 {
-                    newItems.latest = newItems[n][0];
+                    newItems.total += newItems[n].length;
+                    if(newItems[n].length)
+                    {
+                        newItems.latest = newItems[n][0];
+                    }
                 }
             }
             return newItems;
