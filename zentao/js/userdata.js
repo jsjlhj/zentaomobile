@@ -531,7 +531,9 @@
         obj = that.clean(obj);
         if(obj.desc)
         {
-            obj.desc = obj.desc.replace(/\r/gi, '').replace(/\n/g, '').replace(/"/gi, '\\"');
+            obj.desc = obj.desc.replace(/\r/gi, '')
+                    .replace(/\n/g, '')
+                    .replace(/"/gi, '\\"');
         }
 
         var dt = that.data[name];

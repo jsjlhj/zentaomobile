@@ -156,13 +156,13 @@
 
         // if(!item._DETAIL)
         // {
-            setTimeout(function()
+        setTimeout(function()
+        {
+            zentao.loadItem(options.type, options.id, function(newItem)
             {
-                zentao.loadItem(options.type, options.id, function(newItem)
-                {
-                    window.fire(itemView, 'refresh', {id: options.id, type: options.type, data: newItem, url: window.user.url});
-                });
-            }, 300);
+                window.fire(itemView, 'refresh', {id: options.id, type: options.type, data: newItem});
+            });
+        }, 300);
         // }
     };
 

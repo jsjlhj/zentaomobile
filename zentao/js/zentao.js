@@ -471,7 +471,6 @@
 
         var url = this.concatUrl(options);
         var that = this;
-        console.log(url);
         http.getJSON(url, function(dt)
         {
             if(dt.status === 'success')

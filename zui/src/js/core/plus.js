@@ -40,13 +40,18 @@
             // console.groupCollapsed('%cFIRE: ' + eventType, 'color: #fff; background-color: orange;');
             // console.log('webview', webview);
             // console.log('data', data);
-            // console.groupEnd();
+
+            window.data = data;
             
             if (webview)
             {
-                webview.evalJS("window.receive&&window.receive('" + eventType + "','" + JSON.stringify(data ||
-                {}) + "')");
+                var js = "window.receive&&window.receive('" + eventType + "','" + JSON.stringify(data ||
+                {}).replace(/'/g, "\\'") + "')";
+                // console.log('js', js);
+                webview.evalJS(js);
             }
+
+            // console.groupEnd();
         };
 
         /**

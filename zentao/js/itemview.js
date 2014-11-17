@@ -20,6 +20,20 @@
             });
 
             that.render(that.options.data);
+
+            document.$class('content-padded').on('tap', 'a', function()
+            {
+                var href = this.getAttribute('href');
+                if(!href.startWith('http://') && !href.startWith('https://'))
+                {
+                    if(!that.options.url.endWith('/')) href = '/' + href;
+                    href = that.options.url + href;
+                }
+                plus.runtime.openURL(href, function()
+                {
+                    alert('无法调用内置浏览器打开。');
+                });
+            });
         });
     };
 
@@ -39,7 +53,6 @@
             {
                 document.$tag('img', el).forEach(function($img)
                 {
-                    // console.log($img);
                     imgSrc = $img.getAttribute('src');
                     if(imgSrc.startWith('data/upload/'))
                     {
