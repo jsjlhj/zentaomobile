@@ -475,32 +475,44 @@
         }
 
         var that = this;
-        var url = this.concatUrl(
+        if(that.datalist.lastLoadTime)
+        {
+            that.lastSyncTime = that.datalist.lastLoadTime;
+        }
+        else if(that.syncId < 2)
+        {
+            that.lastSyncTime = (new Date()).addDays(0-(400 - that.syncId*200));
+        }
+
+        var options = 
         {
             module: 'api',
             method: 'mobileGetList',
-            format: 'all',
+            format: that.syncId > 0 ? 'all' : 'index',
             zip: 1,
-            records: 400,
-            type: this.datalist.isEmpty ? 'full' : 'increment',
-            last: this.lastSyncTime ? Math.floor(this.lastSyncTime/1000) : ''
-        });
+            records: that.syncId < 2 ? 120 : 60,
+            type: 'increment',
+            last: Math.floor(that.lastSyncTime/1000)
+        };
 
-        that.lastSyncTime = new Date();
+        var nextSyncTime = new Date();
+        var url = this.concatUrl(options);
 
         http.getJSON(url, function(dt)
         {
             if (dt.status === 'success')
             {
                 var jsonData = dt.data;
-                if(dt.zip)
+                if(dt.zip && dt.zip !== '0')
                 {
-                    var decodedData = window.atob(jsonData);
+                    var decodedData = window.decodeB64(jsonData);
                     var inflate = new window.Zlib.Inflate(decodedData);
                     jsonData = String.fromCharCode.apply(null, inflate.decompress());
                 }
                 dt = JSON.parse(jsonData);
                 that.datalist.load(dt);
+                that.lastSyncTime = nextSyncTime;
+                that.syncId++;
                 successCallback && successCallback(dt);
             }
             else
