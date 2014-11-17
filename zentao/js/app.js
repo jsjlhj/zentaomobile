@@ -150,7 +150,7 @@
             aniType: 'slide-in-right',
             extras:
             {
-                options: {id: options.id, type: options.type, data: item}
+                options: {id: options.id, type: options.type, data: item, url: window.user.url}
             }
         });
 
@@ -160,7 +160,7 @@
             {
                 zentao.loadItem(options.type, options.id, function(newItem)
                 {
-                    window.fire(itemView, 'refresh', {id: options.id, type: options.type, data: newItem});
+                    window.fire(itemView, 'refresh', {id: options.id, type: options.type, data: newItem, url: window.user.url});
                 });
             }, 300);
         // }

@@ -25,14 +25,29 @@
 
     ItemView.prototype.render = function(obj)
     {
-        console.log('render', obj);
-        var doms, val, fmt, dft, dVal;
+        // console.log('render', this, obj);
+        var doms, val, fmt, dft, dVal, dType, imgSrc, options = this.options;
         var handleElement = function(el)
         {
             fmt = el.getAttribute('data-format');
             dft = el.getAttribute('data-default');
             dVal = dft && (!val) ? dft : val;
             el.innerHTML = dVal && fmt ? dVal.format(fmt) : dVal;
+
+            dType = el.getAttribute('data-type');
+            if(dType === 'html')
+            {
+                document.$tag('img', el).forEach(function($img)
+                {
+                    // console.log($img);
+                    imgSrc = $img.getAttribute('src');
+                    if(imgSrc.startWith('data/upload/'))
+                    {
+                        if(!options.url.endWith('/')) imgSrc = '/' + imgSrc;
+                        $img.setAttribute('src', options.url + imgSrc);
+                    }
+                });
+            }
         };
         for(var name in obj)
         {
