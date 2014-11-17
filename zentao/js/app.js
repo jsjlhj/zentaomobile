@@ -10,6 +10,7 @@
         syncInterval    = 20000,
         // listViewsOrder  = {todo: 1, task: 2, bug: 3, story: 4},
         listViews       = {todo: "todos.html", task: "tasks.html", bug: "bugs.html", story: "stories.html"},
+        itemView,
         loginWindow,
         markReadTip,
         settingWindow,
@@ -111,6 +112,58 @@
 
         currentListView = options.name;
         window.userStore.set('lastListView', currentListView);
+    };
+
+    var closeItemView = function()
+    {
+        if(itemView)
+        {
+            itemView.close();
+            itemView = null;
+        }
+    };
+
+    var openItemView = function(options, id)
+    {
+        if(typeof options === 'string'){options = {type: options, id: id};}
+
+        closeItemView();
+
+        var item = options.item || zentao.datalist.getById(options.type, options.id);
+        if(!item)
+        {
+            window.plus.nativeUI.toast('无法找到该项目。');
+            return;
+        }
+
+        itemView = window.openWindow(
+        {
+            url: options.type + ".html",
+            id: options.type + "-" + options.id,
+            styles:
+            {
+                top             : "0",
+                bottom          : "51px",
+                bounce          : "vertical",
+                scrollIndicator : "none"
+            },
+            aniType: 'slide-in-right',
+            extras:
+            {
+                options: {id: options.id, type: options.type, data: item}
+            }
+        });
+
+        // if(!item._DETAIL)
+        // {
+            setTimeout(function()
+            {
+                zentao.loadItem(options.type, options.id, function(newItem)
+                {
+                    window.fire(itemView, 'refresh', {id: options.id, type: options.type, data: newItem});
+                });
+            }, 300);
+        // }
     };
 
     var tryLogin = function(key)
@@ -435,6 +488,8 @@
           .on('hideWaiting', hideWaiting)
           .on('updateSetting', updateSetting)
           .on('loadListView', loadListView)
+          .on('openItemView', function(e){openItemView(e.detail);})
+          .on('closeItemView', closeItemView)
           .on('markRead', function(e)
           {
               var options = e && e.detail ? e.detail : {name: currentListView};

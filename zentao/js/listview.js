@@ -87,32 +87,12 @@
     ListView.prototype.showItem = function(id/*, $item*/)
     {
         var item = this.datalist.getById(this.name, id);
-        this.dialog = window.openWindow(
-        {
-            url: this.name + ".html",
-            id: this.name + "-" + id,
-            styles:
-            {
-                top             : "0",
-                bottom          : "51px",
-                bounce          : "vertical",
-                scrollIndicator : "none"
-            },
-            aniType: 'slide-in-right',
-            extras:
-            {
-                options: {id: id, type: this.name, data: item}
-            }
-        });
+        window.fire(window.plus.webview.currentWebview().opener(), 'openItemView', {type: this.name, id: id, item: item});
     };
 
     ListView.prototype.closeDialog = function(options)
     {
-        if(this.dialog)
-        {
-            window.fire(this.dialog, 'close', options);
-            this.dialog = null;
-        }
+        window.fire(window.plus.webview.currentWebview().opener(), 'closeItemView', options);
     };
 
     ListView.prototype.showAll = function()

@@ -522,6 +522,45 @@
         }
     };
 
+    DataList.prototype.loadItem = function(name, obj)
+    {
+        var that = this;
+        obj.dataType = name;
+        obj.syncTime = new Date();
+        obj._DETAIL = 1;
+        obj = that.clean(obj);
+        if(obj.desc)
+        {
+            obj.desc = obj.desc.replace(/\r/gi, '').replace(/\n/g, '');
+        }
+
+        var dt = that.data[name];
+        if(!dt)
+        {
+            dt = {data: [obj], updateTime: new Date()};
+        }
+        else
+        {
+            var dObj = that.getById(name, obj.id);
+            if(dObj)
+            {
+                obj.unread = dObj.unread;
+                dt.data.splice(dt.data.indexOf(dObj), 1, obj);
+            }
+            else
+            {
+                obj.unread = true;
+                dt.data.push(obj);
+            }
+        }
+        that.data[name] = dt;
+        that.save(name);
+
+        console.log('load item', name, obj);
+
+        return obj;
+    };
+
     DataList.prototype.load = function(data, name)
     {
         if(!data)
@@ -586,6 +625,7 @@
                 if (dObj === null)
                 {
                     obj.unread = true;
+
                     dt.newItems.push(obj);
                     dt.data.push(obj);
 

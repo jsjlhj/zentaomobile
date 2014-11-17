@@ -9,6 +9,15 @@
         {
             that.currentView = window.currentWebview;
             that.options = that.currentView.options;
+            window.on('refresh', function(e)
+            {
+                var options = e.detail;
+                if(options.type === that.options.type)
+                {
+                    Object.extend(that.options, options);
+                    that.render(that.options.data);
+                }
+            });
 
             that.render(that.options.data);
         });
@@ -16,6 +25,7 @@
 
     ItemView.prototype.render = function(obj)
     {
+        console.log('render', obj);
         var doms, val, fmt, dft, dVal;
         var handleElement = function(el)
         {

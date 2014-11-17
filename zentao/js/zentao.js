@@ -253,7 +253,7 @@
                     url += '&format=' + (params.format || 'index');
                     url += '&zip=' + (params.zip || '0');
                 }
-                else if(methodName === 'mobileGetInfo')
+                else if(methodName === 'mobilegetinfo')
                 {
                     url += '&id=' + params.id;
                     url += '&type=' + params.type;
@@ -286,7 +286,7 @@
                     url += (params.format || 'index') + '-';
                     url += (params.zip || '0');
                 }
-                else if(methodName === 'mobileGetInfo')
+                else if(methodName === 'mobilegetinfo')
                 {
                     url += params.id + '-';
                     url += params.type;
@@ -454,9 +454,40 @@
 
     Zentao.prototype.filterData = function(dataType, filter)
     {
-        // console.color('FilterData: ' + dataType + ',' + filter, 'h4|info');
+        // console.color('FilterData: ' +  dataType + ',' + filter, 'h4|info');
 
         return this.datalist.filter(dataType, filter);
+    };
+
+    Zentao.prototype.loadItem = function(type, id, successCallback, errorCallback)
+    {
+        var options = 
+        {
+            module: 'api',
+            method: 'mobileGetInfo',
+            id: id,
+            type: type
+        };
+
+        var url = this.concatUrl(options);
+        var that = this;
+        console.log(url);
+        http.getJSON(url, function(dt)
+        {
+            if(dt.status === 'success')
+            {
+                var item = JSON.parse(dt.data);
+                item = zentao.datalist.loadItem(type, item);
+                successCallback && successCallback(item);
+            }
+            else
+            {
+                that.callWidthMessage(errorCallback, '无法获取数据。' + (dt.reason || '') + '请确保所登录的账户拥有超级model权限。禅道权限管理请参考：http://www.zentao.net/book/zentaopmshelp/71.html。');
+            }
+        }, function()
+        {
+            errorCallback && errorCallback();
+        });
     };
 
     Zentao.prototype.loadData = function(successCallback, errorCallback)
@@ -475,9 +506,10 @@
         }
 
         var that = this;
-        if(that.datalist.lastLoadTime)
+        if(that.syncId === 0 && that.datalist.lastLoadTime)
         {
             that.lastSyncTime = that.datalist.lastLoadTime;
+            that.syncId = 2;
         }
         else if(that.syncId < 2)
         {
@@ -488,12 +520,14 @@
         {
             module: 'api',
             method: 'mobileGetList',
-            format: that.syncId > 0 ? 'all' : 'index',
+            format: 'index',
             zip: 1,
-            records: that.syncId < 2 ? 120 : 60,
+            records: 100,
             type: 'increment',
             last: Math.floor(that.lastSyncTime/1000)
         };
+
+        // console.log('SYNC', that.syncId, that.lastSyncTime, options);
 
         var nextSyncTime = new Date();
         var url = this.concatUrl(options);
@@ -517,7 +551,7 @@
             }
             else
             {
-                that.callWidthMessage(errorCallback, '无法获取用户数据。' + (dt.reason || '') + '请确保所登录的账户拥有超级model权限。禅道权限管理请参考：http://www.zentao.net/book/zentaopmshelp/71.html。');
+                that.callWidthMessage(errorCallback, '无法获取数据。' + (dt.reason || '') + '请确保所登录的账户拥有超级model权限。禅道权限管理请参考：http://www.zentao.net/book/zentaopmshelp/71.html。');
             }
 
         }, that.fnToCallWidthMessage(errorCallback, '无法获取数据，请检查网络。'));
