@@ -190,7 +190,7 @@
             {
                 that.callWidthMessage(errorCallback, result.reason || '登录失败，所提供的用户名和密码不正确。');
             }
-            else
+            else if (result.status === 'success')
             {
                 window.userStore.saveUser(
                 {
@@ -199,6 +199,10 @@
                 });
                 window.user.data = result.user;
                 successCallback && successCallback(result);
+            }
+            else
+            {
+                that.callWidthMessage(errorCallback, result.reason || '无法登录，请检查禅道地址是否正确，并确保当前网络连接畅通。禅道手机客户端仅支持禅道专业版4.2以上的版本。');
             }
         }, function(xhr)
         {
@@ -299,69 +303,6 @@
 
         return url;
     };
-
-    // Zentao.prototype.getSession = function(successCallback, errorCallback)
-    // {
-    //     var url = this.concatUrl(
-    //         {
-    //             module: 'api',
-    //             method: 'getSessionID'
-    //         }),
-    //         that = this;
-    //     http.getJSON(url, function(session)
-    //     {
-    //         if (session.status === 'success')
-    //         {
-    //             session = JSON.parse(session.data);
-
-    //             if (session.sessionID && session.sessionID != 'undefined')
-    //             {
-    //                 window.userStore.saveUser({session: session});
-    //                 successCallback && successCallback(session);
-    //             }
-    //             else
-    //             {
-    //                 that.callWidthMessage(errorCallback, '获取Session信息不完整。');
-    //             }
-    //         }
-    //         else
-    //         {
-    //             that.callWidthMessage(errorCallback, '获取Session信息失败。');
-    //         }
-    //     }, that.fnToCallWidthMessage(errorCallback, '无法获取Session，请检查禅道地址是否正确。'));
-    // };
-
-    // Zentao.prototype.getRole = function(successCallback, errorCallback)
-    // {
-    //     var url = this.concatUrl(
-    //         {
-    //             module: 'api',
-    //             method: 'getmodel',
-    //             moduleName: 'user',
-    //             methodName: 'getById',
-    //             account: window.user.account
-    //         }),
-    //         that = this;
-    //     http.getJSON(url, function(roleData)
-    //     {
-    //         if (roleData.status !== 'failed')
-    //         {
-    //             roleData = JSON.parse(roleData.data);
-    //             window.userStore.saveUser(
-    //             {
-    //                 role: roleData.role,
-    //                 status: 'online',
-    //                 lastLoginTime: new Date().getTime()
-    //             });
-    //             window.user.data = roleData;
-    //             successCallback && successCallback(roleData);
-    //         }
-    //         else
-    //         {
-    //             that.callWidthMessage(errorCallback, '获取的用户角色信息不完整。');
-    //         }
-    //     }, that.fnToCallWidthMessage(errorCallback, '无法获取用户角色，请检查禅道地址是否正确。'));
-    // };
 
     Zentao.prototype.getConfig = function(successCallback, errorCallback)
     {
@@ -540,6 +481,7 @@
             method: 'mobileGetList',
             format: 'all',
             zip: 1,
+            records: 400,
             type: this.datalist.isEmpty ? 'full' : 'increment',
             last: this.lastSyncTime ? Math.floor(this.lastSyncTime/1000) : ''
         });
@@ -553,7 +495,7 @@
                 var jsonData = dt.data;
                 if(dt.zip)
                 {
-                    var decodedData = window.decodeB64(jsonData);
+                    var decodedData = window.atob(jsonData);
                     var inflate = new window.Zlib.Inflate(decodedData);
                     jsonData = String.fromCharCode.apply(null, inflate.decompress());
                 }
