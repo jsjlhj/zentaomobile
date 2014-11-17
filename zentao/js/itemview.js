@@ -21,7 +21,7 @@
 
             that.render(that.options.data);
 
-            document.$class('content-padded').on('tap', 'a', function()
+            document.$id('dialog').on('tap', '.content-padded a', function()
             {
                 var href = this.getAttribute('href');
                 if(!href.startWith('http://') && !href.startWith('https://'))
