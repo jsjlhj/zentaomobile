@@ -27,7 +27,7 @@
     {
         if(loginWindow)
         {
-            // console.error('登录窗口已经打开。');
+            console.error('登录窗口已经打开。');
             return;
         }
         var status = window.user.status;
@@ -519,7 +519,7 @@
             updateBadge(e.unreadCount);
             var newItems = e.newItems;
 
-            if(firstSync || newItems[currentListView].length > 0)
+            if(firstSync || newItems[currentListView] && newItems[currentListView].length > 0)
             {
                 // console.log(firstSync, currentListView, e.unreadCount, listViews[currentListView]);
                 window.fire(listViews[currentListView], 'reloadData');

@@ -597,6 +597,7 @@
             dObj;
         dt.unreadCount = 0;
         var key = data.key;
+
         if(key)
         {
             var getObj = function(valArray)
@@ -614,9 +615,9 @@
                 if(idx === 'key') continue;
                 var obj = getObj(data[idx]);
 
-                if(discardRules[name](obj, this.account))
+                if(discardRules[name](obj, window.user.name))
                 {
-                    // console.log('discard', name, obj, this.account);
+                    // console.log('discard', name, obj, window.user.name);
                     continue;
                 }
 
@@ -803,7 +804,7 @@
             else if(name === 'task' || name === 'bug' || name === 'story')
             {
                 var cdt = {};
-                cdt[filter] = this.account;
+                cdt[filter] = window.user.name;
                 data.where(cdt, result);
             }
         }
