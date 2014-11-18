@@ -45,17 +45,14 @@
             {
                 if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304 || (xhr.status === 0 && protocol === 'file:'))
                 {
-                    if(that.debug > 1)
-                    {
-                        console.group('responseText[' + workingId + ']');
-                        console.log("%c" + xhr.responseText, 'color:blue; margin: 3px 0; padding:2px 5px; background: #fafafa');
-                        console.groupEnd();
-                        console.groupCollapsed('ResponseHeaders[' + workingId + ']');
-                        console.log(xhr.getAllResponseHeaders());
-                        console.groupEnd();
+                    console.group('responseText[' + workingId + ']');
+                    console.log("%c" + xhr.responseText, 'color:blue; margin: 3px 0; padding:2px 5px; background: #fafafa');
+                    console.groupEnd();
+                    console.groupCollapsed('ResponseHeaders[' + workingId + ']');
+                    console.log(xhr.getAllResponseHeaders());
+                    console.groupEnd();
 
-                        console.groupEnd();
-                    }
+                    console.groupEnd();
 
                     if(that.working === workingId) that.working = false;
                     successCallback && successCallback(xhr.responseText, xhr);
@@ -97,7 +94,6 @@
      */
     Http.prototype.getJSON = function(url, successCallback, errorCallback)
     {
-        var debug = this.debug;
         return this.get(url, function(response, xhr)
         {
             var success = true;
@@ -109,7 +105,7 @@
             catch(e)
             {
                 success = false;
-                if(debug) console.error('%cWrong json string:' + response, 'color: red; font-weight: bold;');
+                console.error('%cWrong json string:' + response, 'color: red; font-weight: bold;');
             }
             if(success)
             {
@@ -135,5 +131,4 @@
     };
 
     window.http = new Http();
-    window.http.debug = 0;
 }());

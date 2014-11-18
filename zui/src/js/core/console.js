@@ -38,7 +38,7 @@
 
     var originConsoleFn = {};
 
-    ["log", "info", "warn", "error"].forEach(function(method)
+    ["log", "info", "warn", "error", "groupCollapsed", "groupEnd", "group"].forEach(function(method)
     {
         originConsoleFn[method] = console[method];
 
