@@ -1,11 +1,88 @@
 /*!
- * ZUI for mobile - v0.1.0-beta - 2014-11-17
+ * ZUI for mobile - v0.1.0-beta - 2014-11-18
  * http://zui.sexy
  * GitHub: https://github.com/easysoft/zui.git 
  * Copyright (c) 2014 cnezsoft.com; Licensed MIT
  */
 
 /* Some code copy from ratchet v2.0.2 (Copyright (c) 2014 connors and other contributors. Licensed under http://www.apache.org/licenses/)*/
+
+(function()
+{
+    'use strict';
+
+    console.options =
+    {
+        DEBUG: 1
+    };
+    
+    var cstyle = 
+    {
+        h1: 'font-size: 28px; font-weight: bold;',
+        h2: 'font-size: 24px; font-weight: bold;',
+        h3: 'font-size: 20px; font-weight: bold;',
+        h4: 'font-size: 16px; font-weight: bold;',
+        h5: 'font-size: 14px; font-weight: bold;',
+        h6: 'font-size: 12px; font-weight: bold;',
+        success: 'color: green; border-left: 10px solid green; padding-left: 5px;',
+        danger: 'color: red; border-left: 10px solid red; padding-left: 5px;',
+        warning: 'color: orange; border-left: 10px solid orange; padding-left: 5px;',
+        info: 'color: blue; border-left: 10px solid blue; padding-left: 5px;',
+        muted: 'color: gray; border-left: 10px solid gray; padding-left: 5px;',
+        u: 'text-decoration: underline;',
+        bd: 'border: 1px solid #ddd',
+        bgsuccess: 'color: #fff; background: green; padding: 2px 5px;',
+        bgdanger: 'color: #fff; background: red; padding: 2px 5px;',
+        bgwarning: 'color: #fff; background: orange; padding: 2px 5px;',
+        bginfo: 'color: #fff; background: blue; padding: 2px 5px;',
+        bgmuted: 'color: #fff; background: gray; padding: 2px 5px;',
+        bdsuccess: 'border:1px solid green;',
+        bddanger: 'border:1px solid red;',
+        bdwarning: 'border:1px solid orange;',
+        bdinfo: 'border:1px solid blue;',
+        bdmuted: 'border:1px solid gray;',
+        strong: 'font-weight: bold;',
+        small: 'font-size: 0.85em'
+    };
+
+    var originConsoleFn = {};
+
+    ["log", "info", "warn", "error"].forEach(function(method)
+    {
+        originConsoleFn[method] = console[method];
+
+        console[method] = function()
+        {
+            if(console.options.DEBUG)
+            {
+                originConsoleFn[method].apply(this, arguments);
+            }
+        };
+    });
+
+    console.color = function(text, style)
+    {
+        if(console.options.DEBUG)
+        {
+            if (style.indexOf('|') >= 0)
+            {
+                var styles = style.split('|');
+                style = '';
+                for (var i = 0; i < (styles.length); ++i)
+                {
+                    style += cstyle[styles[i]];
+                }
+            }
+            else
+            {
+                style = cstyle[style] || style;
+            }
+            originConsoleFn.log.apply(this, '%c' + text, style);
+        }
+    };
+
+    console.cstyle = cstyle;
+}());
 
 (function()
 {

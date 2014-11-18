@@ -1,6 +1,11 @@
 (function()
 {
     'use strict';
+
+    console.options =
+    {
+        DEBUG: 1
+    };
     
     var cstyle = 
     {
@@ -31,24 +36,41 @@
         small: 'font-size: 0.85em'
     };
 
-    window.consolelog = function(text, style)
+    var originConsoleFn = {};
+
+    ["log", "info", "warn", "error"].forEach(function(method)
     {
-        if (style.indexOf('|') >= 0)
+        originConsoleFn[method] = console[method];
+
+        console[method] = function()
         {
-            var styles = style.split('|');
-            style = '';
-            for (var i = 0; i < (styles.length); ++i)
+            if(console.options.DEBUG)
             {
-                style += cstyle[styles[i]];
+                originConsoleFn[method].apply(this, arguments);
             }
-        }
-        else
+        };
+    });
+
+    console.color = function(text, style)
+    {
+        if(console.options.DEBUG)
         {
-            style = cstyle[style] || style;
+            if (style.indexOf('|') >= 0)
+            {
+                var styles = style.split('|');
+                style = '';
+                for (var i = 0; i < (styles.length); ++i)
+                {
+                    style += cstyle[styles[i]];
+                }
+            }
+            else
+            {
+                style = cstyle[style] || style;
+            }
+            originConsoleFn.log.apply(this, '%c' + text, style);
         }
-        console.log('%c' + text, style);
     };
 
-    console.color = window.consolelog;
     console.cstyle = cstyle;
 }());
