@@ -77,7 +77,7 @@
             {
                 style = cstyle[style] || style;
             }
-            originConsoleFn.log.apply(this, '%c' + text, style);
+            console.log('%c' + text, style);
         }
     };
 
