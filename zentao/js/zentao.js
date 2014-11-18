@@ -139,11 +139,13 @@
                 loginkey.url = 'http://' + loginkey.url;
             }
 
+            loginkey.account = loginkey.name + '@' + loginkey.url;
+
             Object.extend(window.user, loginkey);
             window.userStore.saveUser(window.user);
         }
 
-        if(!window.user.url || !window.user.account || !window.user.pwdMd5)
+        if(!window.user.url || !window.user.name || !window.user.pwdMd5)
         {
             callError('用户登录信息不完整。');
             return;
@@ -233,7 +235,7 @@
             if (moduleName === 'user' && methodName === 'login')
             {
                 password = md5(window.user.pwdMd5 + config.rand);
-                url += 'm=user&f=login&account=' + user.account +
+                url += 'm=user&f=login&account=' + user.name +
                     '&password=' + password + '&' + config.sessionName +
                     '=' + config.sessionID + '&t=json';
                 return url;
@@ -268,7 +270,7 @@
             if (moduleName === 'user' && methodName === 'login')
             {
                 password = md5(window.user.pwdMd5 + config.rand);
-                url += 'user-login.json?account=' + user.account + '&password=' + password + '&' + (config.sessionName || 'sid') + '=' + config.sessionID;
+                url += 'user-login.json?account=' + user.name + '&password=' + password + '&' + (config.sessionName || 'sid') + '=' + config.sessionID;
                 return url;
             }
 

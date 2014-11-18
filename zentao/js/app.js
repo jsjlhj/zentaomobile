@@ -32,9 +32,9 @@
         }
         var status = window.user.status;
         var options = {offline: status == 'offline' || status == 'disconnect'};
-        if(window.user.account)
+        if(window.user.name)
         {
-            options.account = window.user.account;
+            options.name = window.user.name;
             options.url = window.user.url;
         }
 

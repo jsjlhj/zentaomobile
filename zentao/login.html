@@ -121,7 +121,7 @@ window.plusReady(function()
         document.body.classList.add('swipeback');
     }
 
-    if (options.account) username.value = options.account;
+    if (options.name) username.value = options.name;
     if (options.url) address.value      = options.url;
 
     address.on('focus', function()
@@ -181,7 +181,7 @@ window.plusReady(function()
 
         window.fire(parentView, 'login',
         {
-            account : username.value,
+            name    : username.value,
             pwdMd5  : password.value,
             url     : address.value,
             ui      : true
