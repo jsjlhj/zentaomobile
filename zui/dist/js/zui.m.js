@@ -2191,7 +2191,7 @@
      */
     Http.prototype.send = function(method, url, successCallback, errorCallback)
     {
-        if(this.debug) console.groupCollapsed('%cHTTP[' + (uuid + 1) + '] ' + method + ': ' + url, 'color: blue; border-left: 10px solid blue; padding-left: 5px; font-size: 16px; font-weight: bold; background-color: lightblue;');
+        console.groupCollapsed('%cHTTP[' + (uuid + 1) + '] ' + method + ': ' + url, 'color: blue; border-left: 10px solid blue; padding-left: 5px; font-size: 16px; font-weight: bold; background-color: lightblue;');
 
         var workingId = ++uuid;
         this.working = workingId;
@@ -2200,12 +2200,11 @@
         var that = this;
         var protocol = /^([\w-]+:)\/\//.test(url) ? RegExp.$1 : window.location.protocol;
 
-        if(this.debug) console.log('XMLHttpRequest[' + workingId + ']:', xhr);
-        if(this.debug && this.debug < 2) console.groupEnd();
+        console.log('XMLHttpRequest[' + workingId + ']:', xhr);
 
         xhr.onreadystatechange = function()
         {
-            if(that.debug > 1) console.log('readyState[' + workingId + ']:', xhr.readyState, ', status:', xhr.status);
+            console.log('readyState[' + workingId + ']:', xhr.readyState, ', status:', xhr.status);
 
             if (xhr.readyState === 4)
             {
@@ -2225,7 +2224,7 @@
                 }
                 else
                 {
-                    if(that.debug) console.groupEnd();
+                    console.groupEnd();
 
                     if(that.working === workingId) that.working = false;
                     errorCallback && errorCallback(xhr);

@@ -18,7 +18,7 @@
 
     UserStore.prototype.setStorage = function(storage)
     {
-        window.store.setStorage(storage);
+        // window.store.setStorage(storage);
     };
 
     UserStore.prototype.setAccount = function(account)
