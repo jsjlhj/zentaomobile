@@ -89,15 +89,18 @@
           </div>
           <button id="loginBtn" type="button" class="btn btn-primary btn-block">登录</button>
           <button id="backBtn" type="button" class="btn btn-block action-back hidden" data-aniType='fade-out'>离线使用<!--  <i class="icon icon-arrow-right"></i> --></button>
-          <button id="tipButton" type="button" class="btn btn-block action-back">0.1.4 beta</button>
+          <button id="tipButton" type="button" class="btn btn-block action-back"></button>
         </div>
       </div>
     </section>
   </div>
 
 <script src="js/lib/zui.m.js"></script>
+<script src="js/config.js"></script>
 <script src="js/webview.js"></script>
 <script>
+document.getElementById('tipButton').innerHTML = window.CONFIG.version;
+
 window.plusReady(function()
 {
     var view = plus.webview.currentWebview();

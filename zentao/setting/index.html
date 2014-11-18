@@ -45,7 +45,7 @@
     </ul>
     <h5 style="padding: 8px 10px 2px">关于</h5>
     <ul class="table-view">
-      <li class="table-view-cell"><span class="text-muted">版本 </span><span>0.1.4 beta</span> <!-- <button class="btn" id="checkVersion">检查新版本</button> --></li>
+      <li class="table-view-cell"><span class="text-muted">版本 </span><span class="version">0.1.4 beta</span> <!-- <button class="btn" id="checkVersion">检查新版本</button> --></li>
     </ul>
   </div>
   <div class="dialog fixed" id="syncIntervalDialog">
@@ -75,8 +75,11 @@
   </div>
 
 <script src="../js/lib/zui.m.js"></script>
+<script src="../js/config.js"></script>
 <script src="../js/webview.js"></script>
 <script>
+document.$('.version').innerHTML = window.CONFIG.version;
+
 var $dialog = document.$id('syncIntervalDialog');
 var openDialog = function()
 {
