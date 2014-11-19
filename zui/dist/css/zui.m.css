@@ -674,9 +674,11 @@ input[type="button"] {
   margin: -11px -65px -11px -15px;
   overflow: hidden;
   color: inherit;
+  transition: background-color .1s;
 }
-.table-view-cell > a:not(.btn):active {
-  background-color: #eee;
+.table-view-cell > a:not(.btn):active,
+.table-view-cell > a:not(.btn).active {
+  background-color: #e5e5e5;
 }
 .table-view-cell p {
   margin-bottom: 0;

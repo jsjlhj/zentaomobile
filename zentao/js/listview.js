@@ -24,10 +24,10 @@
                 that.lessCount = false;
                 that.show(tab, that.datalist.filter(that.name, tab), that.lessCount);
             }
-            else if(this.classList.contains('nomore-tip'))
-            {
-                return;
-            }
+            // else if(this.classList.contains('nomore-tip'))
+            // {
+            //     return;
+            // }
             else
             {
                 if(this.classList.contains('unread'))
@@ -43,6 +43,9 @@
                     window.fire(window.plus.webview.currentWebview().opener(), 'markRead', {name: that.name, id: id});
                     that.updateTabBadge();
                 }
+                var $a = this.$('a');
+                $a.classList.add('active');
+                setTimeout(function(){$a.classList.remove('active');}, 500);
                 that.showItem(this.getAttribute('data-id'), this);
             }
         });

@@ -32,6 +32,7 @@
   }
   // If it's a table view of links, make sure the child <a> takes up full table view item tap area (want to avoid selecting child buttons though)
   > a:not(.btn) {
+    transition: background-color 0.1s;
     position: relative;
     display: block;
     padding: inherit;
@@ -39,8 +40,8 @@
     overflow: hidden;
     color: inherit;
 
-    &:active {
-      background-color: #eee;
+    &:active, &.active {
+      background-color: #e5e5e5;
     }
   }
   p {
