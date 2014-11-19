@@ -280,6 +280,38 @@ a:active {
 .small {
   font-size: 14px;
 }
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -o-transform: rotate(0deg);
+  }
+  100% {
+    -o-transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
 h1,
 h2,
 h3,
@@ -478,6 +510,24 @@ input[type="button"] {
 .bar-footer-secondary-tab {
   border-top: 1px solid #ddd;
   border-bottom: 0;
+}
+/* Waiting icon */
+.bar > .icon.waiting {
+  position: absolute;
+  top: 0;
+  right: -60px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  text-align: center;
+  opacity: .4;
+  transition: right .2s;
+  -webkit-animation: spin 2s infinite linear;
+     -moz-animation: spin 2s infinite linear;
+          animation: spin 2s infinite linear;
+}
+body.waiting .bar > .waiting {
+  right: 5px;
 }
 .bar-nav {
   top: 0;

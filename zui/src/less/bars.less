@@ -44,6 +44,28 @@
   border-bottom: 0;
 }
 
+/* Waiting icon */
+.bar > .icon.waiting
+{
+    position: absolute;
+    right: -60px;
+    top: 0;
+    width: 44px;
+    height: 44px;
+    z-index: 100;
+    opacity: 0.4;
+    text-align: center;
+    -moz-animation: spin 2s infinite linear;
+    -webkit-animation: spin 2s infinite linear;
+    animation: spin 2s infinite linear;
+    transition: right 0.2s;
+}
+
+body.waiting .bar > .waiting
+{
+    right: 5px;
+}
+
 
 // Nav bar
 // --------------------------------------------------
