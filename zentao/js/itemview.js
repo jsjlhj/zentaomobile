@@ -15,10 +15,15 @@
                 if(options.type === that.options.type)
                 {
                     Object.extend(that.options, options);
+                    document.body.classList[that.options.wait ? 'add' : 'remove']('waiting');
                     that.render(that.options.data);
                 }
+            }).on('overwait', function()
+            {
+                document.body.classList.remove('waiting');
             });
 
+            document.body.classList[that.options.wait ? 'add' : 'remove']('waiting');
             that.render(that.options.data);
 
             document.$id('dialog').on('tap', '.content-padded a', function()

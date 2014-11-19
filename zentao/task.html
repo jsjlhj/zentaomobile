@@ -15,10 +15,13 @@
     #timeBarEstimate, #timeBarConsumed {position: absolute; left: 0; top: 0; bottom: 0; z-index: 5; min-width: 2px}
     #timeBarEstimate {background-color: #5bbce7; background-color: rgba(0,0,0, 0.15);}
     #timeBarConsumed {background-color: #5ee174;}
+    #refreshStatus {display: none}
+    body.waiting #refreshStatus {display: block;}
   </style>
 </head>
 <body class="swipeback">
 <header class="bar headbar bar-nav">
+  <i class="icon icon-spinner waiting"></i>
   <h1 class="title action-back"><i class="icon icon-angle-left"></i> 任务</h1>
 </header>
 <div class="dialog" id="dialog">

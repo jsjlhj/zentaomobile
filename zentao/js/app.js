@@ -136,6 +136,8 @@
             return;
         }
 
+        var needSync = options.needSync || !item._DETAIL || ((new Date()).getTime() - item.syncTime.getTime()) > Date.ONEDAY_TICKS;
+
         itemView = window.openWindow(
         {
             url: options.type + ".html",
@@ -150,20 +152,23 @@
             aniType: 'slide-in-right',
             extras:
             {
-                options: {id: options.id, type: options.type, data: item, url: window.user.url}
+                options: {id: options.id, type: options.type, data: item, url: window.user.url, wait: needSync}
             }
         });
 
-        // if(!item._DETAIL)
-        // {
-        setTimeout(function()
+        if(needSync)
         {
-            zentao.loadItem(options.type, options.id, function(newItem)
+            setTimeout(function()
             {
-                window.fire(itemView, 'refresh', {id: options.id, type: options.type, data: newItem});
-            });
-        }, 300);
-        // }
+                zentao.loadItem(options.type, options.id, function(newItem)
+                {
+                    window.fire(itemView, 'refresh', {id: options.id, type: options.type, data: newItem, wait: false});
+                }, function()
+                {
+                    window.fire(itemView, 'overwait');
+                });
+            }, 300);
+        }
     };
 
     var tryLogin = function(key)
