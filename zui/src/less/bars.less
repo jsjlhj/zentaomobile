@@ -53,17 +53,18 @@
     width: 44px;
     height: 44px;
     z-index: 100;
-    opacity: 0.4;
     text-align: center;
     -moz-animation: spin 2s infinite linear;
     -webkit-animation: spin 2s infinite linear;
     animation: spin 2s infinite linear;
-    transition: right 0.2s;
+    transition: opacity 0.2s;
+    opacity: 0;
 }
 
 body.waiting .bar > .waiting
 {
     right: 5px;
+    opacity: 0.4;
 }
 
 

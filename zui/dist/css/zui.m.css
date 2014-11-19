@@ -520,14 +520,15 @@ input[type="button"] {
   width: 44px;
   height: 44px;
   text-align: center;
-  opacity: .4;
-  transition: right .2s;
+  opacity: 0;
+  transition: opacity .2s;
   -webkit-animation: spin 2s infinite linear;
      -moz-animation: spin 2s infinite linear;
           animation: spin 2s infinite linear;
 }
 body.waiting .bar > .waiting {
   right: 5px;
+  opacity: .4;
 }
 .bar-nav {
   top: 0;
