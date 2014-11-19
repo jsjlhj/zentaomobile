@@ -128,10 +128,10 @@
             element = window;
         }
 
-        // console.groupCollapsed('%cTRIGGER: ' + eventType, 'color: #fff; background-color: orange;');
-        // console.log('element', element);
-        // console.log('eventData', eventData);
-        // console.groupEnd();
+        console.groupCollapsed('%cTRIGGER: ' + eventType, 'color: #fff; background-color: orange;');
+        console.log('element', element);
+        console.log('eventData', eventData);
+        console.groupEnd();
 
         var et = new window.CustomEvent(eventType,
         {

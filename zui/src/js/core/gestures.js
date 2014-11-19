@@ -1,5 +1,5 @@
 /**
- * mui gestures
+ * Gestures
  * @param {type} $
  * @param {type} window
  * @returns {undefined}
@@ -23,9 +23,9 @@
             tap: true,
             doubletap: false,
             longtap: false,
-            flick: true,
-            swipe: true,
-            drag: true
+            flick: false,
+            swipe: false,
+            drag: false
         };
     }
 
@@ -229,7 +229,7 @@
     window.addEventListener(EVENT_CLICK, window.preventDefault);
 
     /**
-     * mui gesture flick[left|right|up|down]
+     * Gesture flick[left|right|up|down]
      * @param {type} $
      * @param {type} name
      * @returns {undefined}
@@ -259,7 +259,7 @@
     });
 
     /**
-     * mui gesture swipe[left|right|up|down]
+     * Gesture swipe[left|right|up|down]
      * @param {type} $
      * @param {type} name
      * @returns {undefined}
@@ -288,7 +288,7 @@
     });
 
     /**
-     * mui gesture drag[start|left|right|up|down|end]
+     * Gesture drag[start|left|right|up|down|end]
      * @param {type} $
      * @param {type} name
      * @returns {undefined}
@@ -296,7 +296,7 @@
     registerGesture(
     {
         name: 'drag',
-        index: 20,
+        index: 30,
         options:
         {},
         handle: function(event, touch)
@@ -327,7 +327,7 @@
     });
 
     /**
-     * mui gesture tap and doubleTap
+     * Gesture tap and doubleTap
      * @param {type} $
      * @param {type} name
      * @returns {undefined}
@@ -335,7 +335,7 @@
     registerGesture(
     {
         name: 'tap',
-        index: 30,
+        index: 20,
         options:
         {
             tapMaxInterval: 300,
@@ -344,9 +344,19 @@
         },
         handle: function(event, touch)
         {
-            //if (event.type === EVENT_END || event.type === EVENT_CANCEL) {
-            if (event.type === EVENT_END)
+            // console.group('%cHANDLE TAP GESTURE: '+event.type, 'color: #fff; background: blue; font-weight: bold;');
+            // console.log('event', event);
+            // console.log('touch.distance', touch.distance, ' / ', this.options.tapMaxDistance);
+            // console.log('touch.touchTime', touch.touchTime, ' / ', this.options.tapMaxTime);
+            // console.log('touch.direction', touch.direction || 'NONE');
+            // console.log('touch.drag', touch.drag);
+            // console.log('touch.flick', touch.flick);
+            // console.log('touch', touch);
+
+            if (event.type === EVENT_END || event.type === EVENT_CANCEL)
+            // if (event.type === EVENT_END)
             { //ignore touchcancel
+                // console.color('taping', 'bginfo|h5');
                 var options = this.options;
                 if (touch.distance < options.tapMaxDistance && touch.touchTime < options.tapMaxTime)
                 {
@@ -357,19 +367,24 @@
                             window.trigger(event.target, 'doubletap', touch);
                             touch.lastTapTime = Date.now();
                             touch.lastTarget = event.target;
+
+                            // console.groupEnd();
                             return;
                         }
                     }
+
+                    // console.color('TAP √', 'bgsuccess|h5');
                     window.trigger(event.target, 'tap', touch);
                     touch.lastTapTime = Date.now();
                     touch.lastTarget = event.target;
                 }
             }
+            // console.groupEnd();
         }
     });
 
     /**
-     * mui gesture longtap
+     * Gesture longtap
      * @param {type} $
      * @param {type} name
      * @returns {undefined}
