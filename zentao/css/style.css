@@ -15,6 +15,7 @@
 .article-content-plain p
 {
   margin: 0 !important;
+  color: #333;
 }
 .article-content-plain h1,
 .article-content-plain h2,
