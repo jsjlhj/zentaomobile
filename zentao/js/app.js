@@ -21,6 +21,24 @@
         mainView,
         firstSync,
         currentListView,
+        listViewStyle =
+        {
+            top             : "44px",
+            bottom          : "51px",
+            bounce          : "vertical",
+            width           : (window.CONFIG.debug && window.CONFIG.screen) ? window.CONFIG.screen.width : 'auto',
+            height           : (window.CONFIG.debug && window.CONFIG.screen) ? (window.CONFIG.screen.height - 95) : 'auto',
+            scrollIndicator : "none"
+        },
+        itemViewStyle =
+        {
+            top             : "0",
+            bottom          : "51px",
+            bounce          : "vertical",
+            width           : (window.CONFIG.debug && window.CONFIG.screen) ? window.CONFIG.screen.width : 'auto',
+            height           : (window.CONFIG.debug && window.CONFIG.screen) ? (window.CONFIG.screen.height - 51) : 'auto',
+            scrollIndicator : "none"
+        },
         defaultListView;
 
     var openLoginWindow = function()
@@ -47,7 +65,9 @@
                 top             : "0px",
                 bottom          : "0px",
                 bounce          : "vertical",
-                scrollIndicator : "none"
+                scrollIndicator : "none",
+                width           : (window.CONFIG.debug && window.CONFIG.screen) ? window.CONFIG.screen.width : 'auto',
+                height          : (window.CONFIG.debug && window.CONFIG.screen) ? (window.CONFIG.screen.height) : 'auto',
             },
             aniType: 'fade-in',
             duration: 200,
@@ -84,13 +104,7 @@
 
         if(typeof listViews[options.name] === 'string')
         {
-            var view = listViews[options.name] = plus.webview.create(listViews[options.name], options.name, 
-            {
-                top             : "44px",
-                bottom          : "51px",
-                bounce          : "vertical",
-                scrollIndicator : "none"
-            });
+            var view = listViews[options.name] = plus.webview.create(listViews[options.name], options.name, listViewStyle);
 
             showWaiting();
             setTimeout(function()
@@ -142,13 +156,7 @@
         {
             url: options.type + ".html",
             id: options.type + "-" + options.id,
-            styles:
-            {
-                top             : "0",
-                bottom          : "51px",
-                bounce          : "vertical",
-                scrollIndicator : "none"
-            },
+            styles: itemViewStyle,
             aniType: 'slide-in-right',
             extras:
             {
@@ -468,7 +476,9 @@
                 top             : "0px",
                 bottom          : "0px",
                 bounce          : "vertical",
-                scrollIndicator : "none"
+                scrollIndicator : "none",
+                width           : (window.CONFIG.debug && window.CONFIG.screen) ? window.CONFIG.screen.width : 'auto',
+                height          : (window.CONFIG.debug && window.CONFIG.screen) ? (window.CONFIG.screen.height) : 'auto',
             },
             aniType: 'slide-in-right',
             extras: {options: options}
@@ -572,11 +582,17 @@
 
     window.plusReady(function()
     {
+        mainView = plus.webview.currentWebview();
+
         window.plus.navigator.setStatusBarBackground( "#FAFAFA" );
 
-        setTimeout(plus.navigator.closeSplashscreen, 200);
+        setTimeout(function(){plus.navigator.closeSplashscreen();}, 200);
         
-        mainView = plus.webview.currentWebview();
+        if(window.CONFIG.debug && window.CONFIG.screen)
+        {
+            var sc = window.CONFIG.screen;
+            mainView.setStyle({width: sc.width, height: sc.height, left: 0, top: 0, right: 'auto'});
+        }
         
         if(window.user.status === 'online') window.user.status = 'offline';
         checkStatus();
