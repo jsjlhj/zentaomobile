@@ -1180,7 +1180,11 @@
     /* Get item value and deserialize it, if value is null and defaultValue been given then return defaultValue */
     Store.prototype.get = function(key, defaultValue) {
         var val = this.deserialize(this.getItem(key));
-        return (defaultValue !== undefined && (typeof val === 'undefined' || val === null || val === undefined)) ? defaultValue : val;
+        val = (defaultValue !== undefined && (typeof val === 'undefined' || val === null || val === undefined)) ? defaultValue : val;
+        console.groupCollapsed('%cSTORE GET: ' + key, 'color: purple; border-left: 10px solid orange; padding-left: 5px;font-size: 14px; font-weight: bold;');
+        console.log('val', val);
+        console.groupEnd();
+        return val;
     };
 
     /* Get item key by index and deserialize it */
@@ -1198,10 +1202,10 @@
     Store.prototype.set = function(key, val) {
         if (val === undefined) return this.remove(key);
         this.setItem(key, this.serialize(val));
-        // console.groupCollapsed('%cSTORE SET: ' + key, 'color: purple; border-left: 10px solid orange; padding-left: 5px;font-size: 14px; font-weight: bold;');
-        // console.log(val);
-        // console.log('JSON:', this.serialize(val));
-        // console.groupEnd();
+        console.groupCollapsed('%cSTORE SET: ' + key, 'color: purple; border-left: 10px solid orange; padding-left: 5px;font-size: 14px; font-weight: bold;');
+        console.log(val);
+        console.log('JSON:', this.serialize(val));
+        console.groupEnd();
         return this;
     };
 
