@@ -1,5 +1,5 @@
 /*!
- * ZUI for mobile - v0.1.0-beta - 2014-11-19
+ * ZUI for mobile - v0.1.0-beta - 2014-11-20
  * http://zui.sexy
  * GitHub: https://github.com/easysoft/zui.git 
  * Copyright (c) 2014 cnezsoft.com; Licensed MIT
@@ -681,19 +681,37 @@ body.waiting .bar > .waiting {
 .badge-primary.badge-inverted {
   color: #007bc6;
 }
-.badge-positive {
+.badge-positive,
+.badge-success {
   color: #fff;
   background-color: #5cb85c;
 }
-.badge-positive.badge-inverted {
+.badge-positive.badge-inverted,
+.badge-success.badge-inverted {
   color: #5cb85c;
 }
-.badge-negative {
+.badge-negative,
+.badge-danger {
   color: #fff;
   background-color: #d9534f;
 }
-.badge-negative.badge-inverted {
+.badge-negative.badge-inverted,
+.badge-danger.badge-inverted {
   color: #d9534f;
+}
+.badge-warning {
+  color: #fff;
+  background-color: #ed9922;
+}
+.badge-warning.badge-inverted {
+  color: #ed9922;
+}
+.badge-purple {
+  color: #fff;
+  background-color: #8a6de9;
+}
+.badge-purple.badge-inverted {
+  color: #8a6de9;
 }
 .table-view {
   padding-left: 0;
