@@ -207,7 +207,7 @@
                 status:
                 {
                     'draft'     : {name: '草稿',   color: 'purple'},
-                    'active'    : {name: '激活',   color: 'success'},
+                    'active'    : {name: '激活',   color: 'primary'},
                     'closed'    : {name: '已关闭', color: ''},
                     'changed'   : {name: '已变更', color: 'danger'}
                 },
