@@ -150,7 +150,7 @@ window.plusReady(function()
         if(result.result)
         {
             loginBtn.innerHTML = '已登录';
-            window.plus.nativeUI.toast('登录成功');
+            window.plus.nativeUI.toast('登录成功', {verticalAlign: 'center'});
             view.close('zoom-out', 300);
         }
         else

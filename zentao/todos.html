@@ -115,7 +115,7 @@ var listview = new ListView('todo', function(tab, data, lessCount)
                 unreadCount++;
             }
             item.setAttribute('data-id', val.id);
-            var dateStr = '<span class="badge' + (val.status === 'wait' && val.date < today ? ' badge-warning' : '') + '">' + (tab === 'thisweek' ? val.date.getDayName() + ' ' : (tab === 'undone' ? val.date.format('MM月dd日') + ' ' : '')) + val.begin + '</span>';
+            var dateStr = '<span class="badge' + (val.status === 'wait' && val.date < today ? ' badge-warning' : '') + '">' + (tab === 'undone' ? val.date.format('M月d日') : ((tab === 'thisweek' ? val.date.getDayName() + ' ' : '') + val.begin)) + '</span>';
             if(val.status === 'wait')
             {
               item.innerHTML = '<a><span class="list-title"><span class="icon"></span> <span class="list-title-name">' + val.name + '</span></span>' + dateStr + '</a>';
