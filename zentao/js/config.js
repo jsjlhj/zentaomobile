@@ -2,9 +2,9 @@
 {
     window.CONFIG =
     {
-        "debug"   : 2,
+        "debug"   : 0,
         "screen"  : {width: 320, height: 568},
-        "version" : "0.1.5 beta"
+        "version" : "0.1.6 beta"
     };
 
     console.options.DEBUG = window.CONFIG.debug;

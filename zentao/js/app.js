@@ -26,8 +26,8 @@
             top             : "44px",
             bottom          : "51px",
             bounce          : "vertical",
-            width           : (window.CONFIG.debug && window.CONFIG.screen) ? window.CONFIG.screen.width : 'auto',
-            height           : (window.CONFIG.debug && window.CONFIG.screen) ? (window.CONFIG.screen.height - 95) : 'auto',
+            width           : (window.CONFIG.debug && window.CONFIG.screen) ? window.CONFIG.screen.width : null,
+            height           : (window.CONFIG.debug && window.CONFIG.screen) ? (window.CONFIG.screen.height - 95) : null,
             scrollIndicator : "none"
         },
         itemViewStyle =
@@ -35,8 +35,8 @@
             top             : "0",
             bottom          : "51px",
             bounce          : "vertical",
-            width           : (window.CONFIG.debug && window.CONFIG.screen) ? window.CONFIG.screen.width : 'auto',
-            height           : (window.CONFIG.debug && window.CONFIG.screen) ? (window.CONFIG.screen.height - 51) : 'auto',
+            width           : (window.CONFIG.debug && window.CONFIG.screen) ? window.CONFIG.screen.width : null,
+            height           : (window.CONFIG.debug && window.CONFIG.screen) ? (window.CONFIG.screen.height - 51) : null,
             scrollIndicator : "none"
         },
         defaultListView;
@@ -66,8 +66,8 @@
                 bottom          : "0px",
                 bounce          : "vertical",
                 scrollIndicator : "none",
-                width           : (window.CONFIG.debug && window.CONFIG.screen) ? window.CONFIG.screen.width : 'auto',
-                height          : (window.CONFIG.debug && window.CONFIG.screen) ? (window.CONFIG.screen.height) : 'auto',
+                width           : (window.CONFIG.debug && window.CONFIG.screen) ? window.CONFIG.screen.width : null,
+                height          : (window.CONFIG.debug && window.CONFIG.screen) ? (window.CONFIG.screen.height) : null,
             },
             aniType: 'fade-in',
             duration: 200,
@@ -477,8 +477,8 @@
                 bottom          : "0px",
                 bounce          : "vertical",
                 scrollIndicator : "none",
-                width           : (window.CONFIG.debug && window.CONFIG.screen) ? window.CONFIG.screen.width : 'auto',
-                height          : (window.CONFIG.debug && window.CONFIG.screen) ? (window.CONFIG.screen.height) : 'auto',
+                width           : (window.CONFIG.debug && window.CONFIG.screen) ? window.CONFIG.screen.width : null,
+                height          : (window.CONFIG.debug && window.CONFIG.screen) ? (window.CONFIG.screen.height) : null,
             },
             aniType: 'slide-in-right',
             extras: {options: options}
