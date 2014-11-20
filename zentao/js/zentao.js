@@ -545,10 +545,28 @@
                     jsonData = String.fromCharCode.apply(null, inflate.decompress());
                 }
                 dt = JSON.parse(jsonData);
-                that.datalist.load(dt);
-                that.lastSyncTime = nextSyncTime;
-                that.syncId++;
-                successCallback && successCallback(dt);
+
+                if(!dt.bugs)
+                {
+                    that.loadBugs(function(bugs)
+                    {
+                        if(bugs)
+                        {
+                            dt.bugs = bugs;
+                        }
+                        that.datalist.load(dt);
+                        that.lastSyncTime = nextSyncTime;
+                        that.syncId++;
+                        successCallback && successCallback(dt);
+                    });
+                }
+                else
+                {
+                    that.datalist.load(dt);
+                    that.lastSyncTime = nextSyncTime;
+                    that.syncId++;
+                    successCallback && successCallback(dt);
+                }
             }
             else
             {
@@ -556,6 +574,46 @@
             }
 
         }, that.fnToCallWidthMessage(errorCallback, '无法获取数据，请检查网络。'));
+    };
+
+    Zentao.prototype.loadBugs = function(callback)
+    {
+        var that = this;
+        var bugs = {};
+        var options = 
+        {
+            module  : 'api',
+            method  : 'mobileGetList',
+            format  : 'index',
+            object  : 'bug',
+            zip     : 1,
+            records : that.syncId < 1 ? 200 : 30,
+            type    : 'full',
+            last    : Math.floor(that.lastSyncTime/1000)
+        };
+        var url = this.concatUrl(options);
+
+        http.getJSON(url, function(dt)
+        {
+            if (dt.status === 'success')
+            {
+                var jsonData = dt.data;
+                if(dt.zip && dt.zip !== '0')
+                {
+                    var decodedData = window.decodeB64(jsonData);
+                    var inflate = new window.Zlib.Inflate(decodedData);
+                    jsonData = String.fromCharCode.apply(null, inflate.decompress());
+                }
+                dt = JSON.parse(jsonData);
+                
+                bugs = dt.bugs;
+            }
+            callback && callback(bugs);
+
+        }, function()
+        {
+            callback && callback(bugs);
+        });
     };
 
     Zentao.prototype.tryLoadData = function(options, successCallback, errorCallback, count)
