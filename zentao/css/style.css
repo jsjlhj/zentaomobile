@@ -17,7 +17,7 @@
   margin: 0 !important;
 }
 .article-content-plain h1,
-.article-content-plain h2,mj
+.article-content-plain h2,
 .article-content-plain h3,
 .article-content-plain h4,
 .article-content-plain h5,
@@ -31,6 +31,11 @@
 .article-content-plain h6
 {
   font-size: 15px !important;
+}
+
+.article-content-plain img
+{
+  max-width: 100%;
 }
 
 .pri {border-left: 5px solid #bbb}
