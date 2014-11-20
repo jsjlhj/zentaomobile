@@ -44,16 +44,33 @@
 
     ItemView.prototype.render = function(obj)
     {
-        // console.log('render', this, obj);
-        var doms, val, fmt, dft, dVal, dType, imgSrc, options = this.options;
+        console.log('render', this, obj);
+        var doms, val, fmt, dft, dType, valType, imgSrc, options = this.options;
         var handleElement = function(el)
         {
-            fmt = el.getAttribute('data-format');
-            dft = el.getAttribute('data-default');
-            dVal = dft && (!val) ? dft : val;
-            el.innerHTML = dVal && fmt ? dVal.format(fmt) : dVal;
-
             dType = el.getAttribute('data-type');
+
+            if(dType === 'date')
+            {
+                valType = typeof(val);
+                if(valType === 'string') val = new Date(Date.parse(val));
+                else if(valType === 'number') val = new Date(val);
+            }
+
+            fmt = el.getAttribute('data-format');
+
+            if(fmt && val)
+            {
+                console.log('format', val, fmt, val.format(fmt));
+                val = val.format(fmt);
+            }
+            else if(!val)
+            {
+                val = dft || '';
+            }
+
+            el.innerHTML = val;
+
             if(dType === 'html')
             {
                 document.$tag('img', el).forEach(function($img)
