@@ -21,6 +21,13 @@
   .btn > i {font-size: 28px;}
   .desc {padding: 10px; opacity: 0.75}
   .centerbox.in {z-index: 20}
+
+  .devicebox {display: none}
+  @media (min-width: 650px) and (min-height: 600px){
+    .centerbox {margin-left: 30px;}
+    .devicebox {display:block; position: absolute; left: 50%; margin-left: -440px; top: 50%; margin-top: -372px; width: 371px; height: 745px; background: url(img/android-device-sprite.png) no-repeat top left;background-size: contain}
+    .devicebox img {width: 356px; height: 633px; position: absolute; left: 8px; top: 56px}
+  }
   </style>
 </head>
 <body>
@@ -56,6 +63,9 @@
       <div class="desc text-center" style="padding: 5px">
         <button type="button" class="btn btn-link" title="返回下载"><i class="icon-download"></i></button>
       </div>
+    </div>
+    <div class="devicebox">
+      <img src="img/slides.gif" alt="">
     </div>
   </div>
   <script src="js/jquery.js"></script>
